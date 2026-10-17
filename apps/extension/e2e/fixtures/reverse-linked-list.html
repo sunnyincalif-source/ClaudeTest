@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en" class="dark">
+  <head>
+    <meta charset="utf-8" />
+    <title>206. Reverse Linked List - LeetCode</title>
+    <meta
+      name="description"
+      content="Reconstructed LeetCode problem page fixture for LeetTrace tests."
+    />
+  </head>
+  <body>
+    <div id="__next">
+      <div class="flex h-screen w-full flex-col">
+        <nav
+          id="navbar-container"
+          class="z-nav-1 relative flex h-[48px] w-full shrink-0 items-center px-5"
+        >
+          <a href="/problemset/" class="relative flex h-full items-center">Problem List</a>
+          <a href="/problems/two-sum/" data-e2e-locator="prev-question" class="ml-2">Prev</a>
+          <a href="/problems/two-sum/" data-e2e-locator="next-question" class="ml-2">Next</a>
+        </nav>
+        <div class="flexlayout__layout" id="qd-content">
+          <div class="flexlayout__tab" data-layout-path="/ts0/t0">
+            <div class="flex w-full flex-1 flex-col gap-4 overflow-y-auto px-4 py-5">
+              <div class="flex items-start justify-between gap-4">
+                <div class="flex items-start gap-2">
+                  <div class="text-title-large font-semibold text-text-primary">
+                    <a class="no-underline hover:text-blue-s" href="/problems/reverse-linked-list/"
+                      >206. Reverse Linked List</a
+                    >
+                  </div>
+                </div>
+              </div>
+              <div class="flex gap-1">
+                <div
+                  class="relative inline-flex items-center justify-center text-caption px-2 py-1 gap-1 rounded-full bg-fill-secondary text-difficulty-easy"
+                >
+                  Easy
+                </div>
+              </div>
+              <div class="elfjS" data-track-load="description_content">
+                <p>
+                  Given the <code>head</code> of a singly linked list, reverse the list, and return
+                  <em>the reversed list</em>.
+                </p>
+                <p>&nbsp;</p>
+                <p><strong class="example">Example 1:</strong></p>
+                <div class="example-block">
+                  <p><strong>Input:</strong> <span class="example-io">head = [1,2,3,4,5]</span></p>
+                  <p><strong>Output:</strong> <span class="example-io">[5,4,3,2,1]</span></p>
+                </div>
+                <p><strong class="example">Example 2:</strong></p>
+                <div class="example-block">
+                  <p><strong>Input:</strong> <span class="example-io">head = [1,2]</span></p>
+                  <p><strong>Output:</strong> <span class="example-io">[2,1]</span></p>
+                </div>
+                <p>&nbsp;</p>
+                <p><strong>Constraints:</strong></p>
+                <ul>
+                  <li>The number of nodes in the list is the range <code>[0, 5000]</code>.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="flexlayout__tab" data-layout-path="/c1/ts0/t0" id="editor">
+            <div class="flex h-8 items-center justify-between border-b px-1">
+              <div class="flex items-center">
+                <button
+                  type="button"
+                  aria-haspopup="dialog"
+                  aria-expanded="false"
+                  class="rounded items-center whitespace-nowrap focus:outline-none inline-flex bg-transparent"
+                >
+                  Python3<svg aria-hidden="true" width="12" height="12"></svg>
+                </button>
+              </div>
+            </div>
+            <div
+              class="monaco-editor no-user-select showUnused showDeprecated vs-dark"
+              role="code"
+              data-uri="inmemory://model/1"
+            >
+              <div class="overflow-guard">
+                <div class="monaco-scrollable-element editor-scrollable vs-dark">
+                  <div class="lines-content monaco-editor-background">
+                    <div
+                      class="view-lines monaco-mouse-cursor-text"
+                      role="presentation"
+                      aria-hidden="true"
+                      data-mprt="8"
+                    >
+                      <div style="top: 0px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >#&nbsp;Definition&nbsp;for&nbsp;singly-linked&nbsp;list.</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 19px; height: 19px" class="view-line">
+                        <span><span class="mtk1">#&nbsp;class&nbsp;ListNode:</span></span>
+                      </div>
+                      <div style="top: 38px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;__init__(self,&nbsp;val=0,&nbsp;next=None):</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 57px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.val&nbsp;=&nbsp;val</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 76px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >#&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self.next&nbsp;=&nbsp;next</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 95px; height: 19px" class="view-line">
+                        <span><span class="mtk1">class&nbsp;Solution:</span></span>
+                      </div>
+                      <div style="top: 114px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >&nbsp;&nbsp;&nbsp;&nbsp;def&nbsp;reverseList(self,&nbsp;head:&nbsp;Optional[ListNode])&nbsp;-&gt;&nbsp;Optional[ListNode]:</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 133px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;prev&nbsp;=&nbsp;None</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 152px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;while&nbsp;head:</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 171px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;head.next,&nbsp;prev,&nbsp;head&nbsp;=&nbsp;prev,&nbsp;head,&nbsp;head.next</span
+                          ></span
+                        >
+                      </div>
+                      <div style="top: 190px; height: 19px" class="view-line">
+                        <span
+                          ><span class="mtk1"
+                            >&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;return&nbsp;prev</span
+                          ></span
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="flexlayout__tab" data-layout-path="/c1/ts1/t0">
+            <div class="monaco-editor vs-dark" data-uri="inmemory://model/2">
+              <div class="overflow-guard">
+                <div class="view-lines">
+                  <div style="top: 0px; height: 20px" class="view-line">
+                    <span><span class="mtk1">[1,2,3,4,5]</span></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="ide-top-btns" class="relative flex overflow-hidden rounded bg-fill-tertiary">
+          <div class="relative flex">
+            <button
+              data-e2e-locator="console-run-button"
+              class="font-medium items-center whitespace-nowrap focus:outline-none inline-flex relative select-none rounded-none px-3 py-1.5"
+            >
+              <div
+                class="relative text-[16px] leading-[normal] p-0.5 before:block before:h-4 before:w-4"
+              >
+                <svg aria-hidden="true" width="16" height="16"></svg>
+              </div>
+              <span class="text-sm font-medium">Run</span>
+            </button>
+          </div>
+          <div class="relative flex">
+            <button
+              data-e2e-locator="console-submit-button"
+              class="font-medium items-center whitespace-nowrap focus:outline-none inline-flex relative select-none rounded-none px-3 py-1.5"
+            >
+              <span class="text-sm font-medium">Submit</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <script>
+      /* Stand-in for LeetCode's Monaco instance: a solution model and a test-case model. */
+      (function () {
+        const code =
+          window.__MOCK_CODE__ ||
+          '# Definition for singly-linked list.\n# class ListNode:\n#     def __init__(self, val=0, next=None):\n#         self.val = val\n#         self.next = next\nclass Solution:\n    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:\n        prev = None\n        while head:\n            head.next, prev, head = prev, head, head.next\n        return prev\n';
+        const solution = {
+          getValue: () => code,
+          getLanguageId: () => 'python',
+          isDisposed: () => false,
+        };
+        const testcase = {
+          getValue: () => '[1,2,3,4,5]',
+          getLanguageId: () => 'plaintext',
+          isDisposed: () => false,
+        };
+        window.monaco = {
+          editor: {
+            getModels: () => [testcase, solution],
+            getEditors: () => [
+              { getModel: () => testcase, hasTextFocus: () => false },
+              { getModel: () => solution, hasTextFocus: () => false },
+            ],
+          },
+        };
+      })();
+    </script>
+  </body>
+</html>

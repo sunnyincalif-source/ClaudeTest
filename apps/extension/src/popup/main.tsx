@@ -1,5 +1,6 @@
 import { StrictMode, useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { INSTALL_URL } from '../shared/config';
 import { clearPairing, getPairing, type Pairing } from '../shared/storage';
 import './popup.css';
 
@@ -32,6 +33,11 @@ function Popup() {
           the panel.
         </p>
       )}
+      <p className="small">
+        <a href={INSTALL_URL} target="_blank" rel="noreferrer">
+          Install guide
+        </a>
+      </p>
       <p className="muted small">
         Your code runs only on your machine. LeetTrace is an independent tool, not affiliated with
         LeetCode.

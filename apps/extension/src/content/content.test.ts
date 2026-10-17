@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { checkDaemon, confirmPairing, traceCases } from './daemon';
+import { checkDaemon, confirmPairing, localNetworkPermission, traceCases } from './daemon';
 import {
   findRunButton,
   isPythonLabel,
@@ -11,7 +11,10 @@ import {
   slugFromPath,
 } from './leetcodePage';
 
-const mockPage = readFileSync(join(__dirname, '..', '..', 'e2e', 'mock-problem.html'), 'utf8');
+const mockPage = readFileSync(
+  join(__dirname, '..', '..', 'e2e', 'fixtures', 'two-sum.html'),
+  'utf8',
+);
 
 function loadDoc(html: string): Document {
   return new DOMParser().parseFromString(html, 'text/html');
@@ -42,8 +45,9 @@ describe('LeetCode page adapter', () => {
     expect(cases.map((c) => c.input)).toEqual([
       'nums = [2,7,11,15], target = 9',
       'nums = [3,2,4], target = 6',
+      'nums = [3,3], target = 6',
     ]);
-    expect(cases.map((c) => c.expected)).toEqual(['[0,1]', '[1,2]']);
+    expect(cases.map((c) => c.expected)).toEqual(['[0,1]', '[1,2]', '[0,1]']);
   });
 
   it('falls back visibly when the page layout is unknown', () => {
@@ -51,12 +55,12 @@ describe('LeetCode page adapter', () => {
       pathname: '/problems/x/',
     } as Location);
     expect(p.examples).toEqual([]);
-    expect(p.warnings[0]).toMatch(/Paste a test case/);
+    expect(p.warnings[0]).toMatch(/paste a test case/i);
   });
 
   it('finds the Run button and the language label', () => {
     const doc = loadDoc(mockPage);
-    expect(findRunButton(doc)?.textContent).toBe('Run');
+    expect(findRunButton(doc)?.textContent?.trim()).toBe('Run');
     expect(readProblem(doc, { pathname: '/problems/two-sum/' } as Location).languageLabel).toBe(
       'Python3',
     );
@@ -141,5 +145,59 @@ describe('daemon client', () => {
         f as unknown as typeof fetch,
       ),
     ).rejects.toThrow(/Trace Schema/);
+  });
+});
+
+// Regression: Chrome's local-network-access prompt (fixed in 3e4c9ec).
+describe('Chrome local network access', () => {
+  function stubPermissions(byName: Record<string, PermissionState>) {
+    vi.stubGlobal('navigator', {
+      ...navigator,
+      permissions: {
+        query: async ({ name }: { name: string }) => {
+          if (!(name in byName)) throw new TypeError(`unknown permission ${name}`);
+          return { state: byName[name] };
+        },
+      },
+    });
+  }
+
+  it('understands the renamed permission (loopback-network)', async () => {
+    stubPermissions({ 'loopback-network': 'granted' });
+    expect(await localNetworkPermission()).toBe('granted');
+    stubPermissions({ 'local-network-access': 'prompt' });
+    expect(await localNetworkPermission()).toBe('prompt');
+    stubPermissions({});
+    expect(await localNetworkPermission()).toBe('unsupported');
+  });
+
+  it('reports a denial instead of "engine off"', async () => {
+    stubPermissions({ 'loopback-network': 'denied' });
+    const f = vi.fn();
+    expect(await checkDaemon(f as unknown as typeof fetch)).toEqual({
+      kind: 'offline',
+      localNetworkBlocked: true,
+    });
+    expect(f).not.toHaveBeenCalled();
+  });
+
+  it('waits for the user to answer the prompt instead of giving up after ~1s', async () => {
+    stubPermissions({ 'loopback-network': 'prompt' });
+    vi.useFakeTimers();
+    const f = vi.fn(
+      (_url: string, init?: RequestInit) =>
+        new Promise<Response>((resolve, reject) => {
+          init?.signal?.addEventListener('abort', () =>
+            reject(new DOMException('aborted', 'AbortError')),
+          );
+          setTimeout(() => resolve(res(401)), 20_000); // the user clicks Allow after 20s
+        }),
+    );
+    const pending = checkDaemon(f as unknown as typeof fetch);
+    await vi.advanceTimersByTimeAsync(21_000);
+    expect(await pending).toEqual({ kind: 'unpaired', port: 47823 });
+    const init = f.mock.calls[0]![1] as RequestInit & { targetAddressSpace?: string };
+    expect(init.targetAddressSpace).toBe('loopback');
+    vi.useRealTimers();
   });
 });

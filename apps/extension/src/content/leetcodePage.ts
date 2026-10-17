@@ -5,7 +5,10 @@
 // Scope: only the public problem description's example blocks. Never premium/auth-gated
 // content, never submissions.
 
-export const ADAPTER_VERSION = '2026.10';
+export const ADAPTER_VERSION = '2026.10b';
+
+/** The fallback message shown whenever the page can't be read. */
+export const PAGE_FALLBACK = "Couldn't read the page — paste a test case below.";
 
 export interface ExampleCase {
   input: string;
@@ -20,6 +23,10 @@ export interface ProblemInfo {
   languageLabel: string | null;
   /** Non-fatal reasons something couldn't be read, shown to the user. */
   warnings: string[];
+}
+
+export function isProblemPath(pathname: string): boolean {
+  return /^\/problems\/[a-z0-9-]+/i.test(pathname);
 }
 
 export function slugFromPath(pathname: string): string | null {
@@ -107,11 +114,7 @@ export function readProblem(doc: Document = document, loc: Location = location):
   } catch {
     // fall through to the warning below
   }
-  if (examples.length === 0) {
-    warnings.push(
-      `Couldn't read the example test cases from this page (adapter ${ADAPTER_VERSION}). Paste a test case below.`,
-    );
-  }
+  if (examples.length === 0) warnings.push(`${PAGE_FALLBACK} (adapter ${ADAPTER_VERSION})`);
   return { slug, title: readTitle(doc), examples, languageLabel: readLanguageLabel(doc), warnings };
 }
 
@@ -136,29 +139,76 @@ export function findRunButton(doc: Document = document): HTMLElement | null {
  * Must be self-contained: it is serialized and injected.
  */
 export function readMonacoInPage(): { code: string; languageId: string | null } | null {
-  type Model = { getValue(): string; getLanguageId?: () => string; isDisposed?: () => boolean };
+  type Model = {
+    getValue(): string;
+    getLanguageId?: () => string;
+    getModeId?: () => string;
+    isDisposed?: () => boolean;
+  };
   type Editor = { getModel(): Model | null; hasTextFocus?: () => boolean };
-  const monaco = (
-    window as unknown as {
-      monaco?: { editor?: { getModels(): Model[]; getEditors?: () => Editor[] } };
-    }
-  ).monaco;
-  const api = monaco?.editor;
+  const w = window as unknown as {
+    monaco?: { editor?: { getModels(): Model[]; getEditors?: () => Editor[] } };
+  };
+  const api = w.monaco?.editor;
   if (!api) return null;
+  const lang = (m: Model) => (m.getLanguageId?.() ?? m.getModeId?.() ?? '').toLowerCase();
+  // LeetCode also runs Monaco for the test-case panel (plaintext); skip those models.
+  const isCode = (m: Model | null | undefined): m is Model =>
+    !!m && !m.isDisposed?.() && !['plaintext', 'json', ''].includes(lang(m));
   const editors = api.getEditors?.() ?? [];
-  const focused = editors.find((e) => e.hasTextFocus?.())?.getModel();
+  const fromEditors = editors.map((e) => e.getModel()).filter(isCode);
+  const focused = editors.find((e) => e.hasTextFocus?.() && isCode(e.getModel()))?.getModel();
+  const candidates = fromEditors.length ? fromEditors : api.getModels().filter(isCode);
+  // Prefer the focused editor, then the longest buffer (the solution, not a scratch model).
   const model =
-    focused ?? editors[0]?.getModel() ?? api.getModels().filter((m) => !m.isDisposed?.())[0];
+    focused ?? [...candidates].sort((a, b) => b.getValue().length - a.getValue().length)[0] ?? null;
   if (!model) return null;
-  return { code: model.getValue(), languageId: model.getLanguageId?.() ?? null };
+  return { code: model.getValue(), languageId: lang(model) || null };
 }
 
 /** Last-resort fallback when Monaco isn't reachable: visible lines only (lossy). */
 export function readVisibleEditorText(doc: Document = document): string | null {
-  const lines = doc.querySelectorAll<HTMLElement>('.monaco-editor .view-lines .view-line');
+  // The solution editor lives under #editor; the test-case panel has its own Monaco.
+  const editor = doc.querySelector('#editor .monaco-editor') ?? doc.querySelector('.monaco-editor');
+  if (!editor) return null;
+  const lines = editor.querySelectorAll<HTMLElement>('.view-lines .view-line');
   if (lines.length === 0) return null;
   const sorted = [...lines].sort(
     (a, b) => parseFloat(a.style.top || '0') - parseFloat(b.style.top || '0'),
   );
   return sorted.map((l) => (l.innerText || l.textContent || '').replace(/\u00a0/g, ' ')).join('\n');
+}
+
+/**
+ * Call `onChange` whenever the in-tab URL changes. LeetCode is a single-page app: going from
+ * one problem to the next pushes history without a page load. Content scripts can't patch
+ * the page's own history.pushState (different JS world), so combine every signal available:
+ * the Navigation API, popstate, DOM mutations, and a slow poll as a backstop.
+ */
+export function watchNavigation(onChange: (url: string) => void, win: Window = window): () => void {
+  let last = win.location.href;
+  const check = () => {
+    const now = win.location.href;
+    if (now !== last) {
+      last = now;
+      onChange(now);
+    }
+  };
+  type Nav = {
+    addEventListener(t: string, l: () => void): void;
+    removeEventListener(t: string, l: () => void): void;
+  };
+  const nav = (win as unknown as { navigation?: Nav }).navigation;
+  const deferred = () => setTimeout(check, 0);
+  nav?.addEventListener('currententrychange', deferred);
+  win.addEventListener('popstate', deferred);
+  const mo = new MutationObserver(check);
+  mo.observe(win.document.documentElement, { childList: true, subtree: true });
+  const poll = win.setInterval(check, 700);
+  return () => {
+    nav?.removeEventListener('currententrychange', deferred);
+    win.removeEventListener('popstate', deferred);
+    mo.disconnect();
+    win.clearInterval(poll);
+  };
 }

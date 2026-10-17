@@ -30,14 +30,28 @@ const ctx = await chromium.launchPersistentContext(mkdtempSync(join(tmpdir(), 'l
 // Chrome asks the user before leetcode.com may reach 127.0.0.1 (Local Network Access);
 // a real user clicks "Allow" once. Headless can't click the bubble, so grant it here.
 await ctx.grantPermissions(['local-network-access'], { origin: 'https://leetcode.com' });
-await ctx.route('https://leetcode.com/**', (route) =>
-  route.fulfill({
-    status: 200,
-    contentType: 'text/html',
-    body: readFileSync(join(here, 'mock-problem.html'), 'utf8'),
-  }),
-);
+// Problem URLs are served from the reconstructed problem-page fixtures (e2e/fixtures).
+const fixture = (slug) => readFileSync(join(here, 'fixtures', `${slug}.html`), 'utf8');
+await ctx.route('https://leetcode.com/**', (route) => {
+  const slug = /\/problems\/([a-z0-9-]+)/.exec(new URL(route.request().url()).pathname)?.[1];
+  const body = slug
+    ? fixture(slug)
+    : '<!doctype html><html><body><div id="__next">Problem list</div></body></html>';
+  return route.fulfill({ status: 200, contentType: 'text/html', body });
+});
 const page = await ctx.newPage();
+async function spaNavigate(slug) {
+  // What LeetCode does on "next problem": pushState + re-render, no page load.
+  await page.evaluate(
+    ({ slug, html }) => {
+      const doc = new DOMParser().parseFromString(html, 'text/html');
+      history.pushState(null, '', `/problems/${slug}/`);
+      document.body.innerHTML = doc.body.innerHTML;
+      for (const s of doc.querySelectorAll('script')) (0, eval)(s.textContent);
+    },
+    { slug, html: fixture(slug) },
+  );
+}
 const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 if (process.env.DEBUG) page.on('console', (m) => console.log('[console]', m.type(), m.text()));
@@ -51,10 +65,7 @@ check(
   (await page.locator('#leettrace-trace-button').count()) === 0,
   'no Trace button off problem pages',
 );
-await page.evaluate(() => {
-  history.pushState(null, '', '/problems/two-sum/');
-  document.body.appendChild(document.createElement('div')); // LeetCode re-renders on route change
-});
+await spaNavigate('two-sum');
 await page.locator('#leettrace-trace-button').waitFor({ timeout: 5000 });
 check(true, 'Trace button appears after in-app navigation to a problem');
 
@@ -97,7 +108,7 @@ await panel.getByText('Test cases').waitFor({ timeout: 10000 });
 check(true, 'paired → scraped example cases shown');
 const cases = await panel.locator('.ltx-case').allInnerTexts();
 check(
-  cases.length === 2 &&
+  cases.length === 3 &&
     cases[0].includes('nums = [2,7,11,15], target = 9') &&
     cases[1].includes('[1,2]'),
   `examples scraped: ${JSON.stringify(cases)}`,
@@ -107,7 +118,7 @@ check(
 await panel.getByRole('button', { name: 'Trace my code' }).click();
 await panel.locator('.lt-viz').waitFor({ timeout: 20000 });
 check((await panel.locator('.lt-test').innerText()).includes('Passed'), 'case 1 passes');
-check((await panel.getByRole('tab').count()) === 2, 'one result tab per example case');
+check((await panel.getByRole('tab').count()) === 3, 'one result tab per example case');
 await panel.getByLabel('Timeline').fill('8');
 await sleep(400);
 const frames = await panel.locator('.lt-frame-name').allInnerTexts();
@@ -135,6 +146,28 @@ if (process.env.FRAMES_DIR) {
     });
   }
 }
+
+// 4b) Problem → problem with no page load: button re-attaches, panel re-reads, trace works.
+await spaNavigate('reverse-linked-list');
+await page.locator('#leettrace-trace-button').waitFor({ timeout: 5000 });
+await panel.getByText('head = [1,2,3,4,5]').waitFor({ timeout: 5000 });
+check(
+  (await panel.locator('.lt-viz').count()) === 0,
+  'SPA navigation: old results cleared, new examples read',
+);
+await page.locator('#leettrace-trace-button').click();
+await panel.locator('.lt-test').first().waitFor({ timeout: 20000 });
+check(
+  (await panel.locator('.lt-test').innerText()).includes('Passed'),
+  'SPA navigation: tracing the next problem passes',
+);
+await panel.getByLabel('Timeline').fill('12');
+await sleep(300);
+check(
+  Number(await panel.locator('.lt-arrows').getAttribute('data-edge-count')) >= 3,
+  'SPA navigation: linked-list arrows drawn',
+);
+if (shotDir) await page.screenshot({ path: join(shotDir, 'ext-spa.png') });
 
 // 5) The page's own scripts can't see the token (it lives in extension storage).
 const leaked = await page.evaluate(() => JSON.stringify(localStorage) + document.cookie);

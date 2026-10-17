@@ -212,3 +212,17 @@
   border-color: var(--ltx-accent);
   font-weight: 600;
 }
+.ltx-root textarea.ltx-code {
+  width: 100%;
+  font:
+    12.5px ui-monospace,
+    SFMono-Regular,
+    Menlo,
+    Consolas,
+    monospace;
+  color: var(--ltx-text);
+  background: var(--ltx-bg);
+  border: 1px solid var(--ltx-border);
+  border-radius: 6px;
+  padding: 6px 8px;
+}

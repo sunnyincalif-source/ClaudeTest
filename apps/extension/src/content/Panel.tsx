@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Trace } from '@leettrace/schema';
 import { TraceViewer } from '@leettrace/viz';
+import { INSTALL_URL } from '../shared/config';
 import { clearPairing } from '../shared/storage';
 import { bus } from './bus';
 import {
@@ -18,8 +19,6 @@ import {
   type ExampleCase,
   type ProblemInfo,
 } from './leetcodePage';
-
-const INSTALL_URL = 'https://github.com/leettrace/leettrace#install';
 
 export interface EditorRead {
   code: string;
@@ -51,6 +50,8 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [notice, setNotice] = useState<string | null>(null);
+  const [pastedCode, setPastedCode] = useState('');
+  const [needCode, setNeedCode] = useState(false);
 
   const refresh = useCallback(async () => {
     setStatus(null);
@@ -72,9 +73,12 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
     if (st.kind !== 'ready') return;
     const p = problem ?? readProblem();
     if (!problem) setProblem(p);
-    const editor = await readEditor();
+    const editor = pastedCode.trim()
+      ? { code: pastedCode, languageId: null, lossy: false }
+      : await readEditor();
     if (!editor) {
-      setError("Couldn't read your code from the editor. Click into the editor and try again.");
+      setNeedCode(true);
+      setError("Couldn't read your code from the editor — paste it below and press Trace again.");
       return;
     }
     const lang = editor.languageId ?? p.languageLabel;
@@ -115,7 +119,7 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
     } finally {
       setBusy(false);
     }
-  }, [status, problem, selected, custom, refresh]);
+  }, [status, problem, selected, custom, refresh, pastedCode]);
 
   useEffect(() => {
     void refresh();
@@ -128,8 +132,17 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
         if (e === 'toggle') setOpen((o) => !o);
         if (e === 'open') setOpen(true);
         if (e === 'trace') void runTrace();
+        if (e === 'navigate') {
+          // Problem-to-problem navigation without a page load: start fresh on the new problem.
+          loadProblem();
+          setTraces(null);
+          setError(null);
+          setNotice(null);
+          setPastedCode('');
+          setNeedCode(false);
+        }
       }),
-    [runTrace],
+    [runTrace, loadProblem],
   );
 
   if (!open) {
@@ -206,6 +219,18 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
                   onChange={(e) => setCustom(e.currentTarget.value)}
                 />
               </label>
+              {needCode && (
+                <label className="ltx-custom">
+                  <span>Your code (paste it if the editor couldn&apos;t be read)</span>
+                  <textarea
+                    className="ltx-code"
+                    value={pastedCode}
+                    rows={8}
+                    spellCheck={false}
+                    onChange={(e) => setPastedCode(e.currentTarget.value)}
+                  />
+                </label>
+              )}
               <div className="ltx-actions">
                 <button
                   type="button"
