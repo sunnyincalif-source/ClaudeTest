@@ -1,0 +1,3515 @@
+{
+ "engineVersion": "0.1.0",
+ "language": "python",
+ "source": "class Node:\n    def __init__(self, val):\n        self.val = val\n        self.next = None\n\n\nhead = Node(1)\ntail = head\nfor v in [2, 3, 4]:\n    tail.next = Node(v)\n    tail = tail.next\n\ncur = head\nwhile cur is not None:\n    print(cur.val)\n    cur = cur.next\n",
+ "steps": [
+  {
+   "event": "line",
+   "heap": {},
+   "i": 0,
+   "line": 1,
+   "note": "Defining class Node.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 1,
+   "line": 7,
+   "note": "Evaluating Node(1) — the result will be stored in head.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {},
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 2,
+   "line": 2,
+   "note": "Calling __init__(self=a Node, val=1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "__init__",
+     "id": "f2",
+     "locals": {
+      "self": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {},
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 3,
+   "line": 3,
+   "note": "self.val will be 1.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "__init__",
+     "id": "f2",
+     "locals": {
+      "self": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 4,
+   "line": 4,
+   "note": "self.next will be None.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "__init__",
+     "id": "f2",
+     "locals": {
+      "self": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 5,
+   "line": 4,
+   "note": "__init__() returns None back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "__init__",
+     "id": "f2",
+     "locals": {
+      "self": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 6,
+   "line": 8,
+   "note": "tail will point to the Node(1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "head"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 7,
+   "line": 9,
+   "note": "Next loop iteration: v will be 2.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "head",
+      "tail"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    }
+   },
+   "i": 8,
+   "line": 10,
+   "note": "tail.next will point to the Node(2).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {},
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 9,
+   "line": 2,
+   "note": "Calling __init__(self=a Node, val=2).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f3",
+     "locals": {
+      "self": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {},
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 10,
+   "line": 3,
+   "note": "self.val will be 2.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f3",
+     "locals": {
+      "self": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 11,
+   "line": 4,
+   "note": "self.next will be None.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f3",
+     "locals": {
+      "self": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 12,
+   "line": 4,
+   "note": "__init__() returns None back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f3",
+     "locals": {
+      "self": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 13,
+   "line": 11,
+   "note": "tail will point to the Node(2).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 14,
+   "line": 9,
+   "note": "Next loop iteration: v will be 3.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    }
+   },
+   "i": 15,
+   "line": 10,
+   "note": "tail.next will point to the Node(3).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {},
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 16,
+   "line": 2,
+   "note": "Calling __init__(self=a Node, val=3).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f4",
+     "locals": {
+      "self": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {},
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 17,
+   "line": 3,
+   "note": "self.val will be 3.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f4",
+     "locals": {
+      "self": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 18,
+   "line": 4,
+   "note": "self.next will be None.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f4",
+     "locals": {
+      "self": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 19,
+   "line": 4,
+   "note": "__init__() returns None back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f4",
+     "locals": {
+      "self": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 20,
+   "line": 11,
+   "note": "tail will point to the Node(3).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 21,
+   "line": 9,
+   "note": "Next loop iteration: v will be 4.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    }
+   },
+   "i": 22,
+   "line": 10,
+   "note": "tail.next will point to the Node(4).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {},
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 23,
+   "line": 2,
+   "note": "Calling __init__(self=a Node, val=4).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f5",
+     "locals": {
+      "self": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {},
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 24,
+   "line": 3,
+   "note": "self.val will be 4.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f5",
+     "locals": {
+      "self": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 25,
+   "line": 4,
+   "note": "self.next will be None.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f5",
+     "locals": {
+      "self": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 26,
+   "line": 4,
+   "note": "__init__() returns None back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    },
+    {
+     "func": "__init__",
+     "id": "f5",
+     "locals": {
+      "self": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "self",
+      "val"
+     ],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 27,
+   "line": 11,
+   "note": "tail will point to the Node(4).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 28,
+   "line": 9,
+   "note": "The loop over [2, 3, 4] is finished.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 29,
+   "line": 13,
+   "note": "cur will point to the Node(1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 30,
+   "line": 14,
+   "note": "Loop check: cur is not None → True, so the loop body runs.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 31,
+   "line": 15,
+   "note": "Printing '1'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 32,
+   "line": 16,
+   "note": "cur will point to the Node(2).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 33,
+   "line": 14,
+   "note": "Loop check: cur is not None → True, so the loop body runs.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 34,
+   "line": 15,
+   "note": "Printing '2'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 35,
+   "line": 16,
+   "note": "cur will point to the Node(3).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 36,
+   "line": 14,
+   "note": "Loop check: cur is not None → True, so the loop body runs.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 37,
+   "line": 15,
+   "note": "Printing '3'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 38,
+   "line": 16,
+   "note": "cur will point to the Node(4).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n3\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 39,
+   "line": 14,
+   "note": "Loop check: cur is not None → True, so the loop body runs.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n3\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 40,
+   "line": 15,
+   "note": "Printing '4'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n3\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 41,
+   "line": 16,
+   "note": "cur will be None.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n3\n4\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 42,
+   "line": 14,
+   "note": "Loop check: cur is not None → False, so the loop ends.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "kind": "none"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ]
+    }
+   ],
+   "stdout": "1\n2\n3\n4\n"
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "id": "o1",
+     "type": "instance"
+    },
+    "o2": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o3",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "id": "o2",
+     "type": "instance"
+    },
+    "o3": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "val": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "id": "o3",
+     "type": "instance"
+    },
+    "o4": {
+     "className": "Node",
+     "fields": {
+      "next": {
+       "kind": "none"
+      },
+      "val": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "id": "o4",
+     "type": "instance"
+    }
+   },
+   "i": 43,
+   "line": 14,
+   "note": "Program finished.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {
+      "cur": {
+       "kind": "none"
+      },
+      "head": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "tail": {
+       "id": "o4",
+       "kind": "ref"
+      },
+      "v": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "head",
+      "tail",
+      "v",
+      "cur"
+     ],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": "1\n2\n3\n4\n"
+  }
+ ]
+}

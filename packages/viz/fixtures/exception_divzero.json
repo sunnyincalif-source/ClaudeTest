@@ -1,0 +1,524 @@
+{
+ "engineVersion": "0.1.0",
+ "error": {
+  "line": 3,
+  "message": "division by zero",
+  "type": "ZeroDivisionError"
+ },
+ "language": "python",
+ "source": "def average(xs):\n    total = sum(xs)\n    return total / len(xs)\n\n\nprint(average([4, 8]))\nprint(average([]))\nprint(\"never printed\")\n",
+ "steps": [
+  {
+   "event": "line",
+   "heap": {},
+   "i": 0,
+   "line": 1,
+   "note": "Defining function average().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 1,
+   "line": 6,
+   "note": "Printing '6.0'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 4
+      },
+      {
+       "kind": "int",
+       "value": 8
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 2,
+   "line": 1,
+   "note": "Calling average(xs=[4, 8]).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f2",
+     "locals": {
+      "xs": {
+       "id": "o1",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 4
+      },
+      {
+       "kind": "int",
+       "value": 8
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 3,
+   "line": 2,
+   "note": "total will be 12.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f2",
+     "locals": {
+      "xs": {
+       "id": "o1",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 4
+      },
+      {
+       "kind": "int",
+       "value": 8
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 4,
+   "line": 3,
+   "note": "About to return total / len(xs).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f2",
+     "locals": {
+      "total": {
+       "kind": "int",
+       "value": 12
+      },
+      "xs": {
+       "id": "o1",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs",
+      "total"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 4
+      },
+      {
+       "kind": "int",
+       "value": 8
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 5,
+   "line": 3,
+   "note": "average() returns 6.0 back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f2",
+     "locals": {
+      "total": {
+       "kind": "int",
+       "value": 12
+      },
+      "xs": {
+       "id": "o1",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs",
+      "total"
+     ],
+     "returnValue": {
+      "kind": "float",
+      "value": 6.0
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 6,
+   "line": 7,
+   "note": "Printing average([]).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o2": {
+     "id": "o2",
+     "items": [],
+     "type": "list"
+    }
+   },
+   "i": 7,
+   "line": 1,
+   "note": "Calling average(xs=[]).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f3",
+     "locals": {
+      "xs": {
+       "id": "o2",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs"
+     ]
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o2": {
+     "id": "o2",
+     "items": [],
+     "type": "list"
+    }
+   },
+   "i": 8,
+   "line": 2,
+   "note": "total will be 0.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f3",
+     "locals": {
+      "xs": {
+       "id": "o2",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs"
+     ]
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o2": {
+     "id": "o2",
+     "items": [],
+     "type": "list"
+    }
+   },
+   "i": 9,
+   "line": 3,
+   "note": "About to return total / len(xs).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f3",
+     "locals": {
+      "total": {
+       "kind": "int",
+       "value": 0
+      },
+      "xs": {
+       "id": "o2",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs",
+      "total"
+     ]
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "exception",
+   "exception": {
+    "message": "division by zero",
+    "type": "ZeroDivisionError"
+   },
+   "heap": {
+    "o2": {
+     "id": "o2",
+     "items": [],
+     "type": "list"
+    }
+   },
+   "i": 10,
+   "line": 3,
+   "note": "ZeroDivisionError raised: division by zero. Python unwinds until it finds a matching except.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f3",
+     "locals": {
+      "total": {
+       "kind": "int",
+       "value": 0
+      },
+      "xs": {
+       "id": "o2",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs",
+      "total"
+     ]
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o2": {
+     "id": "o2",
+     "items": [],
+     "type": "list"
+    }
+   },
+   "i": 11,
+   "line": 3,
+   "note": "average() exits early — the exception propagates to the caller.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f3",
+     "locals": {
+      "total": {
+       "kind": "int",
+       "value": 0
+      },
+      "xs": {
+       "id": "o2",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs",
+      "total"
+     ]
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "exception",
+   "exception": {
+    "message": "division by zero",
+    "type": "ZeroDivisionError"
+   },
+   "heap": {},
+   "i": 12,
+   "line": 7,
+   "note": "ZeroDivisionError raised: division by zero. Python unwinds until it finds a matching except.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 13,
+   "line": 7,
+   "note": "The exception reached the top level of the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": "6.0\n"
+  },
+  {
+   "event": "exception",
+   "exception": {
+    "message": "division by zero",
+    "type": "ZeroDivisionError"
+   },
+   "heap": {
+    "o2": {
+     "id": "o2",
+     "items": [],
+     "type": "list"
+    }
+   },
+   "i": 14,
+   "line": 3,
+   "note": "Uncaught ZeroDivisionError: division by zero. The program stops here — this is where it blew up.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "average",
+     "id": "f3",
+     "locals": {
+      "total": {
+       "kind": "int",
+       "value": 0
+      },
+      "xs": {
+       "id": "o2",
+       "kind": "ref"
+      }
+     },
+     "order": [
+      "xs",
+      "total"
+     ]
+    }
+   ],
+   "stdout": "6.0\n"
+  }
+ ]
+}

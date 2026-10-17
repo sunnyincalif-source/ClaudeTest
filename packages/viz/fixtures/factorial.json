@@ -1,0 +1,1178 @@
+{
+ "engineVersion": "0.1.0",
+ "language": "python",
+ "source": "def factorial(n):\n    if n <= 1:\n        return 1\n    return n * factorial(n - 1)\n\n\nprint(factorial(5))\n",
+ "steps": [
+  {
+   "event": "line",
+   "heap": {},
+   "i": 0,
+   "line": 1,
+   "note": "Defining function factorial().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 1,
+   "line": 7,
+   "note": "Printing '120'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {},
+   "i": 2,
+   "line": 1,
+   "note": "Calling factorial(n=5).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 3,
+   "line": 2,
+   "note": "Checking if n <= 1 (5 <= 1) → False, so we skip the if block.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 4,
+   "line": 4,
+   "note": "About to return n * factorial(n - 1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {},
+   "i": 5,
+   "line": 1,
+   "note": "Calling factorial(n=4) (recursion depth 2).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 6,
+   "line": 2,
+   "note": "Checking if n <= 1 (4 <= 1) → False, so we skip the if block.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 7,
+   "line": 4,
+   "note": "About to return n * factorial(n - 1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {},
+   "i": 8,
+   "line": 1,
+   "note": "Calling factorial(n=3) (recursion depth 3).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 9,
+   "line": 2,
+   "note": "Checking if n <= 1 (3 <= 1) → False, so we skip the if block.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 10,
+   "line": 4,
+   "note": "About to return n * factorial(n - 1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {},
+   "i": 11,
+   "line": 1,
+   "note": "Calling factorial(n=2) (recursion depth 4).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 12,
+   "line": 2,
+   "note": "Checking if n <= 1 (2 <= 1) → False, so we skip the if block.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 13,
+   "line": 4,
+   "note": "About to return n * factorial(n - 1).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {},
+   "i": 14,
+   "line": 1,
+   "note": "Calling factorial(n=1) (recursion depth 5).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f6",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 15,
+   "line": 2,
+   "note": "Checking if n <= 1 (1 <= 1) → True, so the if block runs.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f6",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 16,
+   "line": 3,
+   "note": "About to return 1.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f6",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "n"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 17,
+   "line": 3,
+   "note": "Base case: n <= 1 is True — returning 1 back to factorial().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f6",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 1
+      }
+     },
+     "order": [
+      "n"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 1
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 18,
+   "line": 4,
+   "note": "factorial() returns 2 back to factorial().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f5",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "n"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 2
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 19,
+   "line": 4,
+   "note": "factorial() returns 6 back to factorial().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f4",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 3
+      }
+     },
+     "order": [
+      "n"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 6
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 20,
+   "line": 4,
+   "note": "factorial() returns 24 back to factorial().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ]
+    },
+    {
+     "func": "factorial",
+     "id": "f3",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 4
+      }
+     },
+     "order": [
+      "n"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 24
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 21,
+   "line": 4,
+   "note": "factorial() returns 120 back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "factorial",
+     "id": "f2",
+     "locals": {
+      "n": {
+       "kind": "int",
+       "value": 5
+      }
+     },
+     "order": [
+      "n"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 120
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 22,
+   "line": 7,
+   "note": "Program finished.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": [],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": "120\n"
+  }
+ ]
+}

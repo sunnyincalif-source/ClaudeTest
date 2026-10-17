@@ -1,0 +1,963 @@
+{
+ "engineVersion": "0.1.0",
+ "language": "python",
+ "source": "def two_sum(nums, target):\n    seen = {}\n    for i, x in enumerate(nums):\n        need = target - x\n        if need in seen:\n            return [seen[need], i]\n        seen[x] = i\n    return []\n\n\nprint(two_sum([2, 7, 11, 15], 9))\n",
+ "steps": [
+  {
+   "event": "line",
+   "heap": {},
+   "i": 0,
+   "line": 1,
+   "note": "Defining function two_sum().",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {},
+   "i": 1,
+   "line": 11,
+   "note": "Printing '[0, 1]'.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "call",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 2,
+   "line": 1,
+   "note": "Calling two_sum(nums=[2, 7, 11, 15], target=9).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      }
+     },
+     "order": [
+      "nums",
+      "target"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 3,
+   "line": 2,
+   "note": "seen will point to an empty dict.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      }
+     },
+     "order": [
+      "nums",
+      "target"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 4,
+   "line": 3,
+   "note": "Next iteration of the loop over enumerate(nums).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 5,
+   "line": 4,
+   "note": "need will be 7.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 0
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 6,
+   "line": 5,
+   "note": "Checking if need in seen → False, so we skip the if block.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 0
+      },
+      "need": {
+       "kind": "int",
+       "value": 7
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 7,
+   "line": 7,
+   "note": "Storing i into seen[x].",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 0
+      },
+      "need": {
+       "kind": "int",
+       "value": 7
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [
+      {
+       "key": {
+        "kind": "int",
+        "value": 2
+       },
+       "value": {
+        "kind": "int",
+        "value": 0
+       }
+      }
+     ],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 8,
+   "line": 3,
+   "note": "Next iteration of the loop over enumerate(nums).",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 0
+      },
+      "need": {
+       "kind": "int",
+       "value": 7
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 2
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [
+      {
+       "key": {
+        "kind": "int",
+        "value": 2
+       },
+       "value": {
+        "kind": "int",
+        "value": 0
+       }
+      }
+     ],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 9,
+   "line": 4,
+   "note": "need will be 2.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 1
+      },
+      "need": {
+       "kind": "int",
+       "value": 7
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 7
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [
+      {
+       "key": {
+        "kind": "int",
+        "value": 2
+       },
+       "value": {
+        "kind": "int",
+        "value": 0
+       }
+      }
+     ],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 10,
+   "line": 5,
+   "note": "Checking if need in seen → True, so the if block runs.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 1
+      },
+      "need": {
+       "kind": "int",
+       "value": 2
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 7
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "line",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [
+      {
+       "key": {
+        "kind": "int",
+        "value": 2
+       },
+       "value": {
+        "kind": "int",
+        "value": 0
+       }
+      }
+     ],
+     "id": "o2",
+     "type": "dict"
+    }
+   },
+   "i": 11,
+   "line": 6,
+   "note": "About to return [seen[need], i].",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 1
+      },
+      "need": {
+       "kind": "int",
+       "value": 2
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 7
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ]
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {
+    "o1": {
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 7
+      },
+      {
+       "kind": "int",
+       "value": 11
+      },
+      {
+       "kind": "int",
+       "value": 15
+      }
+     ],
+     "type": "list"
+    },
+    "o2": {
+     "entries": [
+      {
+       "key": {
+        "kind": "int",
+        "value": 2
+       },
+       "value": {
+        "kind": "int",
+        "value": 0
+       }
+      }
+     ],
+     "id": "o2",
+     "type": "dict"
+    },
+    "o3": {
+     "id": "o3",
+     "items": [
+      {
+       "kind": "int",
+       "value": 0
+      },
+      {
+       "kind": "int",
+       "value": 1
+      }
+     ],
+     "type": "list"
+    }
+   },
+   "i": 12,
+   "line": 6,
+   "note": "two_sum() returns [0, 1] back to the program.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": []
+    },
+    {
+     "func": "two_sum",
+     "id": "f2",
+     "locals": {
+      "i": {
+       "kind": "int",
+       "value": 1
+      },
+      "need": {
+       "kind": "int",
+       "value": 2
+      },
+      "nums": {
+       "id": "o1",
+       "kind": "ref"
+      },
+      "seen": {
+       "id": "o2",
+       "kind": "ref"
+      },
+      "target": {
+       "kind": "int",
+       "value": 9
+      },
+      "x": {
+       "kind": "int",
+       "value": 7
+      }
+     },
+     "order": [
+      "nums",
+      "target",
+      "seen",
+      "i",
+      "x",
+      "need"
+     ],
+     "returnValue": {
+      "id": "o3",
+      "kind": "ref"
+     }
+    }
+   ],
+   "stdout": ""
+  },
+  {
+   "event": "return",
+   "heap": {},
+   "i": 13,
+   "line": 11,
+   "note": "Program finished.",
+   "stack": [
+    {
+     "func": "<module>",
+     "id": "f1",
+     "locals": {},
+     "order": [],
+     "returnValue": {
+      "kind": "none"
+     }
+    }
+   ],
+   "stdout": "[0, 1]\n"
+  }
+ ]
+}

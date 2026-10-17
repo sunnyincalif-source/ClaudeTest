@@ -58,6 +58,7 @@ ignore = [
   "S102",  # exec is the product: we run the user's own code, sandboxed in a subprocess
   "S307",  # eval is used only on AST-whitelisted pure expressions (narration)
   "S603",  # subprocess with our own argv
+  "S110",  # best-effort narration probes intentionally swallow failures
 ]
 
 [tool.ruff.lint.per-file-ignores]
