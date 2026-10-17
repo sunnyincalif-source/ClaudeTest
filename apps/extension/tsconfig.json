@@ -2,7 +2,7 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["vite/client", "vitest/globals", "chrome", "@testing-library/jest-dom"]
+    "types": ["vite/client", "vitest/globals", "chrome", "@testing-library/jest-dom", "node"]
   },
   "include": ["src", "vite.config.ts", "manifest.config.ts"]
 }

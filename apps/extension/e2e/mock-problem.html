@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>1. Two Sum - Mock problem page</title>
+  </head>
+  <body>
+    <!-- A stand-in for a LeetCode problem page: same structural hooks the adapter reads
+         (description container, example blocks, Run button, Monaco on window). -->
+    <div data-track-load="description_content">
+      <p>
+        Given an array of integers <code>nums</code> and an integer <code>target</code>, return
+        indices of the two numbers such that they add up to target.
+      </p>
+      <p><strong class="example">Example 1:</strong></p>
+      <pre><strong>Input:</strong> nums = [2,7,11,15], target = 9
+<strong>Output:</strong> [0,1]
+<strong>Explanation:</strong> Because nums[0] + nums[1] == 9, we return [0, 1].</pre>
+      <p><strong class="example">Example 2:</strong></p>
+      <div class="example-block">
+        <p><strong>Input:</strong> <span class="example-io">nums = [3,2,4], target = 6</span></p>
+        <p><strong>Output:</strong> <span class="example-io">[1,2]</span></p>
+      </div>
+    </div>
+    <div id="editor">
+      <button aria-haspopup="dialog">Python3</button>
+      <div class="monaco-editor"><div class="view-lines"></div></div>
+    </div>
+    <div class="toolbar">
+      <button data-e2e-locator="console-run-button">Run</button><button>Submit</button>
+    </div>
+    <script>
+      const CODE =
+        window.__MOCK_CODE__ ||
+        `class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        seen = {}
+        for i, x in enumerate(nums):
+            if target - x in seen:
+                return [seen[target - x], i]
+            seen[x] = i
+`;
+      const model = {
+        getValue: () => CODE,
+        getLanguageId: () => 'python',
+        isDisposed: () => false,
+      };
+      window.monaco = {
+        editor: {
+          getModels: () => [model],
+          getEditors: () => [{ getModel: () => model, hasTextFocus: () => true }],
+        },
+      };
+    </script>
+  </body>
+</html>

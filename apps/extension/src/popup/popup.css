@@ -1,0 +1,40 @@
+body {
+  margin: 0;
+  width: 300px;
+  font:
+    14px/1.45 system-ui,
+    sans-serif;
+  color: #1c2128;
+  background: #fff;
+}
+@media (prefers-color-scheme: dark) {
+  body {
+    color: #e6edf3;
+    background: #0f1216;
+  }
+}
+main {
+  padding: 12px 14px;
+}
+h1 {
+  font-size: 16px;
+  margin: 0 0 6px;
+}
+.ok {
+  color: #15803d;
+}
+.muted {
+  color: #59636e;
+}
+.small {
+  font-size: 12px;
+}
+button {
+  font: inherit;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: 1px solid #d9dde3;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
