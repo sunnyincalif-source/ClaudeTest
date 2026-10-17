@@ -10,8 +10,15 @@ import { Panel } from './Panel';
 const HOST_ID = 'leettrace-root';
 const BUTTON_ID = 'leettrace-trace-button';
 
+const onProblemPage = () => location.pathname.startsWith('/problems/');
+
 function mount() {
-  if (document.getElementById(HOST_ID)) return;
+  const existing = document.getElementById(HOST_ID);
+  if (existing) {
+    existing.style.display = onProblemPage() ? '' : 'none';
+    return;
+  }
+  if (!onProblemPage()) return;
   const host = document.createElement('div');
   host.id = HOST_ID;
   document.documentElement.appendChild(host);
@@ -26,7 +33,7 @@ function mount() {
 }
 
 function injectTraceButton() {
-  if (document.getElementById(BUTTON_ID)) return;
+  if (!onProblemPage() || document.getElementById(BUTTON_ID)) return;
   const run = findRunButton();
   if (!run?.parentElement) return;
   const btn = document.createElement('button');
@@ -54,10 +61,20 @@ function injectTraceButton() {
   run.parentElement.insertBefore(btn, run);
 }
 
-mount();
-injectTraceButton();
-// LeetCode is a single-page app: keep our button present as it re-renders the toolbar.
-new MutationObserver(() => injectTraceButton()).observe(document.body, {
-  childList: true,
-  subtree: true,
-});
+function sync() {
+  mount();
+  injectTraceButton();
+}
+
+sync();
+// LeetCode is a single-page app: re-check on every DOM change (route changes re-render the
+// page) so the panel appears on problem pages and the button survives toolbar re-renders.
+let queued = false;
+new MutationObserver(() => {
+  if (queued) return;
+  queued = true;
+  requestAnimationFrame(() => {
+    queued = false;
+    sync();
+  });
+}).observe(document.body, { childList: true, subtree: true });

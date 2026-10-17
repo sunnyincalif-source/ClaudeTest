@@ -124,7 +124,8 @@ export function findRunButton(doc: Document = document): HTMLElement | null {
   const byLocator = doc.querySelector<HTMLElement>('[data-e2e-locator="console-run-button"]');
   if (byLocator) return byLocator;
   for (const b of doc.querySelectorAll<HTMLElement>('button')) {
-    if (clean(b.innerText || b.textContent || '') === 'Run') return b;
+    const label = clean(b.innerText || b.textContent || b.getAttribute('aria-label') || '');
+    if (label === 'Run' || b.getAttribute('aria-label') === 'Run') return b;
   }
   return null;
 }

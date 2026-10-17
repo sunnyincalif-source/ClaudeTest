@@ -44,6 +44,20 @@ if (process.env.DEBUG) page.on('console', (m) => console.log('[console]', m.type
 if (process.env.DEBUG)
   page.on('requestfailed', (r) => console.log('[reqfail]', r.url(), r.failure()?.errorText));
 
+// 0) Client-side navigation (problem list → problem, no page load) still gets the button.
+await page.goto('https://leetcode.com/problemset/');
+await sleep(1500);
+check(
+  (await page.locator('#leettrace-trace-button').count()) === 0,
+  'no Trace button off problem pages',
+);
+await page.evaluate(() => {
+  history.pushState(null, '', '/problems/two-sum/');
+  document.body.appendChild(document.createElement('div')); // LeetCode re-renders on route change
+});
+await page.locator('#leettrace-trace-button').waitFor({ timeout: 5000 });
+check(true, 'Trace button appears after in-app navigation to a problem');
+
 // 1) Engine OFF → a clear start-the-app prompt, never a silent failure.
 await page.goto(PROBLEM);
 await page.locator('#leettrace-trace-button').waitFor({ timeout: 10000 });

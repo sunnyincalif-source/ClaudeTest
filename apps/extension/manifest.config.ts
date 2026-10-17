@@ -12,11 +12,13 @@ export default defineManifest({
   background: { service_worker: 'src/background/index.ts', type: 'module' },
   content_scripts: [
     {
-      matches: ['https://leetcode.com/problems/*'],
+      // All of leetcode.com: LeetCode navigates client-side (list → problem) without a page
+      // load, so the script must already be present and activate on /problems/ URLs.
+      matches: ['https://leetcode.com/*'],
       js: ['src/content/index.tsx'],
       run_at: 'document_idle',
     },
   ],
   permissions: ['storage', 'scripting'],
-  host_permissions: ['https://leetcode.com/problems/*', 'http://127.0.0.1/*'],
+  host_permissions: ['https://leetcode.com/*', 'http://127.0.0.1/*'],
 });
