@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import stat
 import sys
+from pathlib import Path
 from typing import Any
 
 import pytest
@@ -258,3 +259,57 @@ def test_huge_body_rejected_before_parsing(client: TestClient) -> None:
         "/trace", content=b"x" * 2_000_000, headers={**AUTH, "Content-Type": "application/json"}
     )
     assert r.status_code == 413
+
+
+# ------------------------------------------------------------------ automatic pairing (§6)
+
+
+def test_bootstrap_only_for_the_engines_own_page(client: TestClient) -> None:
+    own = {"Sec-Fetch-Site": "same-origin"}
+    ok = client.get("/pair/bootstrap", headers=own)
+    assert ok.status_code == 200
+    assert ok.json() == {"token": TOKEN, "port": PORT, "version": ok.json()["version"]}
+    assert ok.headers["cache-control"] == "no-store"
+    # Same-origin fetch that also names our own origin: fine.
+    with_origin = {**own, "Origin": f"http://127.0.0.1:{PORT}"}
+    assert client.get("/pair/bootstrap", headers=with_origin).status_code == 200
+    # Everyone else is refused — including LeetCode's own page scripts.
+    for headers in (
+        {},  # no fetch metadata (not a browser page we trust)
+        {"Sec-Fetch-Site": "cross-site", "Origin": "https://leetcode.com"},
+        {"Sec-Fetch-Site": "same-site"},
+        {"Sec-Fetch-Site": "none"},  # typed into the address bar / navigation
+        {"Sec-Fetch-Site": "same-origin", "Origin": "https://leetcode.com"},
+    ):
+        r = client.get("/pair/bootstrap", headers=headers)
+        assert r.status_code == 403, headers
+        assert TOKEN not in r.text
+    # A foreign origin never even reaches the route (middleware allowlist).
+    evil = {"Sec-Fetch-Site": "same-origin", "Origin": "https://evil.example"}
+    assert client.get("/pair/bootstrap", headers=evil).status_code == 403
+
+
+def test_bootstrap_rejects_dns_rebinding(client: TestClient) -> None:
+    r = client.get(
+        "/pair/bootstrap",
+        headers={"Sec-Fetch-Site": "same-origin", "Host": "attacker.example"},
+    )
+    assert r.status_code == 421
+
+
+def test_token_persists_across_restarts(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+    from leettrace.server import session as sess
+
+    monkeypatch.setenv("LEETTRACE_HOME", str(tmp_path))
+    first = sess.make_session(47823, "1.1.0")
+    second = sess.make_session(47823, "1.1.0")
+    assert first.token == second.token and len(first.token) >= 40
+    path = sess.token_path()
+    if os.name != "nt":
+        assert path.stat().st_mode & 0o777 == 0o600
+    rotated = sess.rotate_token()
+    assert rotated != first.token
+    assert sess.make_session(47823, "1.1.0").token == rotated
+    # A damaged token file is replaced, not trusted.
+    path.write_text("short", encoding="utf-8")
+    assert len(sess.make_session(47823, "1.1.0").token) >= 40

@@ -1,14 +1,23 @@
 // Client for the local LeetTrace engine, used from the content script so requests carry
 // `Origin: https://leetcode.com` — the one browser origin (besides the engine's own UI) on
-// the engine's allowlist. The session token comes from a one-time pairing confirmed with
-// a code shown in the user's terminal (SPEC §8).
+// the engine's allowlist. The session token is delivered automatically by the engine's own
+// page (SPEC-PRODUCT §6) and kept across restarts; a manual one-time code is the fallback.
 import { isCompatibleEngine, parseTrace, SCHEMA_VERSION, type Trace } from '@leettrace/schema';
-import { clearPairing, getPairing, setPairing, type Pairing } from '../shared/storage';
+import {
+  clearPairing,
+  getPairing,
+  setPairing,
+  waitForPairing,
+  type Pairing,
+} from '../shared/storage';
 
 export const DEFAULT_PORT = 47823;
 export const PORT_SCAN = 10;
 
 export type DaemonStatus =
+  /** Chrome hasn't been asked yet whether leetcode.com may reach this computer: wait for a
+   * click (Trace / Connect) rather than popping the permission prompt on page load. */
+  | { kind: 'idle' }
   | { kind: 'offline'; localNetworkBlocked?: boolean }
   | { kind: 'unpaired'; port: number }
   | { kind: 'ready'; pairing: Pairing; version: string }
@@ -28,10 +37,12 @@ type Fetch = typeof fetch;
 /**
  * Chrome's Local Network Access asks the user before leetcode.com may reach 127.0.0.1.
  * 'prompt' means the next request will show that permission bubble.
+ *
+ * Chrome split the permission: 'loopback-network' (apps on *this* device — the setting is
+ * called "Apps on device") and 'local-network' (other devices on the LAN, irrelevant here).
+ * Older versions had one 'local-network-access'. Only the loopback ones matter for us.
  */
-// Chrome renamed this permission over time ('local-network-access' → 'loopback-network' /
-// 'local-network'); ask for every name and use the first one the browser knows.
-const LNA_PERMISSION_NAMES = ['loopback-network', 'local-network-access', 'local-network'];
+const LNA_PERMISSION_NAMES = ['loopback-network', 'local-network-access'];
 
 export async function localNetworkPermission(): Promise<PermissionState | 'unsupported'> {
   for (const name of LNA_PERMISSION_NAMES) {
@@ -69,13 +80,22 @@ async function probe(
   }
 }
 
-/** Find the engine and whether our stored pairing still works. */
-export async function checkDaemon(f: Fetch = fetch): Promise<DaemonStatus> {
+/**
+ * Find the engine and whether our stored pairing still works.
+ * `interactive`: the user just clicked (Trace / Connect), so it's fine if this request shows
+ * Chrome's permission prompt. Otherwise an unanswered prompt yields 'idle' (no surprise
+ * prompt on page load).
+ */
+export async function checkDaemon(
+  f: Fetch = fetch,
+  opts: { interactive?: boolean } = {},
+): Promise<DaemonStatus> {
   const pairing = await getPairing();
   const permission = await localNetworkPermission();
-  if (permission === 'denied') return { kind: 'offline', localNetworkBlocked: true };
-  // The first request may show Chrome's "allow access to apps on this device" bubble; give
-  // the user time to answer it. (A stopped engine still fails fast: connection refused.)
+  if (permission === 'prompt' && !opts.interactive) return { kind: 'idle' };
+  // The first request may show Chrome's "Apps on device" prompt; give the user time to
+  // answer it. (A stopped engine still fails fast: connection refused.) A denial is only
+  // reported after actually trying, so a stale or unrelated permission can't block us.
   const firstTimeout = permission === 'granted' ? 3000 : 60_000;
   if (pairing) {
     const res = await probe(pairing.port, pairing.token, f, firstTimeout);
@@ -86,7 +106,7 @@ export async function checkDaemon(f: Fetch = fetch): Promise<DaemonStatus> {
         : { kind: 'outdated', pairing, version };
     }
     if (res?.status === 401) {
-      await clearPairing(); // engine restarted with a new token: pair again
+      await clearPairing(); // token rotated: reconnect (automatically, via the engine's page)
       return { kind: 'unpaired', port: pairing.port };
     }
   }
@@ -127,6 +147,25 @@ async function postJson(url: string, body: unknown, f: Fetch, token?: string): P
   return res;
 }
 
+/**
+ * Automatic (re)connect: the background opens the engine's own page in a background tab,
+ * which hands the token to the extension and closes. Resolves with the new pairing, or null
+ * if it didn't arrive in time (then the panel offers a one-click Connect).
+ */
+export async function autoConnect(
+  port: number,
+  { active = false, timeoutMs = 12_000 }: { active?: boolean; timeoutMs?: number } = {},
+): Promise<Pairing | null> {
+  const previous = (await getPairing())?.token;
+  const arrived = waitForPairing(timeoutMs, previous);
+  try {
+    await chrome.runtime.sendMessage({ type: 'leettrace:connect', port, active });
+  } catch {
+    return null; // extension context gone (e.g. just updated): the user reloads
+  }
+  return arrived;
+}
+
 /** Ask the engine to echo the current pairing code in its terminal (best effort). */
 export async function requestPairing(port: number, f: Fetch = fetch): Promise<void> {
   await postJson(`http://127.0.0.1:${port}/pair/request`, { client: 'LeetTrace extension' }, f);
@@ -140,7 +179,12 @@ export async function confirmPairing(
 ): Promise<Pairing> {
   const res = await postJson(`http://127.0.0.1:${port}/pair/confirm`, { code }, f);
   const body = (await res.json()) as { token: string; port: number; version: string };
-  const pairing = { port: body.port, token: body.token, version: body.version };
+  const pairing: Pairing = {
+    port: body.port,
+    token: body.token,
+    version: body.version,
+    via: 'code',
+  };
   await setPairing(pairing);
   return pairing;
 }

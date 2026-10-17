@@ -103,12 +103,7 @@ describe('design tokens', () => {
 
 // "No surface may hardcode a hex outside this system" (SPEC-PRODUCT §2).
 // Surfaces join this list as they move onto the system (all of them by Phase 19).
-const SURFACES = [
-  'packages/viz/src',
-  'packages/viz/harness',
-  'apps/extension/src/content',
-  'apps/extension/src/shared',
-];
+const SURFACES = ['packages/viz/src', 'packages/viz/harness', 'apps/extension/src', 'apps/web/src'];
 const STYLE_FILES = /\.(css|tsx?)$/;
 
 function walk(dir: string): string[] {

@@ -9,6 +9,7 @@ the welcome page with the "Add the extension" step front and centre. No terminal
 from __future__ import annotations
 
 import contextlib
+import signal
 import threading
 import webbrowser
 from collections.abc import Callable
@@ -75,7 +76,8 @@ class EngineThread:
 
     def stop(self, timeout: float = 10.0) -> None:
         self._stop()
-        self._thread.join(timeout)
+        if timeout and threading.current_thread() is not self._thread:
+            self._thread.join(timeout)
 
     def wait(self) -> None:
         self.stopped.wait()
@@ -100,6 +102,12 @@ def run_app(*, background: bool = False, port: int | None = None) -> None:
 
     engine = EngineThread(port)
     session = engine.start()
+    if threading.current_thread() is threading.main_thread():
+        # Ctrl+C / SIGTERM (CLI use, service managers): stop the engine cleanly so the session
+        # file is removed and the port freed, instead of dying with a daemon thread.
+        for sig in (signal.SIGINT, signal.SIGTERM):
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(sig, lambda *_: engine.stop(timeout=0))
     if not background:
         webbrowser.open(welcome_url(session, first))
 

@@ -157,6 +157,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@leettrace/design':
+        specifier: workspace:^
+        version: link:../../packages/design
       '@leettrace/schema':
         specifier: workspace:^
         version: link:../../packages/schema

@@ -17,6 +17,9 @@ if (m.background?.service_worker) {
 m.browser_specific_settings = {
   gecko: { id: 'leettrace@leettrace.dev', strict_min_version: '128.0' },
 };
+// Chrome-only: the pinned key and externally_connectable (Firefox pairs with the manual code).
+delete m.key;
+delete m.externally_connectable;
 delete m.use_dynamic_url;
 for (const war of m.web_accessible_resources ?? []) delete war.use_dynamic_url;
 writeFileSync(manifestPath, JSON.stringify(m, null, 2));

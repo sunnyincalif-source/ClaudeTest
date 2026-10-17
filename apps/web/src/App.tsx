@@ -1,12 +1,21 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { Trace } from '@leettrace/schema';
 import { TraceViewer } from '@leettrace/viz';
-import { boot, EngineError, getRun, health, traceLeetCode, traceScript, type Case } from './api';
+import {
+  boot,
+  bootstrapToken,
+  EngineError,
+  getRun,
+  health,
+  traceLeetCode,
+  traceScript,
+  type Case,
+} from './api';
 import { SAMPLES, type Sample } from './samples';
-import { Welcome } from './Welcome';
+import { ConnectView, Welcome } from './Welcome';
 import { useWatch, type WatchedRun } from './useWatch';
 
-type View = 'live' | 'practice' | 'welcome';
+type View = 'live' | 'practice' | 'welcome' | 'connect';
 type ThemePref = 'system' | 'light' | 'dark';
 
 function useTheme(): [ThemePref, (t: ThemePref) => void, 'light' | 'dark'] {
@@ -40,9 +49,23 @@ function useTheme(): [ThemePref, (t: ThemePref) => void, 'light' | 'dark'] {
 }
 
 export function App() {
-  const [{ token, runId: bootRun, view: bootView }] = useState(boot);
+  const [{ token: bootToken, runId: bootRun, view: bootView, first }] = useState(boot);
+  const [token, setToken] = useState<string | null>(bootToken);
+  const [booting, setBooting] = useState(!bootToken);
   const [theme, setTheme, resolvedTheme] = useTheme();
-  const [view, setView] = useState<View>(bootView === 'welcome' ? 'welcome' : 'live');
+  const [view, setView] = useState<View>(
+    bootView === 'welcome' || bootView === 'connect' ? bootView : 'live',
+  );
+
+  // Opened without a token in the URL (e.g. by the extension, or a bookmark): this page is
+  // the engine's own, so it may ask the engine for it.
+  useEffect(() => {
+    if (bootToken) return;
+    void bootstrapToken().then((t) => {
+      setToken(t);
+      setBooting(false);
+    });
+  }, [bootToken]);
   const [runs, setRuns] = useState<WatchedRun[]>([]);
   const [current, setCurrent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -77,7 +100,9 @@ export function App() {
       <header className="topbar">
         <div className="brand">
           <Logo />
-          <span>LeetTrace</span>
+          <span className="brand-name">
+            Leet<span>Trace</span>
+          </span>
         </div>
         <nav className="tabs" aria-label="Views">
           <button
@@ -143,10 +168,14 @@ export function App() {
       )}
 
       <main id="main">
-        {!token ? (
+        {booting ? (
+          <p className="muted">Connecting to LeetTrace…</p>
+        ) : !token ? (
           <Onboarding />
+        ) : view === 'connect' ? (
+          <ConnectView token={token} />
         ) : view === 'welcome' ? (
-          <Welcome token={token} onError={setError} onDone={() => setView('live')} />
+          <Welcome token={token} first={first} onError={setError} onDone={() => setView('live')} />
         ) : view === 'live' ? (
           <LiveView
             runs={runs}
@@ -168,13 +197,23 @@ export function App() {
 }
 
 function Logo() {
+  // The LeetTrace mark: focus brackets around a dot, in the accent gradient.
   return (
-    <svg width="22" height="22" viewBox="0 0 24 24" aria-hidden="true">
-      <rect width="24" height="24" rx="6" fill="var(--accent)" />
-      <path d="M6 16 L12 8 L18 16" stroke="white" strokeWidth="2" fill="none" />
-      <circle cx="6" cy="16" r="2.3" fill="white" />
-      <circle cx="12" cy="8" r="2.3" fill="white" />
-      <circle cx="18" cy="16" r="2.3" fill="white" />
+    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id="lt-logo" x1="4" y1="4" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+          <stop style={{ stopColor: 'var(--accent)' }} />
+          <stop offset="1" style={{ stopColor: 'var(--accent-2)' }} />
+        </linearGradient>
+      </defs>
+      <path
+        d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"
+        stroke="url(#lt-logo)"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="12" r="3.2" stroke="url(#lt-logo)" strokeWidth="2" />
     </svg>
   );
 }
@@ -182,27 +221,21 @@ function Logo() {
 function Onboarding() {
   return (
     <section className="card onboarding" aria-labelledby="ob-title">
-      <h1 id="ob-title">Open LeetTrace from your terminal</h1>
+      <h1 id="ob-title">Open LeetTrace from the app</h1>
       <p>
-        This page is served by your local LeetTrace engine. For your security it needs the session
-        key that the engine prints, so open it via the CLI:
+        This page is served by the LeetTrace app on your computer, but it couldn’t connect to it.
+        Open it from the app instead:
       </p>
       <ol>
         <li>
-          Install the engine: <code>pipx install leettrace</code>
+          Click the LeetTrace icon in the tray (Windows, Linux) or menu bar (Mac) →{' '}
+          <strong>Open LeetTrace</strong>.
         </li>
+        <li>Not running? Open LeetTrace from the Start menu, Applications, or your launcher.</li>
         <li>
-          Start it: <code>leettrace start</code> — it opens this page already connected.
+          From a terminal: <code>leettrace open</code>.
         </li>
-        <li>
-          Trace a file: <code>leettrace run solution.py</code>, or live-reload while you edit:{' '}
-          <code>leettrace watch solution.py</code>
-        </li>
-        <li>On leetcode.com, the LeetTrace extension adds a Trace button next to Run.</li>
       </ol>
-      <p className="muted">
-        Already running? <code>leettrace open</code> prints a fresh link.
-      </p>
     </section>
   );
 }

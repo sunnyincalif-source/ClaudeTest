@@ -15,6 +15,7 @@
     "a11y": "node e2e/audit.e2e.mjs"
   },
   "dependencies": {
+    "@leettrace/design": "workspace:^",
     "@leettrace/schema": "workspace:^",
     "@leettrace/viz": "workspace:^",
     "react": "18.3.1",

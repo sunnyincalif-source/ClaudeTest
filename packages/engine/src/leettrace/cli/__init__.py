@@ -88,8 +88,10 @@ def start(
         console.print(f"[bold green]●[/] LeetTrace engine {__version__} running")
         console.print(f"  Listening on {session.base_url} [dim](loopback only)[/]")
         console.print(f"  Welcome:     {session.welcome_url()}")
-        console.print(f"  Pairing code for the extension: [bold reverse] {code[:3]}-{code[3:]} [/]")
-        console.print("  Extension:   open a LeetCode problem and click [bold]Trace[/]")
+        console.print(
+            "  Extension:   connects automatically — open a LeetCode problem and click "
+            "[bold]Trace[/]"
+        )
         cap = memory_cap_status()
         if cap["memory"] != "enforced":
             console.print(f"[yellow]  Memory cap: {cap['memory']} — {cap['mechanism']}[/]")
@@ -106,8 +108,9 @@ def start(
             print(f"pairing request from {client}: code {pretty}", flush=True)
             return
         console.print(
-            f"\n[bold yellow]Pairing[/] ({escape(client)}): enter this code in the "
-            f"extension — [bold reverse] {pretty} [/] (also shown on the welcome page)\n"
+            f"\n[bold yellow]Manual pairing[/] ({escape(client)}): code "
+            f"[bold reverse] {pretty} [/] (usually not needed: the extension connects "
+            "automatically)\n"
         )
 
     try:
@@ -125,9 +128,9 @@ def _welcome_once() -> None:
         return
     console.print(
         "\n[bold]Welcome to LeetTrace![/] Three ways to use it:\n"
-        "  1. [bold]Browser[/]: install the extension, open a LeetCode problem, click "
+        "  1. [bold]Browser[/]: add the extension, open a LeetCode problem, click "
         "[bold]Trace[/] beside Run.\n"
-        "     The first time, the panel asks for a pairing code — it appears right here.\n"
+        "     It connects to this engine automatically — no code to type.\n"
         "  2. [bold]Terminal[/]: [cyan]leettrace run solution.py[/] · "
         "[cyan]leettrace watch solution.py[/] (re-traces on save)\n"
         '     LeetCode-style: [cyan]leettrace leetcode sol.py -c "nums = [2,7], target = 9"[/]\n'
@@ -211,7 +214,9 @@ def status() -> None:
     """Show whether the engine is running."""
     session = find_daemon()
     if session is None:
-        console.print("[red]●[/] engine not running — start it with [bold]leettrace start[/]")
+        console.print(
+            "[red]●[/] engine not running — open the LeetTrace app (or run [bold]leettrace[/])"
+        )
         raise typer.Exit(1)
     health = get(session, "/health").json()
     console.print(
@@ -229,8 +234,30 @@ def open_ui() -> None:
 
 
 @app.command()
+def token(
+    rotate: Annotated[
+        bool, typer.Option("--rotate", help="Replace the engine's session token.")
+    ] = False,
+) -> None:
+    """Manage the engine's session token (kept across restarts in ~/.leettrace/token)."""
+    from leettrace.server.session import rotate_token, token_path
+
+    if not rotate:
+        console.print(f"Token file: {token_path()} [dim](user-only; never shown)[/]")
+        console.print("Use [bold]leettrace token --rotate[/] to replace it.")
+        return
+    rotate_token()
+    console.print("[green]●[/] New token written.")
+    if find_daemon() is not None:
+        console.print(
+            "  Restart LeetTrace to use it (Quit from the tray icon, then open it again). "
+            "The extension reconnects by itself."
+        )
+
+
+@app.command()
 def pair() -> None:
-    """Show the one-time code that pairs the browser extension with this engine."""
+    """Show a one-time manual pairing code (only needed if automatic connection fails)."""
     session = _daemon()
     info = get(session, "/pair/code").json()
     code = info["code"]
@@ -238,7 +265,9 @@ def pair() -> None:
         f"Pairing code: [bold reverse] {code[:3]}-{code[3:]} [/] "
         f"[dim](valid {info['expiresIn'] // 60} min, one use)[/]"
     )
-    console.print("Open a LeetCode problem, click [bold]Trace[/], and paste it into the panel.")
+    console.print(
+        "In the LeetTrace panel on LeetCode, open [bold]Other ways to connect[/] and enter it."
+    )
 
 
 def launch() -> None:

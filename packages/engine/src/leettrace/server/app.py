@@ -6,7 +6,9 @@ Endpoints (all but the static UI shell and the pairing handshake need the bearer
   POST /leetcode/trace    {code, cases:[{input, expected?}], ...} → {traces: Trace[]}
   GET  /runs/{id}         a previously published Trace
   WS   /watch?token=…     pushes {type:"trace", runId, label, trace} on every publish
-  GET  /pair/code         (auth) the current one-time pairing code (welcome page, CLI)
+  GET  /pair/bootstrap    same-origin only: the engine's own page reads the token to hand it
+                          to the extension (automatic pairing, SPEC-PRODUCT §6)
+  GET  /pair/code         (auth) the current one-time pairing code (manual fallback)
   POST /pair/request      extension says hello → the current code is echoed in the terminal
   POST /pair/confirm      extension submits the code → receives the token
   GET  /downloads/…       the bundled extension zip (public, no data)
@@ -310,6 +312,24 @@ def create_app(
     def token_ok(request: Request) -> bool:
         # /pair/* is under a public prefix, so authenticated pair routes check explicitly.
         return gate.token_ok(gate.bearer(request.headers.get("authorization")))
+
+    @app.get("/pair/bootstrap")
+    async def pair_bootstrap(request: Request) -> Response:
+        # Automatic pairing: the engine's own page (http://127.0.0.1:<port>) fetches the token
+        # and hands it to the extension via chrome.runtime.sendMessage (externally_connectable).
+        # Only a same-origin request from that page may read it: browsers set Sec-Fetch-Site
+        # and Origin themselves, so no other website (leetcode.com included) can. The Host
+        # check in the middleware already defeats DNS rebinding.
+        origin = request.headers.get("origin")
+        same_origin = request.headers.get("sec-fetch-site") == "same-origin"
+        if not same_origin or (origin is not None and origin not in gate.local_origins):
+            return JSONResponse(
+                {"error": "only LeetTrace's own page may read this"}, status_code=403
+            )
+        return JSONResponse(
+            {"token": gate.token, "port": gate.port, "version": __version__},
+            headers={"Cache-Control": "no-store"},
+        )
 
     @app.get("/pair/code")
     async def pair_code(request: Request) -> Response:

@@ -80,7 +80,7 @@ jobs:
         shell: bash
         run: |
           cd packages/engine
-          ART=$(ls dist-bin/LeetTrace-Setup-*.exe dist-bin/LeetTrace-*.dmg dist-bin/LeetTrace-*.AppImage 2>/dev/null | head -1)
+          ART=$(find dist-bin -maxdepth 1 \( -name 'LeetTrace-Setup-*.exe' -o -name 'LeetTrace-*.dmg' -o -name 'LeetTrace-*.AppImage' \) | head -1)
           CHECK=linux; case "${{ runner.os }}" in Windows) CHECK=windows ;; macOS) CHECK=macos ;; esac
           PY=python3; command -v python3 >/dev/null || PY=python
           $PY ../../scripts/annotate.py "install check ${{ matrix.os }}" $PY scripts/install_check.py $CHECK "$ART"

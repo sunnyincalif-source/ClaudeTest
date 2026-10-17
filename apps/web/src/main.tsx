@@ -1,5 +1,7 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
+import '@leettrace/design/fonts.css';
+import '@leettrace/design/components.css';
 import '@leettrace/viz/viz.css';
 import './app.css';
 import { App } from './App';

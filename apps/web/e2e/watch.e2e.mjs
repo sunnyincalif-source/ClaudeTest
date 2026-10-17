@@ -1,5 +1,5 @@
 // End-to-end: real engine + real browser. Verifies Phase 4's gate — saving a watched file
-// updates the open visualization within ~1s — plus run → UI and the no-token onboarding.
+// updates the open visualization within ~1s — plus run → UI and the token bootstrap.
 //   node e2e/watch.e2e.mjs   (expects `uv` and the built web UI in the engine)
 import { chromium } from '@playwright/test';
 import { spawn, execFileSync } from 'node:child_process';
@@ -46,12 +46,10 @@ const errors = [];
 page.on('pageerror', (e) => errors.push(String(e)));
 page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
 
-// 1) Without a token: onboarding, no data.
+// 1) Without a token in the URL: the engine's own page bootstraps it (same-origin only).
 await page.goto(`http://127.0.0.1:${port}/`);
-check(
-  await page.getByText('Open LeetTrace from your terminal').isVisible(),
-  'no token → onboarding',
-);
+await page.getByText('Engine connected').waitFor({ timeout: 5000 });
+check(true, 'no token in the URL → the engine page bootstraps it and connects');
 
 // 2) With the token: connected and waiting; token stripped from the address bar.
 await page.goto('about:blank');

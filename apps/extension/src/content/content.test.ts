@@ -2,7 +2,13 @@ import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { SCHEMA_VERSION } from '@leettrace/schema';
-import { checkDaemon, confirmPairing, localNetworkPermission, traceCases } from './daemon';
+import {
+  autoConnect,
+  checkDaemon,
+  confirmPairing,
+  localNetworkPermission,
+  traceCases,
+} from './daemon';
 import {
   findRunButton,
   isPythonLabel,
@@ -73,14 +79,30 @@ describe('LeetCode page adapter', () => {
 // ------------------------------------------------------------------ daemon client
 
 const store: Record<string, unknown> = {};
+type Listener = (changes: Record<string, { newValue?: unknown }>, area: string) => void;
+let listeners: Listener[] = [];
+const sendMessage = vi.fn();
 beforeEach(() => {
   for (const k of Object.keys(store)) delete store[k];
+  listeners = [];
+  sendMessage.mockReset();
   vi.stubGlobal('chrome', {
+    runtime: { sendMessage },
     storage: {
       local: {
         get: async (k: string) => ({ [k]: store[k] }),
-        set: async (o: Record<string, unknown>) => Object.assign(store, o),
+        set: async (o: Record<string, unknown>) => {
+          Object.assign(store, o);
+          const changes = Object.fromEntries(
+            Object.entries(o).map(([k, v]) => [k, { newValue: v }]),
+          );
+          for (const l of [...listeners]) l(changes, 'local');
+        },
         remove: async (k: string) => void delete store[k],
+      },
+      onChanged: {
+        addListener: (l: Listener) => listeners.push(l),
+        removeListener: (l: Listener) => (listeners = listeners.filter((x) => x !== l)),
       },
     },
   });
@@ -116,7 +138,28 @@ describe('daemon client', () => {
     expect((await checkDaemon(f as unknown as typeof fetch)).kind).toBe('offline');
   });
 
-  it('pairs, then uses the token; a restarted engine (401) forces re-pairing', async () => {
+  it('auto-connect: the engine page hands over the token via the background', async () => {
+    // The background opens the engine page; the page messages the extension, which stores it.
+    sendMessage.mockImplementation(async (msg: { type: string; port: number }) => {
+      expect(msg).toEqual({ type: 'leettrace:connect', port: 47823, active: false });
+      setTimeout(() => {
+        void chrome.storage.local.set({
+          'leettrace.pairing': { port: 47823, token: 'auto-tok', version: '1.1.0', via: 'auto' },
+        });
+      }, 10);
+      return { ok: true };
+    });
+    const paired = await autoConnect(47823);
+    expect(paired).toMatchObject({ token: 'auto-tok', via: 'auto' });
+  });
+
+  it('auto-connect gives up (→ one-click Connect) if no token arrives', async () => {
+    sendMessage.mockResolvedValue({ ok: true });
+    expect(await autoConnect(47823, { timeoutMs: 50 })).toBeNull();
+    expect(listeners).toEqual([]); // no leaked storage listener
+  });
+
+  it('pairs, then uses the token; a rotated token (401) forces a reconnect', async () => {
     const pairFetch = vi.fn(async () =>
       res(200, { token: 't0k', port: 47823, version: SCHEMA_VERSION }),
     );
@@ -174,13 +217,37 @@ describe('Chrome local network access', () => {
     expect(await localNetworkPermission()).toBe('unsupported');
   });
 
-  it('reports a denial instead of "engine off"', async () => {
+  it('reports a denial only when the engine is actually unreachable', async () => {
     stubPermissions({ 'loopback-network': 'denied' });
-    const f = vi.fn();
-    expect(await checkDaemon(f as unknown as typeof fetch)).toEqual({
+    const refused = vi.fn(async () => {
+      throw new TypeError('blocked');
+    });
+    expect(await checkDaemon(refused as unknown as typeof fetch)).toEqual({
       kind: 'offline',
       localNetworkBlocked: true,
     });
+    // A stale/odd "denied" never blocks a connection that works.
+    store['leettrace.pairing'] = { port: 47823, token: 't', version: SCHEMA_VERSION };
+    const ok = vi.fn(async () => res(200, { version: SCHEMA_VERSION }));
+    expect((await checkDaemon(ok as unknown as typeof fetch)).kind).toBe('ready');
+  });
+
+  it('ignores the LAN permission (local-network): only "Apps on device" matters', async () => {
+    stubPermissions({ 'local-network': 'denied' });
+    expect(await localNetworkPermission()).toBe('unsupported');
+    const refused = vi.fn(async () => {
+      throw new TypeError('refused');
+    });
+    expect(await checkDaemon(refused as unknown as typeof fetch)).toEqual({
+      kind: 'offline',
+      localNetworkBlocked: false,
+    });
+  });
+
+  it("doesn't pop Chrome's prompt on page load: waits for a click", async () => {
+    stubPermissions({ 'loopback-network': 'prompt' });
+    const f = vi.fn();
+    expect(await checkDaemon(f as unknown as typeof fetch)).toEqual({ kind: 'idle' });
     expect(f).not.toHaveBeenCalled();
   });
 
@@ -196,7 +263,7 @@ describe('Chrome local network access', () => {
           setTimeout(() => resolve(res(401)), 20_000); // the user clicks Allow after 20s
         }),
     );
-    const pending = checkDaemon(f as unknown as typeof fetch);
+    const pending = checkDaemon(f as unknown as typeof fetch, { interactive: true });
     await vi.advanceTimersByTimeAsync(21_000);
     expect(await pending).toEqual({ kind: 'unpaired', port: 47823 });
     const init = f.mock.calls[0]![1] as RequestInit & { targetAddressSpace?: string };

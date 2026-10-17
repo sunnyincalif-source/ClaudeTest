@@ -187,3 +187,5 @@ export function parseTrace(x: Json): Trace {
   if (!isTrace(x)) throw new Error('Payload does not conform to the LeetTrace Trace Schema');
   return x;
 }
+
+export * from './pairing.js';

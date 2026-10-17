@@ -1,5 +1,7 @@
 // Client for the local engine. Same-origin (the engine serves this UI); the session token
-// arrives in the URL fragment (#t=…), which browsers never send to any server.
+// arrives in the URL fragment (#t=…), which browsers never send to any server — or, when the
+// page is opened without one (e.g. by the extension to connect), from /pair/bootstrap, which
+// the engine only answers for its own same-origin page.
 import { parseTrace, type Trace } from '@leettrace/schema';
 
 const TOKEN_KEY = 'leettrace.token';
@@ -8,11 +10,37 @@ export interface Boot {
   token: string | null;
   runId: string | null;
   view: string | null;
+  /** First launch after install: lead with "Add the extension". */
+  first?: boolean;
 }
 
 export function parseHash(hash: string): Boot {
   const params = new URLSearchParams(hash.replace(/^#/, ''));
-  return { token: params.get('t'), runId: params.get('run'), view: params.get('view') };
+  return {
+    token: params.get('t'),
+    runId: params.get('run'),
+    view: params.get('view'),
+    first: params.get('first') === '1' || params.get('extension') === '1',
+  };
+}
+
+/** Ask the engine for the token (only works for this, its own, page). */
+export async function bootstrapToken(): Promise<string | null> {
+  try {
+    const res = await fetch('/pair/bootstrap', { cache: 'no-store' });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { token?: string };
+    if (body.token) {
+      try {
+        sessionStorage.setItem(TOKEN_KEY, body.token);
+      } catch {
+        // storage blocked: fine for this page load
+      }
+    }
+    return body.token ?? null;
+  } catch {
+    return null;
+  }
 }
 
 /** Read the token from the fragment (or this tab's session), then strip it from the URL. */
@@ -28,7 +56,7 @@ export function boot(): Boot {
   if (fromHash.token || fromHash.runId || fromHash.view) {
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
-  return { token, runId: fromHash.runId, view: fromHash.view };
+  return { token, runId: fromHash.runId, view: fromHash.view, first: fromHash.first };
 }
 
 export class EngineError extends Error {
@@ -53,15 +81,12 @@ async function request(token: string, path: string, init?: RequestInit): Promise
     });
   } catch {
     throw new EngineError(
-      'Cannot reach the LeetTrace engine. Is `leettrace start` still running?',
+      'Cannot reach LeetTrace. Is the app still running? (Look for its icon in the tray / menu bar.)',
       0,
     );
   }
   if (res.status === 401) {
-    throw new EngineError(
-      'This page’s session expired (the engine restarted). Run `leettrace open` to reconnect.',
-      401,
-    );
+    throw new EngineError('This page’s session expired. Reload the page to reconnect.', 401);
   }
   if (!res.ok) {
     let detail = res.statusText;
