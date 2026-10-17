@@ -223,6 +223,11 @@ def test_recursion_depth_cap() -> None:
     sys.platform == "darwin", reason="macOS does not enforce RLIMIT_AS (best effort)"
 )
 def test_memory_cap() -> None:
+    from leettrace.tracer.runner import memory_cap_status
+
+    trace_script("x = 1\n")  # learn whether the cap attaches on this machine
+    if memory_cap_status()["memory"] != "enforced":
+        pytest.skip(f"memory cap not enforced here: {memory_cap_status()['mechanism']}")
     src = "xs = []\nwhile True:\n    xs.append('x' * 10_000_000)\n"
     trace = trace_script(src, limits=RunLimits(max_memory_mb=64))
     assert trace.get("error", {}).get("type") in ("MemoryError", "MemoryLimit")
@@ -288,3 +293,11 @@ def test_gc_like_disappearance() -> None:
     by_line = {s["line"]: s for s in trace["steps"]}
     assert len(by_line[2]["heap"]) == 1  # before `xs = None` runs
     assert len(by_line[3]["heap"]) == 0  # the list is no longer reachable
+
+
+@pytest.mark.skipif(sys.platform != "win32", reason="Windows Job Object")
+def test_windows_job_object_attaches() -> None:
+    from leettrace.tracer.runner import memory_cap_status
+
+    trace_script("x = 1\n")
+    assert memory_cap_status() == {"memory": "enforced", "mechanism": "Windows Job Object"}
