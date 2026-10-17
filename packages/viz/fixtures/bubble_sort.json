@@ -1,65 +1,35 @@
 {
- "engineVersion": "0.1.0",
  "language": "python",
  "source": "nums = [5, 1, 4, 2, 8]\nn = len(nums)\nfor i in range(n):\n    for j in range(n - i - 1):\n        if nums[j] > nums[j + 1]:\n            nums[j], nums[j + 1] = nums[j + 1], nums[j]\nprint(nums)\n",
  "steps": [
   {
-   "event": "line",
-   "heap": {},
    "i": 0,
    "line": 1,
-   "note": "nums will point to [5, 1, 4, 2, 8].",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {},
      "order": []
     }
    ],
-   "stdout": ""
+   "heap": {},
+   "stdout": "",
+   "note": "nums will point to [5, 1, 4, 2, 8]."
   },
   {
-   "event": "line",
-   "heap": {
-    "o1": {
-     "id": "o1",
-     "items": [
-      {
-       "kind": "int",
-       "value": 5
-      },
-      {
-       "kind": "int",
-       "value": 1
-      },
-      {
-       "kind": "int",
-       "value": 4
-      },
-      {
-       "kind": "int",
-       "value": 2
-      },
-      {
-       "kind": "int",
-       "value": 8
-      }
-     ],
-     "type": "list"
-    }
-   },
    "i": 1,
    "line": 2,
-   "note": "n will be 5.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
       "nums": {
-       "id": "o1",
-       "kind": "ref"
+       "kind": "ref",
+       "id": "o1"
       }
      },
      "order": [
@@ -67,12 +37,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -95,25 +62,28 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "n will be 5."
+  },
+  {
    "i": 2,
    "line": 3,
-   "note": "Next loop iteration: i will be 0.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
       "n": {
        "kind": "int",
        "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -122,12 +92,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -150,29 +117,32 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: i will be 0."
+  },
+  {
    "i": 3,
    "line": 4,
-   "note": "Next loop iteration: j will be 0.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
-      "i": {
-       "kind": "int",
-       "value": 0
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
       },
       "n": {
        "kind": "int",
        "value": 5
       },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
+      "i": {
+       "kind": "int",
+       "value": 0
       }
      },
      "order": [
@@ -182,12 +152,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -210,18 +177,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 0."
+  },
+  {
    "i": 4,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (5 > 1) → True, so the if block runs.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -229,14 +207,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -247,12 +217,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -275,18 +242,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (5 > 1) → True, so the if block runs."
+  },
+  {
    "i": 5,
    "line": 6,
-   "note": "Swap: nums[j] (5) and nums[j + 1] (1) trade places.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -294,14 +272,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -312,21 +282,18 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
        "kind": "int",
-       "value": 1
+       "value": 5
       },
       {
        "kind": "int",
-       "value": 5
+       "value": 1
       },
       {
        "kind": "int",
@@ -340,18 +307,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Swap: nums[j] (5) and nums[j + 1] (1) trade places."
+  },
+  {
    "i": 6,
    "line": 4,
-   "note": "Next loop iteration: j will be 1.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -359,14 +337,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -377,12 +347,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -405,18 +372,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 1."
+  },
+  {
    "i": 7,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (5 > 4) → True, so the if block runs.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -424,14 +402,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -442,12 +412,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -470,18 +437,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (5 > 4) → True, so the if block runs."
+  },
+  {
    "i": 8,
    "line": 6,
-   "note": "Swap: nums[j] (5) and nums[j + 1] (4) trade places.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -489,14 +467,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -507,12 +477,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -521,11 +488,11 @@
       },
       {
        "kind": "int",
-       "value": 4
+       "value": 5
       },
       {
        "kind": "int",
-       "value": 5
+       "value": 4
       },
       {
        "kind": "int",
@@ -535,18 +502,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Swap: nums[j] (5) and nums[j + 1] (4) trade places."
+  },
+  {
    "i": 9,
    "line": 4,
-   "note": "Next loop iteration: j will be 2.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -554,14 +532,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -572,12 +542,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -600,18 +567,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 2."
+  },
+  {
    "i": 10,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (5 > 2) → True, so the if block runs.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -619,14 +597,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -637,12 +607,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -665,18 +632,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (5 > 2) → True, so the if block runs."
+  },
+  {
    "i": 11,
    "line": 6,
-   "note": "Swap: nums[j] (5) and nums[j + 1] (2) trade places.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -684,14 +662,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -702,12 +672,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -720,28 +687,39 @@
       },
       {
        "kind": "int",
-       "value": 2
+       "value": 5
       },
       {
        "kind": "int",
-       "value": 5
+       "value": 2
       },
       {
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Swap: nums[j] (5) and nums[j + 1] (2) trade places."
+  },
+  {
    "i": 12,
    "line": 4,
-   "note": "Next loop iteration: j will be 3.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -749,14 +727,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -767,12 +737,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -795,18 +762,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 3."
+  },
+  {
    "i": 13,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (5 > 8) → False, so we skip the if block.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -814,14 +792,6 @@
       "j": {
        "kind": "int",
        "value": 3
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -832,12 +802,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -860,18 +827,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (5 > 8) → False, so we skip the if block."
+  },
+  {
    "i": 14,
    "line": 4,
-   "note": "The loop over range(n - i - 1) is finished.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -879,14 +857,6 @@
       "j": {
        "kind": "int",
        "value": 3
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -897,12 +867,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -925,18 +892,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "The loop over range(n - i - 1) is finished."
+  },
+  {
    "i": 15,
    "line": 3,
-   "note": "Next loop iteration: i will be 1.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 0
@@ -944,14 +922,6 @@
       "j": {
        "kind": "int",
        "value": 3
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -962,12 +932,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -990,18 +957,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: i will be 1."
+  },
+  {
    "i": 16,
    "line": 4,
-   "note": "Next loop iteration: j will be 0.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1009,14 +987,6 @@
       "j": {
        "kind": "int",
        "value": 3
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1027,12 +997,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1055,18 +1022,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 0."
+  },
+  {
    "i": 17,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (1 > 4) → False, so we skip the if block.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1074,14 +1052,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1092,12 +1062,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1120,18 +1087,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (1 > 4) → False, so we skip the if block."
+  },
+  {
    "i": 18,
    "line": 4,
-   "note": "Next loop iteration: j will be 1.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1139,14 +1117,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1157,12 +1127,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1185,18 +1152,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 1."
+  },
+  {
    "i": 19,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (4 > 2) → True, so the if block runs.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1204,14 +1182,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1222,12 +1192,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1250,18 +1217,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (4 > 2) → True, so the if block runs."
+  },
+  {
    "i": 20,
    "line": 6,
-   "note": "Swap: nums[j] (4) and nums[j + 1] (2) trade places.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1269,14 +1247,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1287,12 +1257,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1301,11 +1268,11 @@
       },
       {
        "kind": "int",
-       "value": 2
+       "value": 4
       },
       {
        "kind": "int",
-       "value": 4
+       "value": 2
       },
       {
        "kind": "int",
@@ -1315,18 +1282,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Swap: nums[j] (4) and nums[j + 1] (2) trade places."
+  },
+  {
    "i": 21,
    "line": 4,
-   "note": "Next loop iteration: j will be 2.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1334,14 +1312,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1352,12 +1322,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1380,18 +1347,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 2."
+  },
+  {
    "i": 22,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (4 > 5) → False, so we skip the if block.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1399,14 +1377,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1417,12 +1387,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1445,18 +1412,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (4 > 5) → False, so we skip the if block."
+  },
+  {
    "i": 23,
    "line": 4,
-   "note": "The loop over range(n - i - 1) is finished.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1464,14 +1442,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1482,12 +1452,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1510,18 +1477,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "The loop over range(n - i - 1) is finished."
+  },
+  {
    "i": 24,
    "line": 3,
-   "note": "Next loop iteration: i will be 2.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 1
@@ -1529,14 +1507,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1547,12 +1517,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1575,18 +1542,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: i will be 2."
+  },
+  {
    "i": 25,
    "line": 4,
-   "note": "Next loop iteration: j will be 0.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 2
@@ -1594,14 +1572,6 @@
       "j": {
        "kind": "int",
        "value": 2
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1612,12 +1582,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1640,18 +1607,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 0."
+  },
+  {
    "i": 26,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (1 > 2) → False, so we skip the if block.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 2
@@ -1659,14 +1637,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1677,12 +1647,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1705,18 +1672,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (1 > 2) → False, so we skip the if block."
+  },
+  {
    "i": 27,
    "line": 4,
-   "note": "Next loop iteration: j will be 1.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 2
@@ -1724,14 +1702,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1742,12 +1712,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1770,18 +1737,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 1."
+  },
+  {
    "i": 28,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (2 > 4) → False, so we skip the if block.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 2
@@ -1789,14 +1767,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1807,12 +1777,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1835,18 +1802,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (2 > 4) → False, so we skip the if block."
+  },
+  {
    "i": 29,
    "line": 4,
-   "note": "The loop over range(n - i - 1) is finished.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 2
@@ -1854,14 +1832,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1872,12 +1842,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1900,18 +1867,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "The loop over range(n - i - 1) is finished."
+  },
+  {
    "i": 30,
    "line": 3,
-   "note": "Next loop iteration: i will be 3.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 2
@@ -1919,14 +1897,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -1937,12 +1907,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -1965,18 +1932,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: i will be 3."
+  },
+  {
    "i": 31,
    "line": 4,
-   "note": "Next loop iteration: j will be 0.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 3
@@ -1984,14 +1962,6 @@
       "j": {
        "kind": "int",
        "value": 1
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2002,12 +1972,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2030,18 +1997,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: j will be 0."
+  },
+  {
    "i": 32,
    "line": 5,
-   "note": "Checking if nums[j] > nums[j + 1] (1 > 2) → False, so we skip the if block.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 3
@@ -2049,14 +2027,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2067,12 +2037,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2095,18 +2062,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Checking if nums[j] > nums[j + 1] (1 > 2) → False, so we skip the if block."
+  },
+  {
    "i": 33,
    "line": 4,
-   "note": "The loop over range(n - i - 1) is finished.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 3
@@ -2114,14 +2092,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2132,12 +2102,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2160,18 +2127,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "The loop over range(n - i - 1) is finished."
+  },
+  {
    "i": 34,
    "line": 3,
-   "note": "Next loop iteration: i will be 4.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 3
@@ -2179,14 +2157,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2197,12 +2167,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2225,18 +2192,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Next loop iteration: i will be 4."
+  },
+  {
    "i": 35,
    "line": 4,
-   "note": "The loop over range(n - i - 1) is finished.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 4
@@ -2244,14 +2222,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2262,12 +2232,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2290,18 +2257,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "The loop over range(n - i - 1) is finished."
+  },
+  {
    "i": 36,
    "line": 3,
-   "note": "The loop over range(n) is finished.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 4
@@ -2309,14 +2287,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2327,12 +2297,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "line",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2355,18 +2322,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "The loop over range(n) is finished."
+  },
+  {
    "i": 37,
    "line": 7,
-   "note": "Printing '[1, 2, 4, 5, 8]'.",
+   "event": "line",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 4
@@ -2374,14 +2352,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2392,12 +2362,9 @@
      ]
     }
    ],
-   "stdout": ""
-  },
-  {
-   "event": "return",
    "heap": {
     "o1": {
+     "type": "list",
      "id": "o1",
      "items": [
       {
@@ -2420,18 +2387,29 @@
        "kind": "int",
        "value": 8
       }
-     ],
-     "type": "list"
+     ]
     }
    },
+   "stdout": "",
+   "note": "Printing '[1, 2, 4, 5, 8]'."
+  },
+  {
    "i": 38,
    "line": 7,
-   "note": "Program finished.",
+   "event": "return",
    "stack": [
     {
-     "func": "<module>",
      "id": "f1",
+     "func": "<module>",
      "locals": {
+      "nums": {
+       "kind": "ref",
+       "id": "o1"
+      },
+      "n": {
+       "kind": "int",
+       "value": 5
+      },
       "i": {
        "kind": "int",
        "value": 4
@@ -2439,14 +2417,6 @@
       "j": {
        "kind": "int",
        "value": 0
-      },
-      "n": {
-       "kind": "int",
-       "value": 5
-      },
-      "nums": {
-       "id": "o1",
-       "kind": "ref"
       }
      },
      "order": [
@@ -2460,7 +2430,37 @@
      }
     }
    ],
-   "stdout": "[1, 2, 4, 5, 8]\n"
+   "heap": {
+    "o1": {
+     "type": "list",
+     "id": "o1",
+     "items": [
+      {
+       "kind": "int",
+       "value": 1
+      },
+      {
+       "kind": "int",
+       "value": 2
+      },
+      {
+       "kind": "int",
+       "value": 4
+      },
+      {
+       "kind": "int",
+       "value": 5
+      },
+      {
+       "kind": "int",
+       "value": 8
+      }
+     ]
+    }
+   },
+   "stdout": "[1, 2, 4, 5, 8]\n",
+   "note": "Program finished."
   }
- ]
+ ],
+ "engineVersion": "0.1.0"
 }

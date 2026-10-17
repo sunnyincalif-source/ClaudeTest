@@ -2,7 +2,8 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "noEmit": true,
-    "types": ["vitest/globals", "@testing-library/jest-dom", "vite/client"]
+    "types": ["vitest/globals", "@testing-library/jest-dom", "vite/client"],
+    "resolveJsonModule": true
   },
-  "include": ["src"]
+  "include": ["src", "harness", "vite.harness.config.ts"]
 }

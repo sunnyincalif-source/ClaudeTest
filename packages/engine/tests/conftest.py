@@ -30,7 +30,7 @@ def snapshot(request: pytest.FixtureRequest):  # type: ignore[no-untyped-def]
 
     def check(name: str, data: Any) -> None:
         path = SNAPSHOTS / f"{name}.json"
-        text = json.dumps(data, indent=1, ensure_ascii=False, sort_keys=True) + "\n"
+        text = json.dumps(data, indent=1, ensure_ascii=False) + "\n"  # keep field order
         if update or not path.exists():
             created = not path.exists()
             SNAPSHOTS.mkdir(exist_ok=True)

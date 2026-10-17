@@ -20,3 +20,4 @@ packages/engine/dist
 # built web UI bundled into the engine wheel at package time
 packages/engine/src/leettrace/web_dist/*
 !packages/engine/src/leettrace/web_dist/.gitkeep
+harness-dist
