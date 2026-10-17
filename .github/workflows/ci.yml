@@ -40,7 +40,7 @@ jobs:
       - name: e2e — friendly launch (welcome page + pairing code)
         run: python3 scripts/annotate.py "e2e launch" pnpm --filter @leettrace/web e2e:launch
       - name: e2e — accessibility audit
-        run: python3 scripts/annotate.py "a11y audit" pnpm --filter @leettrace/web audit
+        run: python3 scripts/annotate.py "a11y audit" pnpm --filter @leettrace/web a11y
       - name: e2e — extension on problem-page fixtures
         run: python3 scripts/annotate.py "e2e extension" pnpm --filter @leettrace/extension e2e
 

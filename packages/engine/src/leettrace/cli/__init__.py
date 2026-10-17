@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import contextlib
 import json
 import sys
 import time
@@ -453,7 +454,14 @@ def leetcode(
 
 
 def _ensure_stdio() -> None:
-    """A double-clicked windowed app (macOS .app) has no console: log to a file instead."""
+    """A double-clicked windowed app (macOS .app) has no console: log to a file instead.
+    Everywhere else, write UTF-8 (Windows consoles and redirected files default to cp1252,
+    which can't encode the status glyphs) and never crash on an unencodable character."""
+    for stream in (sys.stdout, sys.stderr):
+        reconfigure = getattr(stream, "reconfigure", None)
+        if reconfigure is not None:
+            with contextlib.suppress(ValueError, OSError):
+                reconfigure(encoding="utf-8", errors="replace")
     if sys.stdout is not None and sys.stderr is not None:
         return
     import io

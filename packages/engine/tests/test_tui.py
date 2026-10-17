@@ -12,7 +12,7 @@ SNAP = Path(__file__).parent / "snapshots"
 
 
 def test_tui_steps_through_recursion() -> None:
-    trace = json.loads((SNAP / "factorial.json").read_text())
+    trace = json.loads((SNAP / "factorial.json").read_text(encoding="utf-8"))
 
     async def scenario() -> None:
         app = TraceTUI(trace, title="factorial.py")

@@ -18,7 +18,7 @@ import pytest
 from leettrace.tracer.narrate import _after, _fmt
 
 SNAP = Path(__file__).parent / "snapshots"
-TRACES = {p.stem: json.loads(p.read_text()) for p in sorted(SNAP.glob("*.json"))}
+TRACES = {p.stem: json.loads(p.read_text(encoding="utf-8")) for p in sorted(SNAP.glob("*.json"))}
 
 WILL_BE = re.compile(r"^(?P<name>[A-Za-z_]\w*) will be (?P<val>.+)\.$")
 WILL_POINT = re.compile(r"^(?P<name>[A-Za-z_]\w*(?:\.\w+)?) will point to (?P<what>.+)\.$")

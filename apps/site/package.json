@@ -1,0 +1,35 @@
+{
+  "name": "@leettrace/site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "LeetTrace marketing + install site (static; deploys to Vercel).",
+  "scripts": {
+    "dev": "vite",
+    "prebuild": "node scripts/fetch-release.mjs",
+    "build": "tsc -p tsconfig.json --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@fontsource/hanken-grotesk": "5.3.0",
+    "@fontsource/ibm-plex-mono": "5.3.0",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "^4.14.0",
+    "@playwright/test": "1.56.1",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "16",
+    "@types/react": "18",
+    "@types/react-dom": "18",
+    "@vitejs/plugin-react": "4",
+    "jsdom": "26",
+    "vite": "6.4.4",
+    "vitest": "3.2.7"
+  }
+}

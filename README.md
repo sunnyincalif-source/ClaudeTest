@@ -216,7 +216,7 @@ pnpm lint           # ESLint + Prettier + ruff + mypy --strict
 pnpm --filter @leettrace/viz harness       # develop the viz against recorded traces
 leettrace start --dev && pnpm --filter @leettrace/web dev   # UI dev server against the engine
 pnpm --filter @leettrace/web e2e           # real engine + Chromium: watch-mode round trip
-pnpm --filter @leettrace/web audit         # axe-core WCAG 2.1 AA + 380px layout
+pnpm --filter @leettrace/web a11y          # axe-core WCAG 2.1 AA + 380px layout
 pnpm --filter @leettrace/extension e2e     # unpacked extension + engine on a mock problem page
 pnpm fixtures                               # refresh viz fixtures from the golden traces
 ```

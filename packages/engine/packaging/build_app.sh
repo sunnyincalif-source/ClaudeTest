@@ -18,6 +18,11 @@ uv run pyinstaller --noconfirm --clean --windowed --onedir --name LeetTrace \
   --hidden-import watchfiles \
   packaging/entry.py
 # The CLI lives inside the bundle too: LeetTrace.app/Contents/MacOS/LeetTrace <command>
-hdiutil create -volname LeetTrace -srcfolder dist-bin/LeetTrace.app -ov -format UDZO \
+# Classic drag-to-install window: the app next to a shortcut to /Applications.
+STAGE=build/dmg-stage
+rm -rf "$STAGE" && mkdir -p "$STAGE"
+cp -R dist-bin/LeetTrace.app "$STAGE/"
+ln -s /Applications "$STAGE/Applications"
+hdiutil create -volname LeetTrace -srcfolder "$STAGE" -ov -format UDZO \
   "dist-bin/LeetTrace-macos-$ARCH.dmg"
 echo "built: dist-bin/LeetTrace-macos-$ARCH.dmg"

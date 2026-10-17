@@ -75,9 +75,9 @@ def main(cmd: list[str]) -> None:
             time.sleep(0.25)
         if not session_file.exists():
             log.flush()
-            print((Path(home) / "engine.log").read_text())
+            print((Path(home) / "engine.log").read_text(encoding="utf-8"))
             check(False, "engine started and wrote its session file")
-        token = json.loads(session_file.read_text())["token"]
+        token = json.loads(session_file.read_text(encoding="utf-8"))["token"]
         # The session file is written just before the socket is bound: wait until it answers.
         while time.monotonic() < deadline:
             try:
