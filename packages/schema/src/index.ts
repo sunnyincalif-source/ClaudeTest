@@ -68,7 +68,7 @@ export interface Trace {
  * The schema version this client was built against. Clients compare it with
  * `trace.engineVersion`; a mismatch shows an "update" prompt, never a silent misrender.
  */
-export const SCHEMA_VERSION = '0.1.0';
+export const SCHEMA_VERSION = '1.0.0';
 
 /** Compatible when major.minor match (patch releases never change the wire format). */
 export function isCompatibleEngine(engineVersion: string, clientVersion = SCHEMA_VERSION): boolean {

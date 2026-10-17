@@ -1,6 +1,6 @@
 {
   "name": "@leettrace/web",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "private": true,
   "type": "module",
   "description": "Local web UI, served by the LeetTrace engine.",

@@ -1,6 +1,6 @@
 [project]
 name = "leettrace"
-version = "0.1.0"
+version = "1.0.0"
 description = "Local trace engine for LeetCode practice: real CPython tracing, a loopback server, a CLI, and a TUI."
 readme = "README.md"
 requires-python = ">=3.11"

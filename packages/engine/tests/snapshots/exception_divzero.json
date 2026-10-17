@@ -520,5 +520,5 @@
   "message": "division by zero",
   "line": 3
  },
- "engineVersion": "0.1.0"
+ "engineVersion": "1.0.0"
 }
