@@ -1,0 +1,12 @@
+{
+  "name": "@leettrace/engine",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Turborepo shim for the Python engine (managed by uv).",
+  "scripts": {
+    "build": "uv build --wheel -q -o dist",
+    "lint": "uv run ruff check . && uv run ruff format --check . && uv run mypy",
+    "typecheck": "uv run mypy",
+    "test": "uv run pytest"
+  }
+}

@@ -1,0 +1,22 @@
+node_modules
+dist
+dist-firefox
+*.tsbuildinfo
+.turbo
+.vite
+coverage
+test-results
+playwright-report
+.DS_Store
+# Python
+__pycache__/
+*.pyc
+.venv
+.pytest_cache
+.ruff_cache
+.mypy_cache
+packages/engine/build
+packages/engine/dist
+# built web UI bundled into the engine wheel at package time
+packages/engine/src/leettrace/web_dist/*
+!packages/engine/src/leettrace/web_dist/.gitkeep

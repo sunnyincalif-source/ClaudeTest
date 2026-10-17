@@ -1,0 +1,31 @@
+{
+  "name": "@leettrace/web",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Local web UI, served by the LeetTrace engine.",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -p tsconfig.json --noEmit && vite build && node scripts/copy-to-engine.mjs",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint src",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@leettrace/schema": "workspace:^",
+    "@leettrace/viz": "workspace:^",
+    "react": "18.3.1",
+    "react-dom": "18.3.1"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/jest-dom": "^7.0.1",
+    "@testing-library/react": "16",
+    "@types/react": "18",
+    "@types/react-dom": "18",
+    "@vitejs/plugin-react": "4",
+    "jsdom": "26",
+    "vite": "6.4.4",
+    "vitest": "3.2.7"
+  }
+}

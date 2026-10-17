@@ -1,0 +1,12 @@
+node_modules
+dist
+dist-firefox
+.turbo
+pnpm-lock.yaml
+packages/engine
+packages/viz/fixtures
+SPEC.md
+PROMPTS.md
+CLAUDE.md
+ARCHITECTURE.md
+scripts/scaffold.sh
