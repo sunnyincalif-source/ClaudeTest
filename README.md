@@ -16,6 +16,12 @@ example cases.
 | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | <img src="docs/demo/recursive-fib.gif" alt="fib(5): frames push and pop on the call stack" width="420"> | <img src="docs/demo/leetcode-overlay.gif" alt="The LeetTrace side panel tracing Two Sum against the page's examples" width="420"> |
 
+**Get it:** download the app for macOS, Windows or Linux from the
+[LeetTrace site](https://leettrace.vercel.app) or the
+[GitHub Releases](https://github.com/sunnyincalif-source/leettrace/releases/latest). Then add
+the extension and pair; the app's welcome page walks you through it. Launching it yourself:
+[LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md).
+
 > LeetTrace is an independent, third-party tool. It is not affiliated with or endorsed by LeetCode.
 
 ---

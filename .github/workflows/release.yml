@@ -39,6 +39,11 @@ jobs:
           node-version: 20
           cache: pnpm
       - uses: astral-sh/setup-uv@v5
+      - name: Tag must match the version in the code (scripts/set-version.mjs)
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          CODE=$(grep -Po '__version__ = "\K[^"]+' packages/engine/src/leettrace/__init__.py)
+          test "v$CODE" = "${GITHUB_REF_NAME}" || { echo "::error::tag ${GITHUB_REF_NAME} != code version v$CODE — run node scripts/set-version.mjs first"; exit 1; }
       - run: pnpm install --frozen-lockfile
       - run: pnpm exec turbo run build --filter=@leettrace/web --filter=@leettrace/extension
       - uses: actions/upload-artifact@v4

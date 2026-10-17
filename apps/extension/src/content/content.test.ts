@@ -1,6 +1,7 @@
 import { readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { SCHEMA_VERSION } from '@leettrace/schema';
 import { checkDaemon, confirmPairing, localNetworkPermission, traceCases } from './daemon';
 import {
   findRunButton,
@@ -116,9 +117,11 @@ describe('daemon client', () => {
   });
 
   it('pairs, then uses the token; a restarted engine (401) forces re-pairing', async () => {
-    const pairFetch = vi.fn(async () => res(200, { token: 't0k', port: 47823, version: '0.1.0' }));
+    const pairFetch = vi.fn(async () =>
+      res(200, { token: 't0k', port: 47823, version: SCHEMA_VERSION }),
+    );
     await confirmPairing(47823, '123456', pairFetch as unknown as typeof fetch);
-    const ok = vi.fn(async () => res(200, { version: '0.1.0' }));
+    const ok = vi.fn(async () => res(200, { version: SCHEMA_VERSION }));
     expect((await checkDaemon(ok as unknown as typeof fetch)).kind).toBe('ready');
     const call = ok.mock.calls[0] as unknown as [string, RequestInit];
     expect((call[1].headers as Record<string, string>).Authorization).toBe('Bearer t0k');
@@ -131,8 +134,8 @@ describe('daemon client', () => {
   });
 
   it('flags an engine with an incompatible version', async () => {
-    store['leettrace.pairing'] = { port: 47823, token: 't', version: '0.1.0' };
-    const f = vi.fn(async () => res(200, { version: '0.9.0' }));
+    store['leettrace.pairing'] = { port: 47823, token: 't', version: SCHEMA_VERSION };
+    const f = vi.fn(async () => res(200, { version: '99.0.0' }));
     expect((await checkDaemon(f as unknown as typeof fetch)).kind).toBe('outdated');
   });
 

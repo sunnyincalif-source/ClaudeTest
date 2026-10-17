@@ -394,7 +394,9 @@ function Install() {
                 </li>
                 <li>
                   The first time, <strong>right-click the app → Open</strong> (macOS blocks unsigned
-                  apps by default; this is a one-time step), then <strong>Allow</strong>.
+                  apps by default; this is a one-time step), then <strong>Allow</strong>. On macOS
+                  15 (Sequoia) or later, if it still won’t open:{' '}
+                  <strong>System Settings → Privacy &amp; Security → Open Anyway</strong>.
                 </li>
                 <li>
                   Or in Terminal:{' '}
@@ -534,7 +536,8 @@ const FAQ: { q: string; a: React.ReactNode }[] = [
     q: '“macOS can’t verify the developer.”',
     a: (
       <>
-        It’s unsigned for now. Right-click the app → Open (one time), or run{' '}
+        It’s unsigned for now. Right-click the app → Open (one time) — on macOS 15 or later use
+        System Settings → Privacy &amp; Security → Open Anyway — or run{' '}
         <code>xattr -dr com.apple.quarantine /Applications/LeetTrace.app</code>.
       </>
     ),
