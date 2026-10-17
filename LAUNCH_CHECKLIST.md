@@ -1,145 +1,93 @@
-# Launch checklist
+# Launch checklist (v1.1.0)
 
-These are the owner steps, in order. Everything else is already built and checked by CI.
-Steps 1–4 take about 20 minutes, and the optional ones can come later.
+These are the owner steps, in order. Everything else is built and checked by CI.
 
-Throughout, `<you>` is your GitHub username (for example `sunnyincalif-source`).
+The flow your users get: **visit the site → download → run the installer → one-time OS
+warning click-through → add the extension → open LeetCode → it's already there.** No terminal,
+no pairing code, no re-pairing.
 
-## 1. Create the public repo and enable Actions
+Your repo is `sunny925bay-jpg/leettrace`. The site is `https://leettrace.vercel.app` (if Vercel
+gives you a different URL, use that everywhere below).
 
-1. On GitHub, create a new **public**, **empty** repository named `leettrace`. Don't add a
-   README or a license; the code already has both.
-2. Push the code:
+## 1. Bring the v1.1.0 code into your repo
 
-   ```bash
-   git clone -b leettrace https://github.com/sunnyincalif-source/ClaudeTest.git leettrace
-   cd leettrace
-   git remote set-url origin https://github.com/<you>/leettrace.git
-   git push -u origin HEAD:main
-   ```
-
-3. In the repo, go to **Settings → Actions → General**:
-   - Set **Allow all actions**.
-   - Under **Workflow permissions**, choose **Read and write**. The release job needs it to
-     create the GitHub Release.
-4. Open the **Actions** tab. A **CI** run starts on its own and should go green: Linux checks
-   plus engine tests, binary builds and smoke tests on Linux, macOS and Windows.
-
-If you named the repo anything other than `<you>/leettrace`, set
-`VITE_GITHUB_REPO=<you>/<name>` in `apps/site/.env` and commit it.
-
-## 2. Deploy the site on Vercel
-
-1. Go to [vercel.com/new](https://vercel.com/new), import `<you>/leettrace`, and set:
-   - **Root Directory:** `apps/site`
-   - **Framework preset:** Vite (auto-detected). `apps/site/vercel.json` already sets the
-     install and build commands and the security headers.
-   - **Include source files outside of the Root Directory:** leave on (the default).
-     The site's install command needs the monorepo's lockfile.
-2. Click **Deploy**, then note the URL, for example `https://leettrace.vercel.app` or
-   `https://leettrace-<you>.vercel.app`.
-3. If the URL is **not** `https://leettrace.vercel.app`, point the app and extension at it.
-   They link to the site's install guide:
-
-   ```bash
-   sed -i.bak 's#^VITE_LEETTRACE_SITE_URL=.*#VITE_LEETTRACE_SITE_URL=https://YOUR-URL#' apps/extension/.env apps/web/.env
-   git commit -am "chore: point install links at the deployed site" && git push
-   ```
-
-   (On Windows, edit the two `.env` files by hand.)
-
-Optional: add a custom domain in **Vercel → Project → Domains**, then repeat step 3 with it.
-
-## 3. Cut the release
+The work happened on the `leettrace` branch of `sunnyincalif-source/ClaudeTest`. In your local
+clone (VS Code terminal, in the `leettrace` folder):
 
 ```bash
-node scripts/set-version.mjs 1.0.0     # engine, extension, web UI, schema, golden traces
-(cd packages/engine && uv lock)
-pnpm build && pnpm test                # everything should be green
-git commit -am "release: v1.0.0"
-git tag v1.0.0
-git push && git push --tags
+git pull https://github.com/sunnyincalif-source/ClaudeTest.git leettrace
+git push
 ```
 
-The **Release** workflow then:
+GitHub runs **CI** (Actions tab). It should go green: lint, build, tests, browser end-to-end
+tests, and on Linux, macOS and Windows it builds the installer, installs it, starts it the way
+the OS does at login, and smoke-tests it.
 
-- checks that the tag matches the version in the code;
-- builds `LeetTrace-macos-arm64.dmg`, `LeetTrace-macos-x64.dmg`, `LeetTrace-windows-x64.exe`,
-  `leettrace-linux-x64`, `leettrace-chrome-extension.zip` and
-  `leettrace-firefox-extension.zip`;
-- smoke-tests every binary on its own OS;
-- writes `SHA256SUMS`;
-- publishes the **GitHub Release** with generated notes.
+## 2. Make sure the site is live on Vercel
 
-It takes roughly 15 minutes.
+1. If you haven't yet: [vercel.com/new](https://vercel.com/new) → import
+   `sunny925bay-jpg/leettrace` → **Root Directory** `apps/site` → Deploy. (`vercel.json` sets
+   the install/build commands; leave "Include source files outside of the Root Directory" on.)
+2. Every push to `main` redeploys. Open the site: the new dark design should be there.
+3. If the URL isn't `https://leettrace.vercel.app`, set `VITE_LEETTRACE_SITE_URL` in the
+   repo-root `.env` (one file for the site, the app and the extension), commit and push.
 
-Check it: the site's Download button should now show `v1.0.0 · <size>`, and **Other
-platforms & checksums** should list every file.
+## 3. Release v1.1.0
 
-**Dry run, at any time:** push a branch named `release-dry-run/<anything>`. It builds and
-tests every asset and attaches them to the workflow run, but never publishes.
+The code is already at version 1.1.0, so just tag it:
 
-## 4. Run the dress rehearsal
+```bash
+git tag v1.1.0
+git push --tags
+```
 
-Follow `docs/DRESS_REHEARSAL.md` on a clean machine and report anything that breaks.
+The **Release** workflow (about 20 minutes) builds, installs and checks every installer, then
+publishes the GitHub Release with:
 
----
+- `LeetTrace-Setup-windows-x64.exe`, `LeetTrace-macos-arm64.dmg`, `LeetTrace-macos-x64.dmg`,
+  `LeetTrace-linux-x86_64.AppImage`, `leettrace-linux-x64` (CLI);
+- `leettrace-chrome-extension.zip` (store upload), `leettrace-firefox-extension.zip`;
+- `SHA256SUMS`.
 
-## Optional: public-polished path
+Check: the site's **Download** button shows `v1.1.0 · <size>` for your OS.
 
-### Chrome Web Store
+## 4. Chrome Web Store (one-time $5)
 
-1. Create a Chrome Web Store developer account (one-time $5).
-2. Upload `leettrace-chrome-extension.zip` from the release.
-3. Paste the listing copy from `docs/store-listing.md` and submit for review.
-4. Once it's approved, set `VITE_CHROME_STORE_URL=<listing URL>` in `apps/site/.env`, commit,
-   and push. Vercel redeploys, and **Add to Chrome** then goes to the store instead of the
-   Load-unpacked steps.
+1. Create a developer account at the Chrome Web Store Developer Dashboard.
+2. **Add new item** → upload `leettrace-chrome-extension.zip` from the release.
+3. Fill the listing from `docs/store-listing.md` (copy, permission justifications, data-use
+   answers); screenshots and the icon are in `docs/store/`; privacy policy URL:
+   `https://leettrace.vercel.app/privacy/`.
+4. Compare the store's **Item ID** with `EXTENSION_ID` in `packages/schema/src/pairing.ts`.
+   If they differ, put the store ID in `VITE_EXTRA_EXTENSION_IDS` in `.env` (see
+   `docs/RELEASING.md`) and cut a patch release.
+5. Submit for review. Until it's approved, people use the zip (Load unpacked) — the site and
+   the app's welcome page say how.
+6. **After approval:** set `VITE_CHROME_STORE_URL=<listing URL>` in the repo-root `.env` (or as
+   a Vercel environment variable) and push. Every "Add to Chrome" button switches to the store.
 
-### Firefox Add-ons
+Firefox (optional): upload `leettrace-firefox-extension.zip` at addons.mozilla.org. Firefox
+users connect once with the code under "Other ways to connect".
 
-Upload `leettrace-firefox-extension.zip` at addons.mozilla.org.
+## 5. Dress rehearsal
 
-### Code signing
+Run `docs/DRESS_REHEARSAL.md` on a clean machine (or a fresh user account) using only the live
+site, and report anything that doesn't match. One short fix round, then it's live for anyone
+with the link.
 
-The signing steps are written but commented out in `.github/workflows/release.yml`.
+## Later: remove the first-launch warnings
 
-**macOS** (Apple Developer Program, $99/yr):
+Buy an Apple Developer membership ($99/yr) and a Windows code-signing certificate, add the
+secrets listed in `docs/RELEASING.md` → "Signing", and re-release. No code changes.
 
-1. Export a "Developer ID Application" certificate as `.p12`.
-2. Add these repo secrets: `APPLE_DEVELOPER_ID`, `APPLE_CERT_P12_BASE64`,
-   `APPLE_CERT_PASSWORD`, `APPLE_ID`, `APPLE_TEAM_ID`, `APPLE_APP_PASSWORD`.
-3. Uncomment the "Sign + notarize (macOS)" step.
+## Known gaps
 
-**Windows** (OV or EV code-signing certificate):
-
-1. Add the secrets `WINDOWS_CERT_PFX_BASE64` and `WINDOWS_CERT_PASSWORD`.
-2. Uncomment "Sign (Windows)".
-
-Then remove the bypass steps from the site's install section.
-
----
-
-## Known gaps (v1.1)
-
-- **Unsigned binaries.** The first launch needs the one-time bypass. On macOS: right-click →
-  Open. On macOS 15 or later: System Settings → Privacy & Security → Open Anyway. Or run
-  `xattr -dr com.apple.quarantine /Applications/LeetTrace.app`. On Windows:
-  SmartScreen → More info → Run anyway. The site, FAQ and app all say so.
-- **Python only.** JavaScript is next; C++ and Java are on the roadmap. The site says this.
-- **Memory cap by OS.**
-  - Linux: enforced with `RLIMIT_AS`.
-  - Windows: enforced with a Job Object. It's verified in CI on `windows-latest`; the test
-    fails unless the cap attaches.
-  - macOS: best effort, because macOS doesn't enforce `RLIMIT_AS`.
-
-  On every OS the step (10,000), time (5 s) and recursion-depth (200) caps are enforced.
-  `/health` and the welcome page state which memory mechanism applies.
-
-- **Live leetcode.com not verified by CI.** The extension is tested against reconstructed
-  problem pages and simulated in-app navigation, not the live site. Confirming it on the
-  live site is the rehearsal's job.
-- **Chrome asks once.** Chrome asks you to let leetcode.com reach apps on your device (local
-  network access); choose Allow. The panel explains this if access is denied.
-- **macOS Intel builds** run on GitHub's `macos-15-intel` runners. If GitHub retires that
-  label, change it in `release.yml`.
+- **Unsigned** (above): one click-through on first launch, explained on the site, in the FAQ,
+  in the dmg window and in the Windows installer.
+- **Python only.** JavaScript is next; C++ and Java are on the roadmap.
+- **Memory cap:** enforced on Linux (`RLIMIT_AS`) and Windows (Job Object); best effort on
+  macOS. Step, time and depth caps apply everywhere.
+- **Live leetcode.com** isn't reachable from CI; the extension is tested against saved problem
+  pages. The dress rehearsal covers the real site.
+- **Tray icon on Linux** needs a desktop with a system tray (most do; GNOME needs the
+  AppIndicator extension). Without one, LeetTrace still runs in the background.

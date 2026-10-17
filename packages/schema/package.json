@@ -1,6 +1,6 @@
 {
   "name": "@leettrace/schema",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "private": true,
   "type": "module",
   "description": "The LeetTrace Trace Schema — the engine output, the localhost wire format, and the viz's only input.",

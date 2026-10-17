@@ -13,15 +13,32 @@ browser send requests to `127.0.0.1`. LeetTrace refuses them because:
 | ---------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------------- |
 | Loopback bind    | The server listens on `127.0.0.1` only. It never binds the wildcard address or a LAN interface. A test fails the build if the wildcard address appears anywhere in the engine source. | `server/daemon.py`   |
 | Session token    | A 256-bit random token is required on every API request (`Authorization: Bearer …`, or `?token=` for the WebSocket). It is compared in constant time. Requests without it get `401`.  | `server/security.py` |
-| Token storage    | `~/.leettrace/session.json` is `0600` inside a `0700` directory. The daemon log is `0600`.                                                                                            | `server/session.py`  |
+| Token storage    | `~/.leettrace/token` and `session.json` are `0600` inside a `0700` directory. The daemon log is `0600`.                                                                               | `server/session.py`  |
 | Origin allowlist | Only `https://leetcode.com` and the engine's own UI origin are accepted. Anything else gets `403`, even with a valid token. The list is never widened for convenience.                | `server/security.py` |
 | Host check       | The `Host` header must be `127.0.0.1:<port>` or `localhost:<port>`. This defeats DNS-rebinding attacks, where an attacker's domain resolves to 127.0.0.1.                             | `server/security.py` |
 | Size limits      | Bodies over 1 MB are rejected with `413` before parsing. Code is limited to 100 KB and input to 100 KB.                                                                               | `server/app.py`      |
 | Static shell     | The UI's HTML is public but contains no data. It is served with a strict CSP and `frame-ancestors 'none'`.                                                                            | `server/app.py`      |
 
-**How the extension gets the token.** It never reads the token file. The engine holds one
-6-digit pairing code. The code is shown on the local welcome page, which already holds the
-token, and in the terminal. You paste it into the panel on a LeetCode problem once.
+**How the extension gets the token (automatic pairing).** It never reads the token file and
+the user never types anything.
+
+1. The token lives in `~/.leettrace/token` (`0600`) and survives restarts; `leettrace token
+--rotate` replaces it.
+2. Only the engine's own page (served on `http://127.0.0.1:<port>`) can read it, from
+   `GET /pair/bootstrap`. That route answers only same-origin requests (`Sec-Fetch-Site:
+same-origin`, and if an `Origin` is sent it must be the engine's own). Browsers set those
+   headers themselves, so no other site, leetcode.com included, can read it. The Host check
+   still defeats DNS rebinding.
+3. The page hands the token to the extension with `chrome.runtime.sendMessage(EXTENSION_ID,
+…)`. The extension lists only `http://127.0.0.1:*/*` and `http://localhost:*/*` under
+   `externally_connectable`, and its pinned manifest `key` fixes `EXTENSION_ID`, so only our
+   extension is targeted. The background worker rejects any sender that isn't the engine page
+   on the same port as the message claims.
+4. The extension keeps the token in extension storage, which leetcode.com's own scripts cannot
+   read, and sends it as `Authorization: Bearer` from the LeetCode page origin, as before.
+
+The token still gates every request and the origin allowlist is unchanged. A one-time manual
+code remains as a fallback (Firefox has no `externally_connectable`):
 
 - The exchange (`/pair/confirm`) is only accepted from `https://leetcode.com`.
 - Each code works once, and it expires after 15 minutes.
@@ -29,9 +46,7 @@ token, and in the terminal. You paste it into the panel on a LeetCode problem on
 - Attempts are rate-limited to 20 a minute.
 - Reading the code (`/pair/code`) needs the session token.
 
-The token is kept in extension storage, which leetcode.com's own scripts cannot read.
-
-**How the local web UI gets the token.** `leettrace start/run/open` opens the UI with the
+**How the local web UI gets the token.** The app, `leettrace run` and `leettrace open` open the UI with the
 token in the URL fragment (`#t=…`). Fragments are never sent to a server. The UI moves the
 token into per-tab `sessionStorage` and removes it from the address bar.
 

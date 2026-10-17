@@ -131,7 +131,7 @@ async function postJson(url: string, body: unknown, f: Fetch, token?: string): P
     });
   } catch {
     throw new DaemonError(
-      'Lost connection to the LeetTrace engine. Is `leettrace start` running?',
+      'Lost connection to the LeetTrace app. Is it still running? (Look for its tray / menu-bar icon.)',
       0,
     );
   }
@@ -166,7 +166,7 @@ export async function autoConnect(
   return arrived;
 }
 
-/** Ask the engine to echo the current pairing code in its terminal (best effort). */
+/** Ask the engine to echo the manual one-time code in its terminal (best effort). */
 export async function requestPairing(port: number, f: Fetch = fetch): Promise<void> {
   await postJson(`http://127.0.0.1:${port}/pair/request`, { client: 'LeetTrace extension' }, f);
 }

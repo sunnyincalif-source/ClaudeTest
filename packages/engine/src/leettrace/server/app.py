@@ -157,7 +157,7 @@ _PLACEHOLDER = """<!doctype html><meta charset="utf-8"><title>LeetTrace</title>
 <body style="font:16px system-ui;margin:3rem;max-width:40rem">
 <h1>LeetTrace engine is running</h1>
 <p>The web UI isn't bundled in this build. Run <code>pnpm --filter @leettrace/web build</code>
-from the repo, then restart <code>leettrace start</code>.</p></body>"""
+from the repo, then restart LeetTrace.</p></body>"""
 
 
 def create_app(

@@ -70,7 +70,7 @@ def start(
     running = find_daemon()
     if running is not None:
         console.print(f"[green]●[/] LeetTrace engine already running at {running.base_url}")
-        console.print(f"  Welcome page (pairing code, status): {running.welcome_url()}")
+        console.print(f"  Welcome page: {running.welcome_url()}")
         if not no_open and not background:
             webbrowser.open(running.welcome_url())
         return

@@ -16,11 +16,11 @@ example cases.
 | ------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------- |
 | <img src="docs/demo/recursive-fib.gif" alt="fib(5): frames push and pop on the call stack" width="420"> | <img src="docs/demo/leetcode-overlay.gif" alt="The LeetTrace side panel tracing Two Sum against the page's examples" width="420"> |
 
-**Get it:** download the app for macOS, Windows or Linux from the
+**Get it:** download the installer for macOS, Windows or Linux from the
 [LeetTrace site](https://leettrace.vercel.app) or the
-[GitHub Releases](https://github.com/sunnyincalif-source/leettrace/releases/latest). Then add
-the extension and pair; the app's welcome page walks you through it. Launching it yourself:
-[LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md).
+[GitHub Releases](https://github.com/sunny925bay-jpg/leettrace/releases/latest), then add the
+extension. The app and extension connect automatically: no codes, no terminal. Launching it
+yourself: [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md).
 
 > LeetTrace is an independent, third-party tool. It is not affiliated with or endorsed by LeetCode.
 
@@ -86,46 +86,29 @@ The full design is in [SPEC.md](SPEC.md) and [ARCHITECTURE.md](ARCHITECTURE.md).
 
 ## Install: from zero to a trace
 
-You need Python 3.11+ and Chrome or Firefox.
+**For everyone (no terminal):**
 
-**1. Install the engine.**
+1. **Install the app** from the [site](https://leettrace.vercel.app) — the Windows installer,
+   the macOS `.dmg`, or the Linux AppImage. It's unsigned for now, so the first launch needs
+   one click-through: macOS **right-click → Open**, Windows SmartScreen **More info → Run
+   anyway**. LeetTrace then lives in the tray / menu bar and starts when you log in.
+2. **Add the extension** — from the Chrome Web Store once it's listed; until then the app's
+   welcome page offers the zip (Load unpacked).
+3. **Open any LeetCode problem** and click **Trace** next to **Run**. The extension has
+   already connected to the app by itself. If Chrome asks whether leetcode.com may use
+   **apps on this device**, choose **Allow** — that's how the page reaches the app on your
+   own computer.
 
-```bash
-pipx install leettrace            # once it's published on PyPI
-# or, from this repo today:
-pnpm install && pnpm --filter @leettrace/web build   # bundles the web UI into the engine
-pipx install ./packages/engine
-```
-
-There is also a standalone binary that needs no Python. Build it with
-`packages/engine/packaging/build_binary.sh`. The release workflow builds it for Linux,
-macOS, and Windows.
-
-**2. Start it.**
+**From this repo (developers):** you need Python 3.11+, `uv` and `pnpm`.
 
 ```bash
-leettrace start
+pnpm install && pnpm build                  # web UI + extension, bundled into the engine
+cd packages/engine && uv run leettrace      # the desktop app: engine + tray, welcome page
 ```
 
-The engine listens on `127.0.0.1:47823`; if that port is taken, it tries the next ten. The
-command prints a link to the local web UI.
-
-**3. Add the extension.**
-
-- **From a store listing:** once published, install it from there.
-- **From this repo today:** run `pnpm --filter @leettrace/extension build`, open
-  `chrome://extensions`, turn on **Developer mode**, click **Load unpacked**, and choose
-  `apps/extension/dist`. For Firefox, load `apps/extension/dist-firefox` from
-  `about:debugging`.
-
-**4. Trace a problem.** Open any problem on leetcode.com, write Python 3, and click
-**Trace** next to **Run**. The first time:
-
-- Chrome may ask whether leetcode.com can reach apps on this device. Choose **Allow**. That is
-  how the page reaches your local engine.
-- The panel asks for a 6-digit pairing code. Copy it from the LeetTrace welcome page, which
-  opens when you start the app (run `leettrace` with no arguments, or double-click it). The
-  code is also printed in the terminal, and `leettrace pair` shows it again.
+Load `apps/extension/dist` as an unpacked extension (`chrome://extensions` → Developer mode →
+Load unpacked); it connects to the running app automatically. Build the installers with
+`packages/engine/packaging/build_desktop.sh` (see [docs/RELEASING.md](docs/RELEASING.md)).
 
 You can also skip the browser and run `leettrace demo` to see it work right away.
 
@@ -137,7 +120,8 @@ leettrace run solution.py --tui           # …or step through it in the termina
 leettrace watch solution.py               # re-trace on every save; the open UI live-updates
 leettrace leetcode sol.py -c "nums = [2,7,11,15], target = 9" -e "[0,1]"   # class Solution + cases
 leettrace demo                            # write two examples and trace one
-leettrace status | open | pair | stop
+leettrace app | status | open | stop       # the desktop app and its lifecycle
+leettrace autostart on|off · token --rotate · pair (manual fallback code)
 ```
 
 LeetCode mode works with real LeetCode solutions:
@@ -197,8 +181,10 @@ A localhost code runner is an attack surface, so the protections are part of the
 - Every request needs a 256-bit session token.
 - Only `https://leetcode.com` and the engine's own UI origin are accepted.
 - The Host header is checked, to defeat DNS rebinding.
-- The extension pairs once, using a one-time code from the local welcome page. The code
-  rotates after repeated wrong guesses.
+- The token reaches the extension automatically: only the engine's own page (same-origin,
+  on 127.0.0.1) can read it, and it hands it over through `externally_connectable` to the
+  extension's pinned ID, which checks the sender. Nothing is typed; the token persists in a
+  0600 file so restarts need no re-pairing, and `leettrace token --rotate` replaces it.
 - Your code runs in a sandboxed subprocess with step, time, depth, memory, and CPU caps.
 
 [docs/SECURITY.md](docs/SECURITY.md) has the full model, and each item is covered by tests.
