@@ -1,0 +1,6150 @@
+{
+ "language": "python",
+ "source": "class Solution:\n    def maxDepth(self, root: Optional[TreeNode]) -> int:\n        if not root:\n            return 0\n        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))\n",
+ "steps": [
+  {
+   "i": 0,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=the TreeNode(3))."
+  },
+  {
+   "i": 1,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → False, so we skip the if block."
+  },
+  {
+   "i": 2,
+   "line": 5,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))."
+  },
+  {
+   "i": 3,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=the TreeNode(9)) (recursion depth 2)."
+  },
+  {
+   "i": 4,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → False, so we skip the if block."
+  },
+  {
+   "i": 5,
+   "line": 5,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))."
+  },
+  {
+   "i": 6,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f3",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=None) (recursion depth 3)."
+  },
+  {
+   "i": 7,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f3",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → True, so the if block runs."
+  },
+  {
+   "i": 8,
+   "line": 4,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f3",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 0."
+  },
+  {
+   "i": 9,
+   "line": 4,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f3",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 0
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Base case: not root is True — returning 0 back to maxDepth()."
+  },
+  {
+   "i": 10,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f4",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=None) (recursion depth 3)."
+  },
+  {
+   "i": 11,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f4",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → True, so the if block runs."
+  },
+  {
+   "i": 12,
+   "line": 4,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f4",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 0."
+  },
+  {
+   "i": 13,
+   "line": 4,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f4",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 0
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Base case: not root is True — returning 0 back to maxDepth()."
+  },
+  {
+   "i": 14,
+   "line": 5,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f2",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o2"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 1
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "maxDepth() returns 1 back to maxDepth()."
+  },
+  {
+   "i": 15,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=the TreeNode(20)) (recursion depth 2)."
+  },
+  {
+   "i": 16,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → False, so we skip the if block."
+  },
+  {
+   "i": 17,
+   "line": 5,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))."
+  },
+  {
+   "i": 18,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=the TreeNode(15)) (recursion depth 3)."
+  },
+  {
+   "i": 19,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → False, so we skip the if block."
+  },
+  {
+   "i": 20,
+   "line": 5,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))."
+  },
+  {
+   "i": 21,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f7",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=None) (recursion depth 4)."
+  },
+  {
+   "i": 22,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f7",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → True, so the if block runs."
+  },
+  {
+   "i": 23,
+   "line": 4,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f7",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 0."
+  },
+  {
+   "i": 24,
+   "line": 4,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f7",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 0
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Base case: not root is True — returning 0 back to maxDepth()."
+  },
+  {
+   "i": 25,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f8",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=None) (recursion depth 4)."
+  },
+  {
+   "i": 26,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f8",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → True, so the if block runs."
+  },
+  {
+   "i": 27,
+   "line": 4,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f8",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 0."
+  },
+  {
+   "i": 28,
+   "line": 4,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f8",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 0
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Base case: not root is True — returning 0 back to maxDepth()."
+  },
+  {
+   "i": 29,
+   "line": 5,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f6",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o4"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 1
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "maxDepth() returns 1 back to maxDepth()."
+  },
+  {
+   "i": 30,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=the TreeNode(7)) (recursion depth 3)."
+  },
+  {
+   "i": 31,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → False, so we skip the if block."
+  },
+  {
+   "i": 32,
+   "line": 5,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))."
+  },
+  {
+   "i": 33,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f10",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=None) (recursion depth 4)."
+  },
+  {
+   "i": 34,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f10",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → True, so the if block runs."
+  },
+  {
+   "i": 35,
+   "line": 4,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f10",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 0."
+  },
+  {
+   "i": 36,
+   "line": 4,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f10",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 0
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Base case: not root is True — returning 0 back to maxDepth()."
+  },
+  {
+   "i": 37,
+   "line": 2,
+   "event": "call",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f11",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Calling maxDepth(root=None) (recursion depth 4)."
+  },
+  {
+   "i": 38,
+   "line": 3,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f11",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Checking if not root → True, so the if block runs."
+  },
+  {
+   "i": 39,
+   "line": 4,
+   "event": "line",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f11",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "About to return 0."
+  },
+  {
+   "i": 40,
+   "line": 4,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f11",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "none"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 0
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "Base case: not root is True — returning 0 back to maxDepth()."
+  },
+  {
+   "i": 41,
+   "line": 5,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f9",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 1
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "maxDepth() returns 1 back to maxDepth()."
+  },
+  {
+   "i": 42,
+   "line": 5,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ]
+    },
+    {
+     "id": "f5",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 2
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "maxDepth() returns 2 back to maxDepth()."
+  },
+  {
+   "i": 43,
+   "line": 5,
+   "event": "return",
+   "stack": [
+    {
+     "id": "f1",
+     "func": "maxDepth",
+     "locals": {
+      "root": {
+       "kind": "ref",
+       "id": "o1"
+      }
+     },
+     "order": [
+      "root"
+     ],
+     "returnValue": {
+      "kind": "int",
+      "value": 3
+     }
+    }
+   ],
+   "heap": {
+    "o1": {
+     "type": "instance",
+     "id": "o1",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 3
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o2"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o3"
+      }
+     }
+    },
+    "o2": {
+     "type": "instance",
+     "id": "o2",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 9
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o3": {
+     "type": "instance",
+     "id": "o3",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 20
+      },
+      "left": {
+       "kind": "ref",
+       "id": "o4"
+      },
+      "right": {
+       "kind": "ref",
+       "id": "o5"
+      }
+     }
+    },
+    "o4": {
+     "type": "instance",
+     "id": "o4",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 15
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    },
+    "o5": {
+     "type": "instance",
+     "id": "o5",
+     "className": "TreeNode",
+     "fields": {
+      "val": {
+       "kind": "int",
+       "value": 7
+      },
+      "left": {
+       "kind": "none"
+      },
+      "right": {
+       "kind": "none"
+      }
+     }
+    }
+   },
+   "stdout": "",
+   "note": "maxDepth() returns 3."
+  }
+ ],
+ "test": {
+  "index": 0,
+  "input": "root = [3,9,20,null,null,15,7]",
+  "expected": "3",
+  "actual": "3",
+  "passed": true
+ },
+ "engineVersion": "0.1.0"
+}
