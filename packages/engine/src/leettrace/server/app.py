@@ -36,6 +36,7 @@ from leettrace import __version__
 from leettrace.server.security import LEETCODE_ORIGIN, Gate
 from leettrace.tracer.runner import RunLimits, run_request
 
+MAX_BODY_BYTES = 1_000_000
 MAX_CODE = 100_000
 MAX_INPUT = 100_000
 MAX_CASES = 10
@@ -173,6 +174,9 @@ def create_app(
         if not gate.origin_ok(origin):
             return JSONResponse({"error": "origin not allowed"}, status_code=403, headers=base)
         headers = {**base, **cors_headers(origin)}
+        length = request.headers.get("content-length")
+        if length is not None and (not length.isdigit() or int(length) > MAX_BODY_BYTES):
+            return JSONResponse({"error": "request too large"}, status_code=413, headers=headers)
         if request.method == "OPTIONS":
             if request.headers.get("access-control-request-private-network") == "true":
                 headers["Access-Control-Allow-Private-Network"] = "true"

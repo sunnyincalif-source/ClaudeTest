@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import os
 import subprocess
 import sys
 import time
@@ -45,7 +46,9 @@ def ensure_daemon(timeout: float = 15.0) -> Session:
         return session
     log_dir = home()
     log_dir.mkdir(mode=0o700, parents=True, exist_ok=True)
-    with open(log_dir / "daemon.log", "ab") as log:
+    fd = os.open(log_dir / "daemon.log", os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
+    os.chmod(log_dir / "daemon.log", 0o600)
+    with os.fdopen(fd, "ab") as log:
         subprocess.Popen(
             [*leettrace_command(), "start", "--background"],
             stdin=subprocess.DEVNULL,

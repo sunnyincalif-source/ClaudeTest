@@ -1,0 +1,58 @@
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  web-and-extension:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with: { version: 9.15.9 }
+      - uses: actions/setup-node@v4
+        with: { node-version: 20, cache: pnpm }
+      - uses: astral-sh/setup-uv@v5
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm build
+      - run: pnpm --filter @leettrace/extension exec node scripts/package.mjs
+      - name: Build wheel + sdist (bundles the web UI)
+        run: cd packages/engine && uv build -o dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: web-ui
+          path: packages/engine/src/leettrace/web_dist
+      - uses: actions/upload-artifact@v4
+        with:
+          name: python-dist
+          path: packages/engine/dist/*
+      - uses: actions/upload-artifact@v4
+        with:
+          name: extension
+          path: apps/extension/release/*.zip
+
+  binaries:
+    needs: web-and-extension
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with: { python-version: '3.12' }
+      - uses: actions/download-artifact@v4
+        with:
+          name: web-ui
+          path: packages/engine/src/leettrace/web_dist
+      - run: cd packages/engine && uv sync --frozen
+      - shell: bash
+        run: packages/engine/packaging/build_binary.sh
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leettrace-${{ matrix.os }}
+          path: packages/engine/dist-bin/*
+
+  # Publishing (PyPI via trusted publishing, Chrome Web Store, AMO) is deliberately manual:
+  # download the artifacts from this run and upload them. See docs/RELEASING.md.

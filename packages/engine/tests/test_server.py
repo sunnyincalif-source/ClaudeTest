@@ -227,3 +227,10 @@ def test_no_wildcard_bind_anywhere() -> None:
     for f in src.rglob("*.py"):
         text = f.read_text(encoding="utf-8")
         assert "0.0.0.0" not in text, f"wildcard bind found in {f}"  # noqa: S104
+
+
+def test_huge_body_rejected_before_parsing(client: TestClient) -> None:
+    r = client.post(
+        "/trace", content=b"x" * 2_000_000, headers={**AUTH, "Content-Type": "application/json"}
+    )
+    assert r.status_code == 413

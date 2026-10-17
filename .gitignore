@@ -21,3 +21,5 @@ packages/engine/dist
 packages/engine/src/leettrace/web_dist/*
 !packages/engine/src/leettrace/web_dist/.gitkeep
 harness-dist
+dist-bin
+apps/extension/release

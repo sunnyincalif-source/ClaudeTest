@@ -10,7 +10,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
-    "e2e": "node e2e/extension.e2e.mjs"
+    "e2e": "node e2e/extension.e2e.mjs",
+    "package": "pnpm build && node scripts/package.mjs"
   },
   "dependencies": {
     "@leettrace/schema": "workspace:^",
