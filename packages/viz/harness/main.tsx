@@ -1,10 +1,14 @@
 // Viz harness: develop and review the visualization against recorded traces, with no
 // engine running (SPEC §6). `pnpm --filter @leettrace/viz harness`
+// URL params: ?fixture=<name>&theme=dark|light&compact&step=<n>
 import { StrictMode, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { parseTrace, type Trace } from '@leettrace/schema';
 import { TraceViewer } from '../src';
+import '@leettrace/design/fonts.css';
+import '@leettrace/design/components.css';
 import '../src/viz.css';
+import './harness.css';
 
 const files = import.meta.glob<{ default: unknown }>('../fixtures/*.json', { eager: true });
 const fixtures: Record<string, Trace> = Object.fromEntries(
@@ -14,49 +18,50 @@ const fixtures: Record<string, Trace> = Object.fromEntries(
   ]),
 );
 
+type Theme = 'dark' | 'light';
+
 function Harness() {
   const params = new URLSearchParams(location.search);
   const [name, setName] = useState(params.get('fixture') ?? 'linked_list_reverse');
-  const [theme, setTheme] = useState(params.get('theme') ?? 'light');
+  const [theme, setTheme] = useState<Theme>(params.get('theme') === 'light' ? 'light' : 'dark');
   const compact = params.has('compact');
   const step = Number(params.get('step') ?? 0);
   const trace = fixtures[name];
-  document.body.style.background = theme === 'dark' ? '#0f1216' : '#fff';
+  document.documentElement.dataset.theme = theme;
   return (
-    <div style={{ padding: 16, fontFamily: 'system-ui', maxWidth: compact ? 440 : 1280 }}>
-      <div style={{ display: 'flex', gap: 8, marginBottom: 12 }}>
-        <select aria-label="Fixture" value={name} onChange={(e) => setName(e.target.value)}>
+    <div className={`harness${compact ? ' harness-compact' : ''}`}>
+      <div className="harness-bar">
+        <strong className="harness-brand">
+          Leet<span>Trace</span> · viz harness
+        </strong>
+        <select
+          className="ds-pill"
+          aria-label="Fixture"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        >
           {Object.keys(fixtures).map((f) => (
             <option key={f}>{f}</option>
           ))}
         </select>
-        <button type="button" onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
+        <button
+          type="button"
+          className="ds-btn ds-btn-ghost ds-btn-sm"
+          onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+        >
           theme: {theme}
         </button>
       </div>
       {trace && (
-        <div data-theme={theme} className="lt-theme-host">
-          <ThemedViewer key={name} trace={trace} theme={theme} compact={compact} step={step} />
-        </div>
+        <TraceViewer
+          key={name}
+          trace={trace}
+          theme={theme}
+          compact={compact}
+          globalKeys
+          initial={{ stepIndex: step }}
+        />
       )}
-    </div>
-  );
-}
-
-function ThemedViewer({
-  trace,
-  theme,
-  compact,
-  step,
-}: {
-  trace: Trace;
-  theme: string;
-  compact: boolean;
-  step: number;
-}) {
-  return (
-    <div ref={(el) => el?.querySelector('.lt-viz')?.setAttribute('data-theme', theme)}>
-      <TraceViewer trace={trace} compact={compact} globalKeys initial={{ stepIndex: step }} />
     </div>
   );
 }

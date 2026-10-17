@@ -20,6 +20,7 @@
     "harness:build": "vite build --config vite.harness.config.ts"
   },
   "dependencies": {
+    "@leettrace/design": "workspace:^",
     "@leettrace/schema": "workspace:^",
     "react": "18.3.1",
     "react-dom": "18.3.1"

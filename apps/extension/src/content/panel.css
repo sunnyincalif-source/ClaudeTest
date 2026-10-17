@@ -1,186 +1,302 @@
+/* Side-panel chrome around the trace viz, in the LeetTrace identity. Lives in a shadow root
+   on leetcode.com; every color is a @leettrace/design token (`.ds-auto` follows the OS). */
 :host {
   all: initial;
 }
 .ltx-root {
-  --ltx-bg: #ffffff;
-  --ltx-panel: #f6f7f9;
-  --ltx-border: #d9dde3;
-  --ltx-text: #1c2128;
-  --ltx-muted: #59636e;
-  --ltx-accent: #4f46e5;
-  --ltx-on-accent: #ffffff;
-  --ltx-bad: #b91c1c;
-  --ltx-bad-soft: #fee2e2;
-  --ltx-warn: #92400e;
-  --ltx-warn-soft: #fef3c7;
-  font:
-    14px/1.45 system-ui,
-    -apple-system,
-    'Segoe UI',
-    Roboto,
-    sans-serif;
-  color: var(--ltx-text);
-}
-@media (prefers-color-scheme: dark) {
-  .ltx-root {
-    --ltx-bg: #0f1216;
-    --ltx-panel: #161a20;
-    --ltx-border: #30363d;
-    --ltx-text: #e6edf3;
-    --ltx-muted: #9aa4af;
-    --ltx-accent: #a5b4fc;
-    --ltx-on-accent: #0f1216;
-    --ltx-bad: #f87171;
-    --ltx-bad-soft: #3b1515;
-    --ltx-warn: #fbbf24;
-    --ltx-warn-soft: #3a2c0b;
-  }
+  font: 14px/1.5 var(--font-sans);
+  color: var(--fg);
 }
 .ltx-root *,
 .ltx-root *::before,
 .ltx-root *::after {
   box-sizing: border-box;
 }
+
+/* Collapsed edge tab */
 .ltx-tab {
   position: fixed;
   right: 0;
   top: 40%;
   z-index: 2147483000;
   writing-mode: vertical-rl;
-  padding: 12px 6px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 7px;
   border: 0;
-  border-radius: 8px 0 0 8px;
-  background: var(--ltx-accent);
-  color: var(--ltx-on-accent);
-  font:
-    600 13px system-ui,
-    sans-serif;
+  border-radius: var(--r-lg) 0 0 var(--r-lg);
+  background: var(--grad);
+  color: var(--accent-ink);
+  font: 600 12.5px var(--font-sans);
+  letter-spacing: 0.01em;
   cursor: pointer;
-  box-shadow: 0 2px 10px rgb(0 0 0 / 0.25);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 45%, transparent),
+    0 8px 24px -8px var(--accent-glow);
+  transition: padding var(--dur-fast) var(--ease-out);
 }
+.ltx-tab:hover {
+  padding-right: 10px;
+}
+
+/* Panel */
 .ltx-panel {
   position: fixed;
   top: 0;
   right: 0;
   bottom: 0;
   z-index: 2147483000;
-  width: min(520px, 100vw);
+  width: min(540px, 100vw);
   display: flex;
   flex-direction: column;
-  background: var(--ltx-bg);
-  border-left: 1px solid var(--ltx-border);
-  box-shadow: -6px 0 24px rgb(0 0 0 / 0.18);
+  background: var(--bg-elev);
+  border-left: 1px solid var(--border-strong);
+  box-shadow: -24px 0 60px -30px var(--shadow);
+  animation: ltx-slide var(--dur-slow) var(--ease-out);
+}
+@keyframes ltx-slide {
+  from {
+    transform: translateX(16px);
+    opacity: 0;
+  }
 }
 .ltx-head {
   display: flex;
   align-items: center;
-  gap: 8px;
-  padding: 10px 12px;
-  border-bottom: 1px solid var(--ltx-border);
+  gap: 9px;
+  padding: 11px 14px;
+  border-bottom: 1px solid var(--border);
+}
+.ltx-mark {
+  width: 20px;
+  height: 20px;
+  flex: none;
+}
+.ltx-name {
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: -0.01em;
+}
+.ltx-name span {
+  color: var(--accent);
 }
 .ltx-sub {
-  color: var(--ltx-muted);
-  font-size: 13px;
+  color: var(--fg-muted);
+  font-size: 12.5px;
   flex: 1;
+  min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+.ltx-conn {
+  flex: none;
+}
+.ltx-conn.ds-live {
+  box-shadow: 0 0 14px -4px color-mix(in srgb, var(--good) 60%, transparent);
+}
 .ltx-body {
   flex: 1;
   overflow: auto;
-  padding: 12px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
 }
+.ltx-body .lt-viz {
+  background: transparent;
+}
+
+/* Controls */
 .ltx-root button {
   font: inherit;
-  color: var(--ltx-text);
-  background: var(--ltx-bg);
-  border: 1px solid var(--ltx-border);
-  border-radius: 6px;
+  font-size: 13px;
+  color: var(--fg);
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
   padding: 6px 12px;
-  min-height: 34px;
+  min-height: 33px;
   cursor: pointer;
+  transition:
+    border-color var(--dur-fast) var(--ease-out),
+    filter var(--dur-fast) var(--ease-out);
+}
+.ltx-root button:hover:not(:disabled) {
+  border-color: var(--accent);
+}
+.ltx-root button:disabled {
+  opacity: 0.55;
+  cursor: default;
 }
 .ltx-root .ltx-primary {
-  background: var(--ltx-accent);
-  color: var(--ltx-on-accent);
-  border-color: var(--ltx-accent);
+  background: var(--grad);
+  color: var(--accent-ink);
+  border-color: transparent;
   font-weight: 600;
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--accent) 40%, transparent),
+    0 8px 24px -12px var(--accent-glow);
+}
+.ltx-root .ltx-primary:hover:not(:disabled) {
+  border-color: transparent;
+  filter: brightness(1.07);
+}
+.ltx-root .ltx-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  min-height: 0;
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .ltx-root .ltx-icon {
-  min-width: 34px;
+  min-width: 33px;
   padding: 0;
+  color: var(--fg-muted);
 }
 .ltx-root :focus-visible {
-  outline: 2px solid var(--ltx-accent);
+  outline: 2px solid var(--accent);
   outline-offset: 2px;
 }
-.ltx-root input:not([type='checkbox']) {
-  font:
-    13px ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Consolas,
-    monospace;
-  color: var(--ltx-text);
-  background: var(--ltx-bg);
-  border: 1px solid var(--ltx-border);
-  border-radius: 6px;
-  padding: 6px 8px;
+.ltx-root a {
+  color: var(--accent);
+}
+.ltx-root input:not([type='checkbox']),
+.ltx-root textarea.ltx-code {
+  font: 12.5px var(--font-mono);
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 7px 9px;
   width: 100%;
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.ltx-root input:not([type='checkbox']):focus,
+.ltx-root textarea.ltx-code:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-soft);
+}
+.ltx-root input[type='checkbox'] {
+  accent-color: var(--accent);
+  margin-top: 3px;
 }
 .ltx-root code,
-.ltx-root pre {
-  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+.ltx-root pre,
+.ltx-root kbd {
+  font-family: var(--font-mono);
   font-size: 12.5px;
 }
 .ltx-root pre {
-  background: var(--ltx-panel);
-  border: 1px solid var(--ltx-border);
-  border-radius: 6px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
   padding: 8px 10px;
 }
+
+/* Cards and notices */
 .ltx-card {
-  background: var(--ltx-panel);
-  border: 1px solid var(--ltx-border);
-  border-radius: 8px;
-  padding: 10px 12px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 12px 13px;
   margin: 0;
 }
 .ltx-card h2 {
-  font-size: 15px;
+  font-size: 14.5px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
   margin: 0 0 6px;
 }
+.ltx-card p {
+  margin: 0 0 8px;
+}
+.ltx-card p:last-child {
+  margin-bottom: 0;
+}
 .ltx-muted {
-  color: var(--ltx-muted);
+  color: var(--fg-muted);
 }
 .ltx-error {
-  color: var(--ltx-bad);
+  color: var(--bad);
 }
 .ltx-card.ltx-error {
-  background: var(--ltx-bad-soft);
-  border-color: transparent;
+  background: var(--bad-soft);
+  border-color: color-mix(in srgb, var(--bad) 30%, transparent);
 }
 .ltx-warn {
-  background: var(--ltx-warn-soft);
-  color: var(--ltx-warn);
-  border-color: transparent;
+  background: var(--warn-soft);
+  color: var(--warn);
+  border-color: color-mix(in srgb, var(--warn) 30%, transparent);
 }
+.ltx-ok {
+  background: var(--good-soft);
+  color: var(--good);
+  border-color: color-mix(in srgb, var(--good) 30%, transparent);
+}
+.ltx-steps {
+  margin: 8px 0 10px;
+  padding-left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.ltx-steps strong {
+  color: var(--fg);
+}
+.ltx-setting {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font: 600 12px var(--font-mono);
+  color: var(--fg);
+  background: var(--bg);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  padding: 5px 10px;
+  margin: 2px 0 8px;
+}
+.ltx-toggle {
+  width: 26px;
+  height: 15px;
+  border-radius: 999px;
+  background: var(--good);
+  position: relative;
+  flex: none;
+}
+.ltx-toggle::after {
+  content: '';
+  position: absolute;
+  right: 2px;
+  top: 2px;
+  width: 11px;
+  height: 11px;
+  border-radius: 50%;
+  background: var(--accent-ink);
+}
+
+/* Test cases */
 .ltx-cases {
-  border: 1px solid var(--ltx-border);
-  border-radius: 8px;
-  padding: 8px 10px 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  padding: 9px 12px 12px;
   margin: 0;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 7px;
+  background: var(--bg-elev-2);
 }
 .ltx-cases legend {
-  color: var(--ltx-muted);
-  font-size: 12px;
+  color: var(--fg-muted);
+  font-size: 10.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.11em;
+  padding: 0 4px;
 }
 .ltx-case {
   display: flex;
@@ -195,7 +311,7 @@
   flex-direction: column;
   gap: 4px;
   font-size: 12.5px;
-  color: var(--ltx-muted);
+  color: var(--fg-muted);
   margin: 6px 0;
 }
 .ltx-actions {
@@ -203,26 +319,41 @@
   gap: 8px;
   flex-wrap: wrap;
 }
+
+/* Result tabs */
 .ltx-tabs {
   display: flex;
-  gap: 4px;
-  margin-bottom: 8px;
+  gap: 2px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  overflow-x: auto;
 }
-.ltx-tabs [aria-selected='true'] {
-  border-color: var(--ltx-accent);
+.ltx-root .ltx-tabs button {
+  background: none;
+  border: 0;
+  border-radius: 0;
+  color: var(--fg-muted);
+  box-shadow: inset 0 -2px 0 transparent;
+  white-space: nowrap;
+}
+.ltx-root .ltx-tabs [aria-selected='true'] {
+  color: var(--fg);
   font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--accent);
 }
-.ltx-root textarea.ltx-code {
-  width: 100%;
-  font:
-    12.5px ui-monospace,
-    SFMono-Regular,
-    Menlo,
-    Consolas,
-    monospace;
-  color: var(--ltx-text);
-  background: var(--ltx-bg);
-  border: 1px solid var(--ltx-border);
-  border-radius: 6px;
-  padding: 6px 8px;
+.ltx-pass {
+  color: var(--good);
+}
+.ltx-fail {
+  color: var(--bad);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ltx-panel {
+    animation: none;
+  }
+  .ltx-root button,
+  .ltx-tab {
+    transition: none;
+  }
 }

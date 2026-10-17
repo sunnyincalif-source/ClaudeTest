@@ -12,3 +12,7 @@ ARCHITECTURE.md
 scripts/scaffold.sh
 SPEC-LAUNCH.md
 PROMPTS-LAUNCH.md
+packages/design/src/tokens.css
+SPEC-PRODUCT.md
+PROMPTS-PRODUCT.md
+docs/ui-reference.html

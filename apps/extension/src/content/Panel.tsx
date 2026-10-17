@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import type { Trace } from '@leettrace/schema';
 import { TraceViewer } from '@leettrace/viz';
+import { BrandMark } from '../shared/BrandMark';
 import { INSTALL_URL } from '../shared/config';
 import { clearPairing } from '../shared/storage';
 import { bus } from './bus';
@@ -153,6 +154,7 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
         onClick={() => setOpen(true)}
         aria-label="Open LeetTrace panel"
       >
+        <BrandMark mono size={15} />
         LeetTrace
       </button>
     );
@@ -161,8 +163,16 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
   return (
     <aside className="ltx-panel" aria-label="LeetTrace">
       <header className="ltx-head">
-        <strong>LeetTrace</strong>
+        <BrandMark className="ltx-mark" />
+        <strong className="ltx-name">
+          Leet<span>Trace</span>
+        </strong>
         <span className="ltx-sub">{problem?.title ?? problem?.slug ?? ''}</span>
+        {status?.kind === 'ready' && (
+          <span className="ltx-conn ds-live" role="status">
+            connected
+          </span>
+        )}
         <button
           type="button"
           className="ltx-icon"
@@ -278,11 +288,11 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
                     onClick={() => setWhich(i)}
                   >
                     Case {i + 1}{' '}
-                    {t.test?.passed === true
-                      ? '✓'
-                      : t.test?.passed === false || t.test?.error
-                        ? '✗'
-                        : ''}
+                    {t.test?.passed === true ? (
+                      <span className="ltx-pass">✓</span>
+                    ) : t.test?.passed === false || t.test?.error ? (
+                      <span className="ltx-fail">✗</span>
+                    ) : null}
                   </button>
                 ))}
               </div>

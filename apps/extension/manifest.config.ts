@@ -19,6 +19,10 @@ export default defineManifest({
       run_at: 'document_idle',
     },
   ],
+  // The panel's bundled fonts, loaded by the content script via @font-face on leetcode.com.
+  web_accessible_resources: [
+    { resources: ['assets/*.woff2'], matches: ['https://leetcode.com/*'] },
+  ],
   permissions: ['storage', 'scripting'],
   host_permissions: ['https://leetcode.com/*', 'http://127.0.0.1/*'],
 });

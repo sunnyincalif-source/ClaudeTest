@@ -42,7 +42,8 @@ interface Props {
   reducedMotion: boolean;
 }
 
-const TWEEN_MS = 280;
+// Rewiring is a short spring (SPEC-PRODUCT §2.4: 120–220ms, slight overshoot).
+const TWEEN_MS = 220;
 
 function relRect(el: Element, origin: DOMRect, canvas: HTMLElement): Rect {
   const r = el.getBoundingClientRect();
@@ -107,7 +108,11 @@ function lerp(a: Geom, b: Geom, t: number): Geom {
   return a.map((v, i) => v + (b[i]! - v) * t) as Geom;
 }
 
-const ease = (t: number) => 1 - Math.pow(1 - t, 3);
+const OVERSHOOT = 0.6;
+const ease = (t: number) => {
+  const u = t - 1;
+  return 1 + (OVERSHOOT + 1) * u ** 3 + OVERSHOOT * u ** 2; // easeOutBack
+};
 
 export function ArrowLayer({ canvasRef, stepKey, hot, reducedMotion }: Props) {
   const [edges, setEdges] = useState<Edge[]>([]);

@@ -31,6 +31,7 @@ for (const pkg of [
   'package.json',
   'packages/schema',
   'packages/viz',
+  'packages/design',
   'packages/engine',
   'apps/web',
   'apps/extension',

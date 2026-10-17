@@ -1,0 +1,414 @@
+<title>LeetTrace UI</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+<style>
+/* LeetTrace — dark dev-tool identity (Linear × Vercel). Blue + cyan only, no purple.
+   Single committed dark world; every color explicit. Layout: hero band, then the live panel. */
+:root{
+  --bg:#08090c; --bg-elev:#0e1014; --bg-elev-2:#15181d; --bg-elev-3:#1b1f26;
+  --border:#1d2128; --border-strong:#2b313a;
+  --fg:#eceef2; --fg-muted:#98a0ab; --fg-faint:#5f6873;
+  --accent:#4d9fff; --accent-2:#22d3ee; --accent-ink:#06080c;
+  --accent-soft:color-mix(in srgb,var(--accent) 16%,transparent);
+  --accent-glow:color-mix(in srgb,var(--accent) 40%,transparent);
+  --grad:linear-gradient(135deg,var(--accent),var(--accent-2));
+  --good:#2dd4a0; --bad:#f4515b; --warn:#f0b254;
+  --ptr-curr:var(--accent); --ptr-prev:var(--good); --ptr-next:var(--accent-2); --ptr-head:#6b7482;
+  --kw:#4d9fff; --num:#2dd4a0; --fn:#22d3ee; --self:#f4515b; --str:#c9a24a;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);
+  font-family:"Geist","Inter",system-ui,sans-serif;line-height:1.5;
+  background-image:radial-gradient(circle at 1px 1px,rgba(255,255,255,.022) 1px,transparent 0);background-size:22px 22px}
+.wrap{max-width:1180px;margin:0 auto;
+  padding-left:max(18px,env(safe-area-inset-left,0px));padding-right:max(18px,env(safe-area-inset-right,0px))}
+h1,h2,h3{text-wrap:balance;letter-spacing:-.02em;margin:0}
+code,.mono{font-family:"IBM Plex Mono",ui-monospace,monospace}
+a{color:inherit}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 82%,transparent);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+.nav-in{display:flex;align-items:center;gap:18px;padding-block:13px}
+.brand{display:flex;align-items:center;gap:9px;font-weight:600;font-size:1.02rem;letter-spacing:-.02em}
+.brand .mk{width:22px;height:22px}
+.brand b{font-weight:700}.brand span{color:var(--accent)}
+.nav-sp{flex:1}
+.nav-links{display:flex;align-items:center;gap:7px}
+.nav-links a{font-size:.85rem;color:var(--fg-muted);text-decoration:none;padding:7px 11px;border-radius:7px}
+.nav-links a:hover{color:var(--fg);background:var(--bg-elev-2)}
+.nav-cta{font-size:.85rem;font-weight:600;color:var(--accent-ink);background:var(--grad);
+  padding:7px 14px;border-radius:8px;text-decoration:none;box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent),0 6px 20px -8px var(--accent-glow)}
+@media(max-width:640px){.nav-links a.hideSm{display:none}}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+.aurora{position:absolute;inset:-40% -10% auto -10%;height:560px;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(42% 60% at 28% 30%,color-mix(in srgb,var(--accent) 30%,transparent),transparent 70%),
+    radial-gradient(40% 55% at 72% 24%,color-mix(in srgb,var(--accent-2) 24%,transparent),transparent 72%);
+  filter:blur(20px);opacity:.5}
+.hero-in{position:relative;z-index:1;padding-block:clamp(48px,9vw,96px);display:grid;gap:40px;
+  grid-template-columns:minmax(0,1fr) minmax(0,1.02fr);align-items:center}
+@media(max-width:860px){.hero-in{grid-template-columns:1fr;gap:34px}}
+.eyebrow{display:inline-flex;align-items:center;gap:7px;font-size:.74rem;font-weight:500;color:var(--fg-muted);
+  border:1px solid var(--border-strong);border-radius:999px;padding:5px 12px;margin-bottom:20px}
+.eyebrow .d{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 0 3px color-mix(in srgb,var(--good) 25%,transparent)}
+.hero h1{font-size:clamp(2.3rem,6vw,3.7rem);font-weight:700;line-height:1.02}
+.hero h1 .g{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--fg-muted);font-size:clamp(1rem,2.2vw,1.18rem);margin-top:18px;max-width:30ch}
+.cta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:28px}
+.btn{display:inline-flex;align-items:center;gap:9px;font:inherit;font-weight:600;font-size:.94rem;
+  border-radius:10px;padding:12px 20px;cursor:pointer;text-decoration:none;border:1px solid transparent}
+.btn-primary{color:var(--accent-ink);background:var(--grad);
+  box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 45%,transparent),0 10px 34px -10px var(--accent-glow)}
+.btn-primary:hover{filter:brightness(1.06)}
+.btn-ghost{color:var(--fg);background:var(--bg-elev-2);border-color:var(--border-strong)}
+.btn-ghost:hover{border-color:var(--accent);color:#fff}
+.btn small{font-weight:400;font-size:.76rem;opacity:.8}
+.trust{margin-top:22px;font-size:.8rem;color:var(--fg-faint);font-family:"IBM Plex Mono",monospace}
+.trust b{color:var(--fg-muted);font-weight:500}
+
+/* window frame (hero product shot — static) */
+.frame{background:var(--bg-elev);border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;
+  box-shadow:0 40px 90px -40px #000,0 0 0 1px color-mix(in srgb,var(--accent) 8%,transparent)}
+.frame-bar{display:flex;align-items:center;gap:8px;padding:10px 13px;background:var(--bg-elev-2);border-bottom:1px solid var(--border)}
+.frame-bar i{width:10px;height:10px;border-radius:50%;background:var(--border-strong)}
+.frame-bar .addr{margin-left:10px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--fg-faint)}
+.shot{display:grid;grid-template-columns:1fr 168px;min-height:230px}
+@media(max-width:480px){.shot{grid-template-columns:1fr}.shot .mini-ed{display:none}}
+.mini-ed{padding:14px 12px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;line-height:1.75;color:var(--fg-muted);border-right:1px solid var(--border)}
+.mini-ed .hot{background:var(--accent-soft);box-shadow:inset 2px 0 0 var(--accent);display:block;margin:0 -12px;padding:0 12px;color:var(--fg)}
+.mini-panel{padding:14px 12px;background:var(--bg-elev);border-left:1px solid var(--border)}
+.mini-h{font-size:.6rem;text-transform:uppercase;letter-spacing:.12em;color:var(--fg-faint);margin-bottom:10px}
+.mini-nodes{display:flex;gap:26px;position:relative;margin:6px 4px 2px}
+.mini-nodes .nd{width:38px;height:38px;border-radius:9px;background:var(--bg-elev-3);border:1px solid var(--border-strong);
+  display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace;font-weight:600;font-size:.9rem;position:relative}
+.mini-nodes .nd.lit{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft)}
+.mini-cap{font-family:"IBM Plex Mono",monospace;font-size:.64rem;color:var(--accent-2);margin-top:14px}
+
+/* section head */
+.sec{padding-block:clamp(40px,7vw,72px)}
+.sec-label{display:flex;align-items:center;gap:10px;font-family:"IBM Plex Mono",monospace;font-size:.74rem;
+  color:var(--fg-faint);text-transform:uppercase;letter-spacing:.12em;margin-bottom:8px}
+.sec-label::before{content:"";width:22px;height:1px;background:var(--accent)}
+.sec h2{font-size:clamp(1.5rem,4vw,2.1rem);font-weight:700}
+.sec .lede{color:var(--fg-muted);margin-top:10px;max-width:56ch}
+
+/* ===== the interactive panel, docked on faux leetcode ===== */
+.dock{margin-top:26px;border:1px solid var(--border-strong);border-radius:14px;overflow:hidden;background:var(--bg-elev);
+  box-shadow:0 40px 90px -46px #000}
+.dock-bar{display:flex;align-items:center;gap:8px;padding:10px 13px;background:var(--bg-elev-2);border-bottom:1px solid var(--border)}
+.dock-bar i{width:10px;height:10px;border-radius:50%;background:var(--border-strong)}
+.dock-bar .addr{margin-left:8px;font-family:"IBM Plex Mono",monospace;font-size:.72rem;color:var(--fg-faint);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dock-bar .addr b{color:var(--fg-muted);font-weight:500}
+.stage{display:grid;grid-template-columns:minmax(0,1fr) 388px}
+@media(max-width:880px){.stage{grid-template-columns:1fr}}
+
+/* faux leetcode (left) */
+.lc{min-width:0;border-right:1px solid var(--border);display:flex;flex-direction:column}
+.lc-tabs{display:flex;gap:2px;padding:0 14px;border-bottom:1px solid var(--border);font-size:.8rem}
+.lc-tabs span{padding:11px 10px;color:var(--fg-faint)}
+.lc-tabs span.on{color:var(--fg);box-shadow:inset 0 -2px 0 var(--accent);font-weight:600}
+.lc-body{padding:15px 16px}
+.lc-title{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:7px}
+.lc-title h3{font-size:1rem;font-weight:600}
+.chip{font-size:.7rem;padding:2px 9px;border-radius:999px;font-weight:600;color:var(--good);background:color-mix(in srgb,var(--good) 15%,transparent)}
+.lc-ex{font-family:"IBM Plex Mono",monospace;font-size:.76rem;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:9px 11px;color:var(--fg-muted);margin-bottom:13px}
+.lang{font-size:.74rem;color:var(--fg-muted);border:1px solid var(--border-strong);border-radius:7px;padding:4px 10px;background:var(--bg-elev-2);display:inline-block}
+.editor{background:var(--bg);border:1px solid var(--border);border-radius:9px;margin-top:9px;overflow:auto;font-family:"IBM Plex Mono",monospace;font-size:.78rem;line-height:1.62}
+.eline{display:flex;white-space:pre}
+.eline .ln{width:32px;flex:none;text-align:right;padding-right:11px;color:#3a424d;user-select:none}
+.eline.active{background:var(--accent-soft)}
+.eline.active .ln{color:var(--accent);font-weight:600}
+.eline.active .ec{box-shadow:inset 2px 0 0 var(--accent);margin-left:-2px;padding-left:2px}
+.tk-kw{color:var(--kw)}.tk-fn{color:var(--fn)}.tk-num{color:var(--num)}.tk-self{color:var(--self)}
+.lc-actions{display:flex;gap:8px;justify-content:flex-end;margin-top:11px}
+.lcbtn{font:inherit;font-size:.8rem;font-weight:600;border-radius:8px;padding:7px 15px;border:1px solid var(--border-strong);background:var(--bg-elev-2);color:var(--fg);cursor:default}
+.lcbtn.run{color:var(--good);border-color:transparent;background:color-mix(in srgb,var(--good) 14%,transparent)}
+.lcbtn.trace{color:var(--accent-ink);background:var(--grad);border-color:transparent;cursor:pointer;box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 40%,transparent)}
+
+/* panel (right) */
+.lt{background:var(--bg-elev);display:flex;flex-direction:column;min-width:0;border-left:1px solid var(--border)}
+.lt-head{display:flex;align-items:center;gap:9px;padding:11px 14px;border-bottom:1px solid var(--border)}
+.lt-head .mk{width:20px;height:20px}
+.lt-name{font-weight:700;font-size:.92rem;letter-spacing:-.01em}.lt-name span{color:var(--accent)}
+.conn{margin-left:auto;display:flex;align-items:center;gap:6px;font-size:.7rem;color:var(--good);
+  border:1px solid color-mix(in srgb,var(--good) 30%,transparent);border-radius:999px;padding:3px 9px;
+  background:color-mix(in srgb,var(--good) 10%,transparent)}
+.conn .d{width:6px;height:6px;border-radius:50%;background:var(--good);box-shadow:0 0 7px var(--good)}
+.testbar{display:flex;align-items:center;gap:8px;padding:9px 14px;border-bottom:1px solid var(--border);font-size:.74rem;color:var(--fg-muted)}
+.testbar code{color:var(--fg)}
+.pass{margin-left:auto;display:inline-flex;align-items:center;gap:5px;color:var(--good);font-weight:600}
+.sect{padding:12px 14px;border-bottom:1px solid var(--border)}
+.sect-h{font-size:.64rem;text-transform:uppercase;letter-spacing:.11em;color:var(--fg-faint);margin-bottom:9px;font-weight:600}
+.frame-c{background:var(--bg-elev-2);border:1px solid var(--border);border-radius:9px;padding:9px 11px}
+.frame-c+.frame-c{margin-top:7px}.frame-c.ghost{opacity:.45}
+.fn-name{font-family:"IBM Plex Mono",monospace;font-size:.77rem;font-weight:600;margin-bottom:7px;display:flex;justify-content:space-between}
+.fn-name .ret{color:var(--good);font-weight:500}
+.locals{display:grid;grid-template-columns:auto 1fr;gap:4px 10px;font-family:"IBM Plex Mono",monospace;font-size:.75rem;align-items:center}
+.locals .k{color:var(--fg-faint)}
+.pill{justify-self:start;padding:1px 8px;border-radius:6px;font-weight:600;background:var(--bg-elev-3);color:var(--fg)}
+.pill.c-curr{color:var(--ptr-curr);background:color-mix(in srgb,var(--ptr-curr) 18%,transparent)}
+.pill.c-prev{color:var(--ptr-prev);background:color-mix(in srgb,var(--ptr-prev) 16%,transparent)}
+.pill.c-next{color:var(--ptr-next);background:color-mix(in srgb,var(--ptr-next) 16%,transparent)}
+.pill.c-head{color:var(--ptr-head);background:color-mix(in srgb,var(--ptr-head) 26%,transparent)}
+.pill.none{color:var(--fg-faint)}
+
+.mem{position:relative;overflow-x:auto;padding-top:28px}
+.memcanvas{position:relative;min-width:344px;height:140px}
+.ptrtags{position:absolute;inset:0 0 auto 0;height:24px;pointer-events:none}
+.ptag{position:absolute;top:0;left:0;transform:translate(-50%,0);transition:transform .4s cubic-bezier(.34,1.2,.4,1),opacity .25s;
+  font-family:"IBM Plex Mono",monospace;font-size:.66rem;font-weight:700;padding:1px 7px;border-radius:6px;white-space:nowrap;display:flex;flex-direction:column;align-items:center}
+.ptag .car{font-size:.66rem;line-height:.5;margin-top:1px}
+.ptag.v-curr{color:var(--ptr-curr);background:color-mix(in srgb,var(--ptr-curr) 18%,transparent)}
+.ptag.v-prev{color:var(--ptr-prev);background:color-mix(in srgb,var(--ptr-prev) 16%,transparent)}
+.ptag.v-next{color:var(--ptr-next);background:color-mix(in srgb,var(--ptr-next) 16%,transparent)}
+.ptag.v-head{color:var(--ptr-head);background:color-mix(in srgb,var(--ptr-head) 24%,transparent)}
+.noderow{position:absolute;top:42px;left:0;display:flex;gap:40px;align-items:center}
+.node{width:50px;height:48px;flex:none;border-radius:10px;background:var(--bg-elev-2);border:1.5px solid var(--border-strong);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;position:relative}
+.node .val{font-family:"IBM Plex Mono",monospace;font-weight:700;font-size:1.02rem}
+.node .adr{font-family:"IBM Plex Mono",monospace;font-size:.54rem;color:var(--fg-faint);margin-top:1px}
+.node.lit{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-soft),0 0 18px -4px var(--accent-glow)}
+.nullcard{width:42px;height:48px;flex:none;border-radius:10px;border:1.5px dashed var(--border-strong);color:var(--fg-faint);display:flex;align-items:center;justify-content:center;font-family:"IBM Plex Mono",monospace}
+.arrows{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible}
+.why{display:flex;gap:9px;align-items:flex-start;font-size:.82rem}
+.why .q{color:var(--accent);font-weight:700;font-family:"IBM Plex Mono",monospace;flex:none}
+.why p{margin:0}.why .lref{color:var(--fg-faint);font-size:.7rem;display:block;margin-top:2px;font-family:"IBM Plex Mono",monospace}
+.controls{padding:11px 14px;display:flex;flex-direction:column;gap:9px}
+.crow{display:flex;align-items:center;gap:8px}
+.cbtn{width:33px;height:33px;flex:none;border-radius:8px;border:1px solid var(--border-strong);background:var(--bg-elev-2);color:var(--fg);cursor:pointer;font-size:.85rem;display:flex;align-items:center;justify-content:center}
+.cbtn:hover{border-color:var(--accent);color:#fff}
+.cbtn.play{background:var(--grad);color:var(--accent-ink);border-color:transparent;width:39px}
+.cbtn:focus-visible,.lcbtn.trace:focus-visible,a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.scrub{flex:1;min-width:0;accent-color:var(--accent);cursor:pointer}
+.count{font-family:"IBM Plex Mono",monospace;font-size:.7rem;color:var(--fg-faint);white-space:nowrap}
+.speed{font:inherit;font-size:.7rem;background:var(--bg-elev-2);color:var(--fg);border:1px solid var(--border-strong);border-radius:7px;padding:4px 6px}
+
+/* feature strip */
+.feat{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:26px}
+@media(max-width:760px){.feat{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.feat{grid-template-columns:1fr}}
+.card{background:var(--bg-elev);border:1px solid var(--border);border-radius:12px;padding:16px 15px}
+.card .ic{width:30px;height:30px;border-radius:8px;background:var(--accent-soft);display:flex;align-items:center;justify-content:center;margin-bottom:11px;color:var(--accent)}
+.card h4{font-size:.95rem;font-weight:600;margin-bottom:5px}
+.card p{font-size:.83rem;color:var(--fg-muted)}
+.note{color:var(--fg-faint);font-size:.78rem;text-align:center;padding:26px 0 40px;border-top:1px solid var(--border);margin-top:20px}
+@media(prefers-reduced-motion:reduce){.ptag{transition:none}}
+</style>
+
+<nav><div class="wrap nav-in">
+  <div class="brand">
+    <svg class="mk" viewBox="0 0 24 24" fill="none"><path d="M8 4 4 4 4 8M16 4 20 4 20 8M8 20 4 20 4 16M16 20 20 20 20 16" stroke="url(#g)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" stroke="url(#g)" stroke-width="2"/><defs><linearGradient id="g" x1="4" y1="4" x2="20" y2="20"><stop stop-color="#4d9fff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs></svg>
+    <b>Leet<span>Trace</span></b>
+  </div>
+  <div class="nav-sp"></div>
+  <div class="nav-links">
+    <a href="#panel" class="hideSm">How it works</a>
+    <a href="#panel" class="hideSm">GitHub</a>
+    <a href="#" class="nav-cta">Download</a>
+  </div>
+</div></nav>
+
+<header class="hero">
+  <div class="aurora"></div>
+  <div class="wrap hero-in">
+    <div>
+      <span class="eyebrow"><span class="d"></span>Runs 100% on your machine</span>
+      <h1>See your code <span class="g">actually run.</span></h1>
+      <p class="sub">Watch your solution execute step by step — call stack, memory, and pointers — right on the LeetCode problem you're grinding.</p>
+      <div class="cta-row">
+        <a href="#" class="btn btn-primary">↓ Download for macOS <small>· v1.1.0</small></a>
+        <a href="#" class="btn btn-ghost">Add to Chrome</a>
+      </div>
+      <div class="trust"><b>Python</b> · 100% local · open source</div>
+    </div>
+    <div class="frame" aria-hidden="true">
+      <div class="frame-bar"><i></i><i></i><i></i><span class="addr">leetcode.com/problems/reverse-linked-list</span></div>
+      <div class="shot">
+        <div class="mini-ed"><span>def reverseList(head):</span>
+<span>    prev = None</span>
+<span>    curr = head</span>
+<span>    while curr:</span>
+<span class="hot">        curr.next = prev</span>
+<span>        prev = curr</span>
+<span>        curr = nxt</span></div>
+        <div class="mini-panel">
+          <div class="mini-h">Memory</div>
+          <div class="mini-nodes">
+            <div class="nd lit">1</div><div class="nd">2</div><div class="nd">3</div>
+            <svg style="position:absolute;inset:0;width:100%;height:100%;overflow:visible" aria-hidden="true">
+              <path d="M18 48 C 18 70 -8 70 -8 48" fill="none" stroke="#4d9fff" stroke-width="2"/>
+              <path d="M82 20 C 82 2 50 2 50 20" fill="none" stroke="#2b313a" stroke-width="2"/>
+            </svg>
+          </div>
+          <div class="mini-cap">curr.next → prev</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="sec" id="panel">
+    <div class="sec-label">The panel</div>
+    <h2>It shows up inside LeetCode.</h2>
+    <p class="lede">A <b>Trace</b> button appears next to Run. Hit it and the panel plays your solution against the real example cases. Press play below, or drag the scrubber — watch the <code>next</code> pointers reverse one at a time.</p>
+
+    <div class="dock">
+      <div class="dock-bar"><i></i><i></i><i></i><span class="addr">leetcode.com/problems/<b>reverse-linked-list</b></span></div>
+      <div class="stage">
+        <div class="lc">
+          <div class="lc-tabs"><span class="on">Description</span><span>Solutions</span><span>Submissions</span></div>
+          <div class="lc-body">
+            <div class="lc-title"><h3>206. Reverse Linked List</h3><span class="chip">Easy</span></div>
+            <div class="lc-ex">head = [1,2,3,4]  →  [4,3,2,1]</div>
+            <span class="lang">Python3 ▾</span>
+            <div class="editor" id="editor" aria-label="code editor"></div>
+            <div class="lc-actions"><button class="lcbtn run">▷ Run</button><button class="lcbtn trace" id="traceBtn">◑ Trace</button><button class="lcbtn">Submit</button></div>
+          </div>
+        </div>
+        <div class="lt">
+          <div class="lt-head">
+            <svg class="mk" viewBox="0 0 24 24" fill="none"><path d="M8 4 4 4 4 8M16 4 20 4 20 8M8 20 4 20 4 16M16 20 20 20 20 16" stroke="url(#g2)" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" stroke="url(#g2)" stroke-width="2"/><defs><linearGradient id="g2" x1="4" y1="4" x2="20" y2="20"><stop stop-color="#4d9fff"/><stop offset="1" stop-color="#22d3ee"/></linearGradient></defs></svg>
+            <div class="lt-name">Leet<span>Trace</span></div>
+            <div class="conn"><span class="d"></span>connected</div>
+          </div>
+          <div class="testbar">Example 1 · <code>[1,2,3,4]</code> → <code>[4,3,2,1]</code><span class="pass">✓ Passed</span></div>
+          <div class="sect"><div class="sect-h">Call stack</div><div id="stack"></div></div>
+          <div class="sect"><div class="sect-h">Memory</div>
+            <div class="mem"><div class="memcanvas" id="memcanvas">
+              <div class="ptrtags" id="ptrtags"></div><div class="noderow" id="noderow"></div>
+              <svg class="arrows" id="arrows" aria-hidden="true"></svg>
+            </div></div>
+          </div>
+          <div class="sect"><div class="sect-h">Why this step</div>
+            <div class="why"><span class="q">?</span><div><p id="noteText"></p><span class="lref" id="lineRef"></span></div></div>
+          </div>
+          <div class="controls">
+            <div class="crow">
+              <button class="cbtn" id="back" aria-label="Step back">⏮</button>
+              <button class="cbtn play" id="play" aria-label="Play">▶</button>
+              <button class="cbtn" id="fwd" aria-label="Step forward">⏭</button>
+              <input class="scrub" id="scrub" type="range" min="0" value="0" aria-label="Timeline">
+              <span class="count" id="counter">0 / 0</span>
+            </div>
+            <div class="crow" style="justify-content:flex-end">
+              <span class="count">speed</span>
+              <select class="speed" id="speed" aria-label="Speed"><option value="1400">0.5×</option><option value="850" selected>1×</option><option value="450">2×</option></select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="feat">
+      <div class="card"><div class="ic">⌁</div><h4>Live call stack</h4><p>Frames push and pop as functions run. Recursion becomes something you can watch.</p></div>
+      <div class="card"><div class="ic">↗</div><h4>Pointer arrows</h4><p>Linked lists and trees render as real nodes and arrows that rewire as your code runs.</p></div>
+      <div class="card"><div class="ic">▤</div><h4>Step-by-step why</h4><p>A plain-English reason for every step, on the real example cases — pass or fail.</p></div>
+    </div>
+  </section>
+  <p class="note">Design mockup for review — the shipped panel renders the same way from a live local trace.</p>
+</main>
+
+<script>
+(function(){
+  "use strict";
+  var NODES={n1:1,n2:2,n3:3,n4:4}, ORDER=["n1","n2","n3","n4"];
+  var SRC=['def reverseList(head):','    prev = None','    curr = head','    while curr:','        nxt = curr.next','        curr.next = prev','        prev = curr','        curr = nxt','    return prev'];
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function hl(line){var s=esc(line);
+    s=s.replace(/\b(def|while|return|None)\b/g,'<span class="tk-kw">$1</span>');
+    s=s.replace(/(?<![\w])(\d+)\b/g,'<span class="tk-num">$1</span>');
+    s=s.replace(/\b(reverseList)\b/g,'<span class="tk-fn">$1</span>');
+    return s;}
+  var editor=document.getElementById('editor');
+  editor.innerHTML=SRC.map(function(l,i){return '<div class="eline" data-ln="'+(i+1)+'"><span class="ln">'+(i+1)+'</span><span class="ec">'+(hl(l)||' ')+'</span></div>';}).join('');
+
+  var steps=[];
+  (function(){
+    var head='n1',prev,curr,nxt,nx={n1:'n2',n2:'n3',n3:'n4',n4:null};
+    function v(id){return id==null?null:NODES[id];}
+    function snap(line,note,ex){var s={line:line,note:note,vars:{head:head,prev:prev,curr:curr,nxt:nxt},nx:{n1:nx.n1,n2:nx.n2,n3:nx.n3,n4:nx.n4}};if(ex)for(var k in ex)s[k]=ex[k];steps.push(s);}
+    snap(1,'Enter reverseList(head). head points at node 1 — the start of the list.',{event:'call'});
+    prev=null;snap(2,'prev = None. Nothing is reversed yet; prev is the growing reversed list.');
+    curr=head;snap(3,'curr = head. curr walks the original list from node 1.');
+    while(curr!=null){
+      snap(4,'curr is node '+v(curr)+' — not None, so the loop body runs.');
+      nxt=nx[curr];snap(5,'Save curr.next into nxt'+(nxt?' (node '+v(nxt)+')':' (None)')+' before overwriting the link.');
+      nx[curr]=prev;snap(6,'Reverse one link: node '+v(curr)+'.next now points '+(prev?'back to node '+v(prev):'to None')+'.',{hot:curr});
+      prev=curr;snap(7,'prev advances to node '+v(curr)+'. The reversed part just grew.');
+      curr=nxt;snap(8,'curr advances to '+(nxt?'node '+v(nxt):'None')+'. One step down the original list.');
+    }
+    snap(4,'curr is None — every link has been flipped. Exit the loop.');
+    snap(9,'Return prev (node '+v(prev)+') — the new head. head now points at the tail.',{event:'return',ret:prev});
+  })();
+
+  var noderow=document.getElementById('noderow'),ptrtags=document.getElementById('ptrtags'),svg=document.getElementById('arrows'),
+      memcanvas=document.getElementById('memcanvas'),stackEl=document.getElementById('stack'),noteText=document.getElementById('noteText'),
+      lineRef=document.getElementById('lineRef'),scrub=document.getElementById('scrub'),counter=document.getElementById('counter'),
+      playBtn=document.getElementById('play'),SVGNS='http://www.w3.org/2000/svg';
+  ORDER.forEach(function(id){var n=document.createElement('div');n.className='node';n.dataset.id=id;n.innerHTML='<span class="val">'+NODES[id]+'</span><span class="adr">0x'+id.slice(1)+'0</span>';noderow.appendChild(n);});
+  var nullEl=document.createElement('div');nullEl.className='nullcard';nullEl.dataset.id='null';nullEl.textContent='∅';noderow.appendChild(nullEl);
+  var VARS=[['curr','v-curr'],['prev','v-prev'],['nxt','v-next'],['head','v-head']],tagEls={};
+  VARS.forEach(function(v){var t=document.createElement('div');t.className='ptag '+v[1];t.innerHTML=v[0]+'<span class="car">▼</span>';t.style.opacity='0';ptrtags.appendChild(t);tagEls[v[0]]=t;});
+  scrub.max=String(steps.length-1);
+
+  function centerOf(id){var el=id==='null'?nullEl:noderow.querySelector('.node[data-id="'+id+'"]');var cr=memcanvas.getBoundingClientRect(),r=el.getBoundingClientRect();return {x:r.left-cr.left+r.width/2,bottom:r.top-cr.top+r.height};}
+  var edges={},raf=null,tStart=0,DUR=400;
+  function ensureEdge(key){if(edges[key])return edges[key];var p=document.createElementNS(SVGNS,'path');p.setAttribute('fill','none');p.setAttribute('stroke-width','2');p.setAttribute('stroke-linecap','round');var h=document.createElementNS(SVGNS,'path');h.setAttribute('stroke','none');svg.appendChild(p);svg.appendChild(h);return edges[key]={path:p,head:h,cur:null,tgt:null,op:0,opTgt:1};}
+  function geom(fromId,toId){var a=centerOf(fromId),b=centerOf(toId);return {x1:a.x,y1:a.bottom,x2:b.x,y2:b.bottom,b:26+Math.abs(a.x-b.x)*0.12};}
+  function setColor(key,hot){var e=edges[key],c=hot?'var(--accent)':'#2b313a';e.path.setAttribute('stroke',c);e.head.setAttribute('fill',c);e.path.setAttribute('stroke-width',hot?'2.6':'2');}
+  function draw(e,g,op){var midY=Math.max(g.y1,g.y2)+g.b;e.path.setAttribute('d','M '+g.x1+' '+g.y1+' C '+g.x1+' '+midY+' '+g.x2+' '+midY+' '+g.x2+' '+g.y2);e.path.style.opacity=op;e.head.style.opacity=op;var s=5.5;e.head.setAttribute('d','M '+g.x2+' '+g.y2+' l '+(-s)+' '+(s+2)+' l '+(s*2)+' 0 Z');}
+  function lerp(a,b,t){return a+(b-a)*t;}
+  function tick(ts){if(!tStart)tStart=ts;var t=Math.min(1,(ts-tStart)/DUR);var e2=t<.5?2*t*t:1-Math.pow(-2*t+2,2)/2;var alive=false;
+    for(var k in edges){var e=edges[k];if(!e.cur&&e.tgt)e.cur={x1:e.tgt.x1,y1:e.tgt.y1,x2:e.tgt.x2,y2:e.tgt.y2,b:e.tgt.b};var g;
+      if(e.tgt)g={x1:lerp(e.cur.x1,e.tgt.x1,e2),y1:lerp(e.cur.y1,e.tgt.y1,e2),x2:lerp(e.cur.x2,e.tgt.x2,e2),y2:lerp(e.cur.y2,e.tgt.y2,e2),b:lerp(e.cur.b,e.tgt.b,e2)};else g=e.cur;
+      var op=lerp(e.op,e.opTgt,e2);if(g)draw(e,g,op);
+      if(t>=1){e.cur=e.tgt?{x1:e.tgt.x1,y1:e.tgt.y1,x2:e.tgt.x2,y2:e.tgt.y2,b:e.tgt.b}:e.cur;e.op=e.opTgt;if(e.opTgt===0){e.path.remove();e.head.remove();delete edges[k];}}else alive=true;}
+    if(t<1||alive)raf=requestAnimationFrame(tick);else{raf=null;tStart=0;}}
+  function animate(){if(raf)cancelAnimationFrame(raf);tStart=0;raf=requestAnimationFrame(tick);}
+
+  var idx=0;
+  function render(i,instant){var s=steps[i];idx=i;
+    var pa=editor.querySelector('.eline.active');if(pa)pa.classList.remove('active');
+    var la=editor.querySelector('.eline[data-ln="'+s.line+'"]');if(la)la.classList.add('active');
+    noderow.querySelectorAll('.node').forEach(function(n){n.classList.toggle('lit',s.hot===n.dataset.id);});
+    VARS.forEach(function(v){var name=v[0],t=tagEls[name],val=s.vars[name];
+      if(typeof val==='undefined'){t.style.opacity='0';return;}
+      if(val!=null){var g=centerOf(val);t.style.opacity=(name==='head'&&i>0)?'.6':'1';t.style.transform='translate(-50%,0) translateX('+g.x+'px)';}
+      else{var gn=centerOf('n1');t.style.opacity='.5';t.style.transform='translate(-50%,0) translateX('+(gn.x-8)+'px)';}
+      t.firstChild.textContent=name+(val==null?' = ∅':'');});
+    var rows=VARS.map(function(v){var name=v[0],val=s.vars[name],disp,cls;
+      if(typeof val==='undefined'){disp='—';cls='none';}else if(val==null){disp='None';cls='none';}
+      else{disp='node('+NODES[val]+')';cls=({curr:'c-curr',prev:'c-prev',nxt:'c-next',head:'c-head'}[name]);}
+      return '<div class="k">'+name+'</div><div class="pill '+cls+'">'+disp+'</div>';}).join('');
+    var ret=s.event==='return'?'<span class="ret">↩ node('+NODES[s.ret]+')</span>':'';
+    stackEl.innerHTML='<div class="frame-c"><div class="fn-name">reverseList(head)'+ret+'</div><div class="locals">'+rows+'</div></div><div class="frame-c ghost"><div class="fn-name">⟨module⟩</div></div>';
+    noteText.textContent=s.note;lineRef.textContent='line '+s.line+' · step '+(i+1)+' of '+steps.length;
+    scrub.value=String(i);counter.textContent=(i+1)+' / '+steps.length;
+    var want={};ORDER.forEach(function(id){var to=s.nx[id]==null?'null':s.nx[id],key='nx:'+id;want[key]=1;var e=ensureEdge(key);e.tgt=geom(id,to);e.opTgt=1;setColor(key,s.hot===id);});
+    for(var k in edges){if(k.indexOf('nx:')===0&&!want[k])edges[k].opTgt=0;}
+    if(instant){for(var kk in edges){var e=edges[kk];e.cur=e.tgt?{x1:e.tgt.x1,y1:e.tgt.y1,x2:e.tgt.x2,y2:e.tgt.y2,b:e.tgt.b}:e.cur;e.op=e.opTgt;if(e.cur)draw(e,e.cur,e.op);}}else animate();}
+
+  var playing=false,timer=null;
+  function spd(){return parseInt(document.getElementById('speed').value,10);}
+  function setPlay(p){playing=p;playBtn.textContent=p?'⏸':'▶';playBtn.setAttribute('aria-label',p?'Pause':'Play');if(timer){clearInterval(timer);timer=null;}if(p)timer=setInterval(function(){if(idx>=steps.length-1){setPlay(false);return;}render(idx+1);},spd());}
+  playBtn.onclick=function(){if(idx>=steps.length-1&&!playing)render(0);setPlay(!playing);};
+  document.getElementById('fwd').onclick=function(){setPlay(false);render(Math.min(steps.length-1,idx+1));};
+  document.getElementById('back').onclick=function(){setPlay(false);render(Math.max(0,idx-1));};
+  scrub.oninput=function(){setPlay(false);render(parseInt(scrub.value,10));};
+  document.getElementById('speed').onchange=function(){if(playing)setPlay(true);};
+  document.getElementById('traceBtn').onclick=function(){document.getElementById('panel').scrollIntoView({behavior:'smooth',block:'center'});render(0);setPlay(true);};
+  document.addEventListener('keydown',function(e){if(/INPUT|SELECT|TEXTAREA/.test(document.activeElement.tagName))return;if(e.key==='ArrowRight'){e.preventDefault();document.getElementById('fwd').click();}else if(e.key==='ArrowLeft'){e.preventDefault();document.getElementById('back').click();}else if(e.key===' '){e.preventDefault();playBtn.click();}});
+  var rz;window.addEventListener('resize',function(){clearTimeout(rz);rz=setTimeout(function(){render(idx,true);},120);});
+  function start(){render(0,true);if(!matchMedia('(prefers-reduced-motion:reduce)').matches){setTimeout(function(){if(idx===0)setPlay(true);},1100);}}
+  if(document.fonts&&document.fonts.ready){document.fonts.ready.then(function(){render(idx,true);start();});}else start();
+  start();
+})();
+</script>
