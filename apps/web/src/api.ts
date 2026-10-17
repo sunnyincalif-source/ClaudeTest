@@ -7,11 +7,12 @@ const TOKEN_KEY = 'leettrace.token';
 export interface Boot {
   token: string | null;
   runId: string | null;
+  view: string | null;
 }
 
 export function parseHash(hash: string): Boot {
   const params = new URLSearchParams(hash.replace(/^#/, ''));
-  return { token: params.get('t'), runId: params.get('run') };
+  return { token: params.get('t'), runId: params.get('run'), view: params.get('view') };
 }
 
 /** Read the token from the fragment (or this tab's session), then strip it from the URL. */
@@ -24,10 +25,10 @@ export function boot(): Boot {
   } catch {
     // storage blocked: the token still works for this page load
   }
-  if (fromHash.token || fromHash.runId) {
+  if (fromHash.token || fromHash.runId || fromHash.view) {
     history.replaceState(null, '', window.location.pathname + window.location.search);
   }
-  return { token, runId: fromHash.runId };
+  return { token, runId: fromHash.runId, view: fromHash.view };
 }
 
 export class EngineError extends Error {
@@ -78,7 +79,43 @@ async function request(token: string, path: string, init?: RequestInit): Promise
 export interface Health {
   version: string;
   runs: number;
+  port: number;
+  paired: number;
+  limits: {
+    maxSteps: number;
+    maxSeconds: number;
+    maxDepth: number;
+    maxMemoryMb: number;
+    memory: 'enforced' | 'best-effort' | 'unavailable';
+    mechanism: string;
+  };
 }
+
+export interface PairInfo {
+  code: string;
+  expiresIn: number;
+  paired: number;
+}
+
+export async function pairCode(token: string): Promise<PairInfo> {
+  return (await (await request(token, '/pair/code')).json()) as PairInfo;
+}
+
+export async function shutdown(token: string): Promise<void> {
+  await request(token, '/shutdown', { method: 'POST', body: '{}' });
+}
+
+/** The engine serves the Chrome extension zip when it was bundled into this build. */
+export async function extensionZipAvailable(): Promise<boolean> {
+  try {
+    const res = await fetch(EXTENSION_ZIP, { method: 'HEAD' });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+export const EXTENSION_ZIP = '/downloads/leettrace-chrome-extension.zip';
 
 export async function health(token: string): Promise<Health> {
   return (await (await request(token, '/health')).json()) as Health;

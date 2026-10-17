@@ -37,10 +37,10 @@ build-backend = "hatchling.build"
 [tool.hatch.build.targets.wheel]
 packages = ["src/leettrace"]
 # web_dist is gitignored but must ship in the wheel (built by apps/web).
-artifacts = ["src/leettrace/web_dist/**"]
+artifacts = ["src/leettrace/web_dist/**", "src/leettrace/extension_dist/**"]
 
 [tool.hatch.build.targets.sdist]
-artifacts = ["src/leettrace/web_dist/**"]
+artifacts = ["src/leettrace/web_dist/**", "src/leettrace/extension_dist/**"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

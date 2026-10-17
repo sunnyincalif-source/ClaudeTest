@@ -67,6 +67,70 @@ def _error_trace(
     return trace
 
 
+_WINDOWS_JOB_OK: bool | None = None  # learned on first run: did the Job Object attach?
+
+
+def memory_cap_status() -> dict[str, str]:
+    """How the per-run memory cap is enforced on this OS. Never claims a cap that isn't there.
+
+    Step, time and recursion-depth caps are enforced by the tracer on every OS.
+    """
+    if sys.platform.startswith("linux"):
+        return {"memory": "enforced", "mechanism": "RLIMIT_AS"}
+    if sys.platform == "darwin":
+        return {
+            "memory": "best-effort",
+            "mechanism": "RLIMIT_AS (macOS may not enforce it); step/time/depth caps apply",
+        }
+    if sys.platform == "win32":
+        if _WINDOWS_JOB_OK is False:
+            return {
+                "memory": "unavailable",
+                "mechanism": "Job Object could not be applied; step/time/depth caps apply",
+            }
+        return {"memory": "enforced", "mechanism": "Windows Job Object"}
+    return {"memory": "unavailable", "mechanism": "unsupported OS; step/time/depth caps apply"}
+
+
+class _Completed:
+    def __init__(self, returncode: int, stdout: bytes, stderr: bytes) -> None:
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+
+
+def _spawn(request_bytes: bytes, cwd: str, timeout: float, memory_mb: int) -> _Completed:
+    """Start the child, cap it (Job Object on Windows) *before* it receives the program."""
+    global _WINDOWS_JOB_OK
+    job = None
+    proc = subprocess.Popen(
+        child_command(),
+        stdin=subprocess.PIPE,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        cwd=cwd,
+        env=_child_env(),
+    )
+    try:
+        if sys.platform == "win32":
+            from leettrace.tracer.winjob import WindowsJob
+
+            try:
+                job = WindowsJob(memory_mb)
+                _WINDOWS_JOB_OK = job.assign(proc)
+            except OSError:
+                _WINDOWS_JOB_OK = False
+        out, err = proc.communicate(request_bytes, timeout=timeout)
+        return _Completed(proc.returncode, out, err)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        proc.communicate()
+        raise
+    finally:
+        if job is not None:
+            job.close()
+
+
 def run_request(request: dict[str, Any], limits: RunLimits | None = None) -> dict[str, Any]:
     """Run one tracer request in a fresh sandboxed subprocess. Never raises for user code."""
     limits = limits or RunLimits()
@@ -75,14 +139,8 @@ def run_request(request: dict[str, Any], limits: RunLimits | None = None) -> dic
     hard_timeout = limits.max_seconds + 10.0  # startup + serialization headroom
     with tempfile.TemporaryDirectory(prefix="leettrace-") as cwd:
         try:
-            proc = subprocess.run(
-                child_command(),
-                input=json.dumps(request).encode("utf-8"),
-                capture_output=True,
-                timeout=hard_timeout,
-                cwd=cwd,
-                env=_child_env(),
-                check=False,
+            proc = _spawn(
+                json.dumps(request).encode("utf-8"), cwd, hard_timeout, limits.max_memory_mb
             )
         except subprocess.TimeoutExpired:
             return validate_trace(
@@ -95,7 +153,9 @@ def run_request(request: dict[str, Any], limits: RunLimits | None = None) -> dic
             )
     if not proc.stdout:
         tail = proc.stderr.decode("utf-8", "replace").strip().splitlines()[-3:]
-        if proc.returncode in (-9, 137) or "MemoryError" in " ".join(tail):
+        # 137/-9: killed by the OS; 0xC0000017 (STATUS_NO_MEMORY) or a job kill on Windows.
+        oom_codes = (-9, 137, 3221225495, -1073741801)
+        if proc.returncode in oom_codes or "MemoryError" in " ".join(tail):
             return validate_trace(
                 _error_trace(
                     source,

@@ -40,12 +40,17 @@ class Session:
     def base_url(self) -> str:
         return f"http://127.0.0.1:{self.port}"
 
-    def ui_url(self, run_id: str | None = None) -> str:
+    def ui_url(self, run_id: str | None = None, view: str | None = None) -> str:
         # The token travels in the URL *fragment*: never sent to any server, never logged.
         frag = f"t={self.token}"
         if run_id:
             frag += f"&run={run_id}"
+        if view:
+            frag += f"&view={view}"
         return f"{self.base_url}/#{frag}"
+
+    def welcome_url(self) -> str:
+        return self.ui_url(view="welcome")
 
 
 def new_token() -> str:

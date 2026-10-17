@@ -6,12 +6,12 @@
   "description": "LeetTrace browser extension (MV3): visualize your solution on the LeetCode tab.",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -p tsconfig.json --noEmit && vite build && node scripts/build-firefox.mjs",
+    "build": "tsc -p tsconfig.json --noEmit && vite build && node scripts/build-firefox.mjs && node scripts/package.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
     "e2e": "node e2e/extension.e2e.mjs",
-    "package": "pnpm build && node scripts/package.mjs"
+    "package": "pnpm build"
   },
   "dependencies": {
     "@leettrace/schema": "workspace:^",
@@ -30,6 +30,7 @@
     "@types/react": "18",
     "@types/react-dom": "18",
     "@vitejs/plugin-react": "4",
+    "fflate": "0.8.2",
     "jsdom": "26",
     "vite": "6.4.4",
     "vitest": "3.2.7"

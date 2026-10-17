@@ -3,9 +3,10 @@ import type { Trace } from '@leettrace/schema';
 import { TraceViewer } from '@leettrace/viz';
 import { boot, EngineError, getRun, health, traceLeetCode, traceScript, type Case } from './api';
 import { SAMPLES, type Sample } from './samples';
+import { Welcome } from './Welcome';
 import { useWatch, type WatchedRun } from './useWatch';
 
-type View = 'live' | 'practice';
+type View = 'live' | 'practice' | 'welcome';
 type ThemePref = 'system' | 'light' | 'dark';
 
 function useTheme(): [ThemePref, (t: ThemePref) => void, 'light' | 'dark'] {
@@ -39,9 +40,9 @@ function useTheme(): [ThemePref, (t: ThemePref) => void, 'light' | 'dark'] {
 }
 
 export function App() {
-  const [{ token, runId: bootRun }] = useState(boot);
+  const [{ token, runId: bootRun, view: bootView }] = useState(boot);
   const [theme, setTheme, resolvedTheme] = useTheme();
-  const [view, setView] = useState<View>('live');
+  const [view, setView] = useState<View>(bootView === 'welcome' ? 'welcome' : 'live');
   const [runs, setRuns] = useState<WatchedRun[]>([]);
   const [current, setCurrent] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -79,6 +80,13 @@ export function App() {
           <span>LeetTrace</span>
         </div>
         <nav className="tabs" aria-label="Views">
+          <button
+            type="button"
+            aria-pressed={view === 'welcome'}
+            onClick={() => setView('welcome')}
+          >
+            Setup
+          </button>
           <button type="button" aria-pressed={view === 'live'} onClick={() => setView('live')}>
             Live runs
           </button>
@@ -137,6 +145,8 @@ export function App() {
       <main id="main">
         {!token ? (
           <Onboarding />
+        ) : view === 'welcome' ? (
+          <Welcome token={token} onError={setError} onDone={() => setView('live')} />
         ) : view === 'live' ? (
           <LiveView
             runs={runs}

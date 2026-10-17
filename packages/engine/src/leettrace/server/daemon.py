@@ -36,7 +36,7 @@ def pick_port(preferred: int = DEFAULT_PORT, scan: int = PORT_SCAN) -> int:
 def serve(
     *,
     port: int | None = None,
-    on_ready: Callable[[Session], None] | None = None,
+    on_ready: Callable[[Session, str], None] | None = None,
     on_pair_code: Callable[[str, str], None] | None = None,
     dev: bool = False,
 ) -> None:
@@ -62,7 +62,7 @@ def serve(
     app.state.engine.request_shutdown = request_shutdown
     write_session(session)
     if on_ready is not None:
-        on_ready(session)
+        on_ready(session, app.state.engine.pair.current())
     try:
         server.run()
     finally:

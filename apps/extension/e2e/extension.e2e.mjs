@@ -90,22 +90,23 @@ daemon.stderr.on('data', (d) => (out += d));
 for (let i = 0; i < 100 && !out.includes('Listening'); i++) await sleep(150);
 await panel.getByRole('button', { name: 'Retry' }).click();
 if (process.env.DEBUG) console.log('[daemon]', out);
-await panel.getByText('Connect to your engine').waitFor({ timeout: 10000 });
+await panel.getByText('Pair with the LeetTrace app').waitFor({ timeout: 10000 });
 check(true, 'engine found → pairing prompt');
 
-// 3) Pair with the code printed in the terminal.
-await panel.getByRole('button', { name: 'Connect' }).click();
-for (let i = 0; i < 50 && !/\d{3}-\d{3}/.test(out); i++) await sleep(100);
-const code = /(\d{3}-\d{3})/.exec(out)?.[1];
-check(!!code, `pairing code shown in terminal (${code})`);
+// 3) Pair with the code the app shows (welcome page + terminal).
+const code = /Pairing code for the extension: .*?(\d{3}-\d{3})/.exec(out)?.[1];
+check(!!code, `pairing code shown when the app starts (${code})`);
 await panel.getByLabel('Pairing code').fill('000-000');
 await panel.getByRole('button', { name: 'Pair' }).click();
 await panel.getByText('didn’t match').waitFor({ timeout: 5000 });
 check(true, 'wrong code rejected');
 await panel.getByLabel('Pairing code').fill(code);
 await panel.getByRole('button', { name: 'Pair' }).click();
-await panel.getByText('Test cases').waitFor({ timeout: 10000 });
-check(true, 'paired → scraped example cases shown');
+await panel.getByText('Test cases', { exact: true }).waitFor({ timeout: 10000 });
+check(
+  await panel.getByText('Engine connected').isVisible(),
+  'paired → "Engine connected" + scraped example cases',
+);
 const cases = await panel.locator('.ltx-case').allInnerTexts();
 check(
   cases.length === 3 &&

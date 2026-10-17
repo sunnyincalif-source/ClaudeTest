@@ -11,7 +11,8 @@
     "lint": "eslint src",
     "test": "vitest run --passWithNoTests",
     "e2e": "node e2e/watch.e2e.mjs",
-    "audit": "node e2e/audit.e2e.mjs"
+    "audit": "node e2e/audit.e2e.mjs",
+    "e2e:launch": "node e2e/launch.e2e.mjs"
   },
   "dependencies": {
     "@leettrace/schema": "workspace:^",

@@ -2,11 +2,16 @@ name: CI
 
 on:
   push:
-    branches: [main]
   pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  ci:
+  checks:
+    name: Lint, build, tests, e2e (Linux)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -22,9 +27,61 @@ jobs:
           python-version: '3.12'
       - run: pnpm install --frozen-lockfile
       - run: cd packages/engine && uv sync --frozen
-      - name: Lint (TS + Python)
+      - name: Lint (ESLint, Prettier, ruff, mypy --strict)
         run: pnpm lint
-      - name: Build
+      - name: Build (all workspaces; bundles web UI + extension zip into the engine)
         run: pnpm build
-      - name: Test (Vitest + pytest)
+      - name: Unit + golden tests (Vitest + pytest)
         run: pnpm test
+      - name: Install Chromium for e2e
+        run: pnpm --filter @leettrace/web exec playwright install --with-deps chromium
+      - name: e2e — web UI watch round-trip
+        run: pnpm --filter @leettrace/web e2e
+      - name: e2e — friendly launch (welcome page + pairing code)
+        run: pnpm --filter @leettrace/web e2e:launch
+      - name: e2e — accessibility audit
+        run: pnpm --filter @leettrace/web audit
+      - name: e2e — extension on problem-page fixtures
+        run: pnpm --filter @leettrace/extension e2e
+
+  cross-os:
+    name: Engine tests + binary smoke (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: '3.12'
+      - run: pnpm install --frozen-lockfile
+      - name: Build web UI + extension (bundled into the engine)
+        run: pnpm exec turbo run build --filter=@leettrace/web --filter=@leettrace/extension
+      - run: cd packages/engine && uv sync --frozen
+      - name: Engine tests (tracer, limits incl. Windows Job Object, server, adapter, TUI)
+        run: cd packages/engine && uv run pytest
+      - name: Smoke test (dev install)
+        run: cd packages/engine && uv run python scripts/smoke.py uv run leettrace
+      - name: Build standalone binary
+        shell: bash
+        run: packages/engine/packaging/build_binary.sh
+      - name: Smoke test (standalone binary)
+        shell: bash
+        run: |
+          BIN=packages/engine/dist-bin/leettrace
+          if [ -f "$BIN.exe" ]; then BIN="$BIN.exe"; fi
+          python3 packages/engine/scripts/smoke.py "$BIN" || python packages/engine/scripts/smoke.py "$BIN"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: leettrace-ci-${{ matrix.os }}
+          path: packages/engine/dist-bin/*
+          retention-days: 7

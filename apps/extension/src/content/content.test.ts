@@ -117,7 +117,7 @@ describe('daemon client', () => {
 
   it('pairs, then uses the token; a restarted engine (401) forces re-pairing', async () => {
     const pairFetch = vi.fn(async () => res(200, { token: 't0k', port: 47823, version: '0.1.0' }));
-    await confirmPairing(47823, 'req', '123456', pairFetch as unknown as typeof fetch);
+    await confirmPairing(47823, '123456', pairFetch as unknown as typeof fetch);
     const ok = vi.fn(async () => res(200, { version: '0.1.0' }));
     expect((await checkDaemon(ok as unknown as typeof fetch)).kind).toBe('ready');
     const call = ok.mock.calls[0] as unknown as [string, RequestInit];

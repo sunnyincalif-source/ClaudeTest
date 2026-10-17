@@ -127,22 +127,18 @@ async function postJson(url: string, body: unknown, f: Fetch, token?: string): P
   return res;
 }
 
-export async function requestPairing(port: number, f: Fetch = fetch): Promise<string> {
-  const res = await postJson(
-    `http://127.0.0.1:${port}/pair/request`,
-    { client: 'LeetTrace extension' },
-    f,
-  );
-  return ((await res.json()) as { requestId: string }).requestId;
+/** Ask the engine to echo the current pairing code in its terminal (best effort). */
+export async function requestPairing(port: number, f: Fetch = fetch): Promise<void> {
+  await postJson(`http://127.0.0.1:${port}/pair/request`, { client: 'LeetTrace extension' }, f);
 }
 
+/** Exchange the one-time code from the LeetTrace welcome page for the session token. */
 export async function confirmPairing(
   port: number,
-  requestId: string,
   code: string,
   f: Fetch = fetch,
 ): Promise<Pairing> {
-  const res = await postJson(`http://127.0.0.1:${port}/pair/confirm`, { requestId, code }, f);
+  const res = await postJson(`http://127.0.0.1:${port}/pair/confirm`, { code }, f);
   const body = (await res.json()) as { token: string; port: number; version: string };
   const pairing = { port: body.port, token: body.token, version: body.version };
   await setPairing(pairing);

@@ -6,9 +6,10 @@ Endpoints (all but the static UI shell and the pairing handshake need the bearer
   POST /leetcode/trace    {code, cases:[{input, expected?}], ...} → {traces: Trace[]}
   GET  /runs/{id}         a previously published Trace
   WS   /watch?token=…     pushes {type:"trace", runId, label, trace} on every publish
-  POST /pair/request      extension asks to pair → user sees a code in the terminal
+  GET  /pair/code         (auth) the current one-time pairing code (welcome page, CLI)
+  POST /pair/request      extension says hello → the current code is echoed in the terminal
   POST /pair/confirm      extension submits the code → receives the token
-  GET  /pair/pending      (auth) pending pairing codes, for `leettrace pair`
+  GET  /downloads/…       the bundled extension zip (public, no data)
   POST /shutdown          (auth) stop the daemon
 """
 
@@ -34,7 +35,7 @@ from starlette.concurrency import run_in_threadpool
 
 from leettrace import __version__
 from leettrace.server.security import LEETCODE_ORIGIN, Gate
-from leettrace.tracer.runner import RunLimits, run_request
+from leettrace.tracer.runner import RunLimits, memory_cap_status, run_request
 
 MAX_BODY_BYTES = 1_000_000
 MAX_CODE = 100_000
@@ -70,17 +71,34 @@ class PairRequestBody(BaseModel):
 
 
 class PairConfirmBody(BaseModel):
-    request_id: str = Field(alias="requestId", max_length=64)
     code: str = Field(max_length=16)
+    request_id: str | None = Field(default=None, alias="requestId", max_length=64)
+
+
+PAIR_CODE_TTL = 15 * 60  # seconds a pairing code stays valid
+PAIR_MAX_WRONG = 5  # wrong guesses before the code is replaced
 
 
 @dataclass
-class _Pending:
-    request_id: str
-    code: str
-    client: str
-    expires: float
-    attempts: int = 0
+class PairCode:
+    """One standing, one-time pairing code. Shown on the local welcome page (which holds the
+    token) and in the terminal; consumed by a successful pairing, replaced on expiry or after
+    too many wrong guesses."""
+
+    value: str = ""
+    expires: float = 0.0
+    wrong: int = 0
+
+    def rotate(self) -> str:
+        self.value = f"{secrets.randbelow(1_000_000):06d}"
+        self.expires = time.monotonic() + PAIR_CODE_TTL
+        self.wrong = 0
+        return self.value
+
+    def current(self) -> str:
+        if not self.value or time.monotonic() >= self.expires:
+            self.rotate()
+        return self.value
 
 
 @dataclass
@@ -92,8 +110,10 @@ class EngineState:
     labels: dict[str, str] = field(default_factory=dict)
     watchers: set[WebSocket] = field(default_factory=set)
     latest: str | None = None
-    pending: dict[str, _Pending] = field(default_factory=dict)
+    pair: PairCode = field(default_factory=PairCode)
+    paired: int = 0
     last_pair_request: float = 0.0
+    confirm_times: list[float] = field(default_factory=list)
     limits: RunLimits = field(default_factory=RunLimits)
     sem: asyncio.Semaphore = field(default_factory=lambda: asyncio.Semaphore(MAX_CONCURRENT_TRACES))
 
@@ -120,6 +140,15 @@ def _web_dist() -> Path | None:
     except (ModuleNotFoundError, TypeError):
         return None
     return root if (root / "index.html").exists() else None
+
+
+def _downloads_dir() -> Path | None:
+    """The bundled extension zip(s), copied in by the extension build (`extension_dist/`)."""
+    try:
+        root = Path(str(resources.files("leettrace") / "extension_dist"))
+    except (ModuleNotFoundError, TypeError):
+        return None
+    return root if root.is_dir() else None
 
 
 _PLACEHOLDER = """<!doctype html><meta charset="utf-8"><title>LeetTrace</title>
@@ -202,7 +231,17 @@ def create_app(
 
     @app.get("/health")
     async def health() -> dict[str, Any]:
+        lim = state.limits
         return {
+            "limits": {
+                "maxSteps": lim.max_steps,
+                "maxSeconds": lim.max_seconds,
+                "maxDepth": lim.max_depth,
+                "maxMemoryMb": lim.max_memory_mb,
+                **memory_cap_status(),
+            },
+            "paired": state.paired,
+            "port": gate.port,
             "app": "leettrace",
             "version": __version__,
             "status": "ok",
@@ -264,61 +303,67 @@ def create_app(
 
     # ------------------------------------------------------------------ pairing
 
+    def from_leetcode(request: Request) -> bool:
+        # Only the LeetCode page (where the extension's content script lives) may pair.
+        return request.headers.get("origin") == LEETCODE_ORIGIN
+
+    def token_ok(request: Request) -> bool:
+        # /pair/* is under a public prefix, so authenticated pair routes check explicitly.
+        return gate.token_ok(gate.bearer(request.headers.get("authorization")))
+
+    @app.get("/pair/code")
+    async def pair_code(request: Request) -> Response:
+        if not token_ok(request):
+            return JSONResponse({"error": "missing or invalid session token"}, status_code=401)
+        code = state.pair.current()
+        return JSONResponse(
+            {
+                "code": code,
+                "expiresIn": max(0, int(state.pair.expires - time.monotonic())),
+                "paired": state.paired,
+            }
+        )
+
     @app.post("/pair/request")
     async def pair_request(body: PairRequestBody, request: Request) -> Response:
-        # Only the LeetCode page (where the extension's content script lives) may ask.
-        if request.headers.get("origin") != LEETCODE_ORIGIN:
+        if not from_leetcode(request):
             return JSONResponse(
                 {"error": "pairing is only offered to the extension"}, status_code=403
             )
         now = time.monotonic()
-        for rid, p in list(state.pending.items()):
-            if p.expires < now:
-                del state.pending[rid]
-        if now - state.last_pair_request < 2.0 or len(state.pending) >= 3:
+        if now - state.last_pair_request < 2.0:
             return JSONResponse(
                 {"error": "too many pairing requests; wait a moment"}, status_code=429
             )
         state.last_pair_request = now
-        code = f"{secrets.randbelow(1_000_000):06d}"
-        pending = _Pending(
-            request_id=uuid.uuid4().hex, code=code, client=body.client[:80], expires=now + 180
-        )
-        state.pending[pending.request_id] = pending
-        state.on_pair_code(pending.client, code)
-        return JSONResponse({"requestId": pending.request_id, "expiresIn": 180})
+        state.on_pair_code(body.client[:80], state.pair.current())
+        return JSONResponse({"expiresIn": int(state.pair.expires - now)})
 
     @app.post("/pair/confirm")
     async def pair_confirm(body: PairConfirmBody, request: Request) -> Response:
-        if request.headers.get("origin") != LEETCODE_ORIGIN:
+        if not from_leetcode(request):
             return JSONResponse(
                 {"error": "pairing is only offered to the extension"}, status_code=403
             )
-        pending = state.pending.get(body.request_id)
-        if pending is None or pending.expires < time.monotonic():
-            state.pending.pop(body.request_id, None)
-            return JSONResponse({"error": "pairing request expired — start again"}, status_code=410)
-        submitted = body.code.replace("-", "").replace(" ", "")
-        if not secrets.compare_digest(submitted, pending.code):
-            pending.attempts += 1
-            if pending.attempts >= 5:
-                del state.pending[body.request_id]
-            return JSONResponse({"error": "wrong code"}, status_code=403)
-        del state.pending[body.request_id]
-        return JSONResponse({"token": gate.token, "port": gate.port, "version": __version__})
-
-    @app.get("/pair/pending")
-    async def pair_pending(request: Request) -> Response:
-        # Under /pair/ (public prefix) so check the token explicitly here.
-        if not gate.token_ok(gate.bearer(request.headers.get("authorization"))):
-            return JSONResponse({"error": "missing or invalid session token"}, status_code=401)
         now = time.monotonic()
-        items = [
-            {"client": p.client, "code": p.code, "expiresIn": int(p.expires - now)}
-            for p in state.pending.values()
-            if p.expires > now
-        ]
-        return JSONResponse({"pending": items})
+        state.confirm_times = [t for t in state.confirm_times if now - t < 60] + [now]
+        if len(state.confirm_times) > 20:
+            return JSONResponse({"error": "too many attempts; wait a minute"}, status_code=429)
+        if not state.pair.value or now >= state.pair.expires:
+            state.pair.rotate()
+            return JSONResponse(
+                {"error": "that code expired — use the new code on the LeetTrace welcome page"},
+                status_code=410,
+            )
+        submitted = body.code.replace("-", "").replace(" ", "").strip()
+        if not secrets.compare_digest(submitted.encode(), state.pair.value.encode()):
+            state.pair.wrong += 1
+            if state.pair.wrong >= PAIR_MAX_WRONG:
+                state.on_pair_code("(new code after too many wrong attempts)", state.pair.rotate())
+            return JSONResponse({"error": "wrong code"}, status_code=403)
+        state.pair.rotate()  # one-time: the next pairing needs a fresh code
+        state.paired += 1
+        return JSONResponse({"token": gate.token, "port": gate.port, "version": __version__})
 
     # ------------------------------------------------------------------ watch (WS)
 
@@ -369,6 +414,17 @@ def create_app(
         if dist is None:
             return HTMLResponse(_PLACEHOLDER, headers=headers)
         return FileResponse(dist / "index.html", headers=headers)
+
+    downloads = _downloads_dir()
+
+    @app.api_route("/downloads/{name}", methods=["GET", "HEAD"], include_in_schema=False)
+    async def download(name: str) -> Response:
+        if downloads is None or "/" in name or "\\" in name or not name.endswith(".zip"):
+            return Response(status_code=404)
+        path = downloads / name
+        if not path.is_file():
+            return Response(status_code=404)
+        return FileResponse(path, media_type="application/zip", filename=name)
 
     @app.get("/favicon.svg", include_in_schema=False)
     async def favicon() -> Response:

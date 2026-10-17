@@ -19,12 +19,17 @@ browser send requests to `127.0.0.1`. LeetTrace refuses them because:
 | Size limits      | Bodies over 1 MB are rejected with `413` before parsing. Code is limited to 100 KB and input to 100 KB.                                                                               | `server/app.py`      |
 | Static shell     | The UI's HTML is public but contains no data. It is served with a strict CSP and `frame-ancestors 'none'`.                                                                            | `server/app.py`      |
 
-**How the extension gets the token.** It never reads the token file. On first use the panel
-asks the engine to pair. This request is only accepted from `https://leetcode.com`. The
-engine then prints a one-time 6-digit code in your terminal, and you type it into the panel.
-A request is locked out after 5 wrong attempts, at most 3 pairing requests can be pending at
-once, and new requests are rate-limited. The token is kept in extension storage, which
-leetcode.com's own scripts cannot read.
+**How the extension gets the token.** It never reads the token file. The engine holds one
+6-digit pairing code. The code is shown on the local welcome page, which already holds the
+token, and in the terminal. You paste it into the panel on a LeetCode problem once.
+
+- The exchange (`/pair/confirm`) is only accepted from `https://leetcode.com`.
+- Each code works once, and it expires after 15 minutes.
+- After 5 wrong guesses the code is replaced.
+- Attempts are rate-limited to 20 a minute.
+- Reading the code (`/pair/code`) needs the session token.
+
+The token is kept in extension storage, which leetcode.com's own scripts cannot read.
 
 **How the local web UI gets the token.** `leettrace start/run/open` opens the UI with the
 token in the URL fragment (`#t=…`). Fragments are never sent to a server. The UI moves the
@@ -37,8 +42,13 @@ Your code runs in a fresh subprocess with these limits:
 - `python -I` (isolated mode), a minimal environment, a temporary working directory, and a
   deterministic hash seed.
 - A cap of 10,000 trace steps, 5 s wall clock inside the tracer, and a recursion depth of 200. When a cap is hit, you get a partial trace marked `truncated`.
-- On POSIX, `RLIMIT_AS` allows 256 MB above the interpreter's baseline, and `RLIMIT_CPU` is
-  also capped.
+- Memory: 256 MB for your program.
+  - **Linux:** enforced with `RLIMIT_AS`, with `RLIMIT_CPU` as well.
+  - **Windows:** enforced with a Job Object, which also prevents the program from starting
+    other processes.
+  - **macOS:** best effort only, because macOS doesn't enforce `RLIMIT_AS`.
+  - `/health` and the welcome page report which of these applies, so the cap is never
+    silently missing.
 - The parent kills the process after a hard timeout.
 - The protocol result goes over a private file descriptor. The user program's stdout (fd 1)
   is `/dev/null`, so printing cannot corrupt the trace.

@@ -17,9 +17,9 @@ from collections.abc import Iterable
 
 LEETCODE_ORIGIN = "https://leetcode.com"
 
-# Paths that execute nothing and expose nothing: the static UI shell and the pairing
-# handshake (which itself requires an out-of-band code typed by the user).
-PUBLIC_PREFIXES = ("/assets/", "/pair/")
+# Paths that execute nothing and expose nothing: the static UI shell, the extension zip, and
+# the pairing handshake (which itself requires the one-time code the user copies over).
+PUBLIC_PREFIXES = ("/assets/", "/pair/", "/downloads/")
 PUBLIC_PATHS = ("/", "/index.html", "/favicon.svg", "/favicon.ico")
 
 

@@ -117,8 +117,9 @@ command prints a link to the local web UI.
 
 - Chrome may ask whether leetcode.com can reach apps on this device. Choose **Allow**. That is
   how the page reaches your local engine.
-- The panel asks for a 6-digit pairing code. It appears in the terminal running
-  `leettrace start`, or you can run `leettrace pair` to see it.
+- The panel asks for a 6-digit pairing code. Copy it from the LeetTrace welcome page, which
+  opens when you start the app (run `leettrace` with no arguments, or double-click it). The
+  code is also printed in the terminal, and `leettrace pair` shows it again.
 
 You can also skip the browser and run `leettrace demo` to see it work right away.
 
@@ -190,8 +191,8 @@ A localhost code runner is an attack surface, so the protections are part of the
 - Every request needs a 256-bit session token.
 - Only `https://leetcode.com` and the engine's own UI origin are accepted.
 - The Host header is checked, to defeat DNS rebinding.
-- The extension pairs once using a code typed from your terminal, with a lockout after
-  repeated wrong codes.
+- The extension pairs once, using a one-time code from the local welcome page. The code
+  rotates after repeated wrong guesses.
 - Your code runs in a sandboxed subprocess with step, time, depth, memory, and CPU caps.
 
 [docs/SECURITY.md](docs/SECURITY.md) has the full model, and each item is covered by tests.

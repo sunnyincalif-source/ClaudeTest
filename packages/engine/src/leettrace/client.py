@@ -49,12 +49,20 @@ def ensure_daemon(timeout: float = 15.0) -> Session:
     fd = os.open(log_dir / "daemon.log", os.O_WRONLY | os.O_CREAT | os.O_APPEND, 0o600)
     os.chmod(log_dir / "daemon.log", 0o600)
     with os.fdopen(fd, "ab") as log:
+        detach: dict[str, Any] = {}
+        if sys.platform == "win32":
+            # No console window, and not killed when the launching console closes.
+            detach["creationflags"] = (
+                subprocess.CREATE_NEW_PROCESS_GROUP | subprocess.CREATE_NO_WINDOW  # type: ignore[attr-defined]
+            )
+        else:
+            detach["start_new_session"] = True
         subprocess.Popen(
             [*leettrace_command(), "start", "--background"],
             stdin=subprocess.DEVNULL,
             stdout=log,
             stderr=log,
-            start_new_session=True,
+            **detach,
         )
     deadline = time.monotonic() + timeout
     while time.monotonic() < deadline:

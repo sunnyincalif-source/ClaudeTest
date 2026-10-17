@@ -26,7 +26,6 @@ from leettrace.client import (
 app = typer.Typer(
     name="leettrace",
     help="See how your solution actually executes: stack, heap, pointers, and a reason per step.",
-    no_args_is_help=True,
     add_completion=False,
     pretty_exceptions_enable=False,
 )
@@ -40,13 +39,20 @@ def _version_callback(value: bool) -> None:
         raise typer.Exit()
 
 
-@app.callback()
+@app.callback(invoke_without_command=True)
 def _root(
+    ctx: typer.Context,
     version: Annotated[
         bool, typer.Option("--version", callback=_version_callback, is_eager=True)
     ] = False,
 ) -> None:
-    """LeetTrace — a local trace engine for your LeetCode practice."""
+    """LeetTrace — a local trace engine for your LeetCode practice.
+
+    Run with no command (or double-click the app) to start the engine and open the welcome
+    page with your pairing code.
+    """
+    if ctx.invoked_subcommand is None:
+        launch()
 
 
 # ------------------------------------------------------------------ daemon lifecycle
@@ -63,26 +69,35 @@ def start(
     running = find_daemon()
     if running is not None:
         console.print(f"[green]●[/] LeetTrace engine already running at {running.base_url}")
-        console.print(f"  Web UI: {running.ui_url()}")
+        console.print(f"  Welcome page (pairing code, status): {running.welcome_url()}")
+        if not no_open and not background:
+            webbrowser.open(running.welcome_url())
         return
 
     from leettrace.server.daemon import serve
     from leettrace.server.session import Session
 
-    def ready(session: Session) -> None:
+    def ready(session: Session, code: str) -> None:
         if background:
             print(f"leettrace engine {__version__} on {session.base_url}", flush=True)
             return
+        from leettrace.tracer.runner import memory_cap_status
+
         _welcome_once()
         console.print(f"[bold green]●[/] LeetTrace engine {__version__} running")
         console.print(f"  Listening on {session.base_url} [dim](loopback only)[/]")
-        console.print(f"  Web UI:      {session.ui_url()}")
+        console.print(f"  Welcome:     {session.welcome_url()}")
+        console.print(f"  Pairing code for the extension: [bold reverse] {code[:3]}-{code[3:]} [/]")
         console.print("  Extension:   open a LeetCode problem and click [bold]Trace[/]")
+        cap = memory_cap_status()
+        if cap["memory"] != "enforced":
+            console.print(f"[yellow]  Memory cap: {cap['memory']} — {cap['mechanism']}[/]")
         console.print(
-            "[dim]  Your code runs locally, in a sandboxed subprocess. Ctrl+C to stop.[/]"
+            "[dim]  Your code runs locally, in a sandboxed subprocess. "
+            "Close this window or press Ctrl+C to stop.[/]"
         )
         if not no_open:
-            webbrowser.open(session.ui_url())
+            webbrowser.open(session.welcome_url())
 
     def pair_code(client: str, code: str) -> None:
         pretty = f"{code[:3]}-{code[3:]}"
@@ -90,8 +105,8 @@ def start(
             print(f"pairing request from {client}: code {pretty}", flush=True)
             return
         console.print(
-            f"\n[bold yellow]Pairing request[/] from [bold]{escape(client)}[/]. "
-            f"If that was you, enter this code in the extension: [bold reverse] {pretty} [/]\n"
+            f"\n[bold yellow]Pairing[/] ({escape(client)}): enter this code in the "
+            f"extension — [bold reverse] {pretty} [/] (also shown on the welcome page)\n"
         )
 
     try:
@@ -214,18 +229,25 @@ def open_ui() -> None:
 
 @app.command()
 def pair() -> None:
-    """Show pending pairing codes (if the extension asked to connect)."""
+    """Show the one-time code that pairs the browser extension with this engine."""
     session = _daemon()
-    pending = get(session, "/pair/pending").json()["pending"]
-    if not pending:
-        console.print("No pending pairing requests. Click [bold]Connect[/] in the extension first.")
+    info = get(session, "/pair/code").json()
+    code = info["code"]
+    console.print(
+        f"Pairing code: [bold reverse] {code[:3]}-{code[3:]} [/] "
+        f"[dim](valid {info['expiresIn'] // 60} min, one use)[/]"
+    )
+    console.print("Open a LeetCode problem, click [bold]Trace[/], and paste it into the panel.")
+
+
+def launch() -> None:
+    """No subcommand / double-click: start the engine (or find it) and open the welcome page."""
+    running = find_daemon()
+    if running is not None:
+        console.print(f"[green]●[/] LeetTrace is already running — opening {running.base_url}")
+        webbrowser.open(running.welcome_url())
         return
-    for p in pending:
-        code = p["code"]
-        console.print(
-            f"{escape(p['client'])}: [bold reverse] {code[:3]}-{code[3:]} [/] "
-            f"[dim](expires in {p['expiresIn']}s)[/]"
-        )
+    start(port=None, background=False, dev=False, no_open=False)
 
 
 # ------------------------------------------------------------------ tracing
@@ -430,6 +452,27 @@ def leetcode(
         webbrowser.open(session.ui_url(run_id))
 
 
+def _ensure_stdio() -> None:
+    """A double-clicked windowed app (macOS .app) has no console: log to a file instead."""
+    if sys.stdout is not None and sys.stderr is not None:
+        return
+    import io
+    from typing import TextIO
+
+    from leettrace.server.session import home
+
+    log: TextIO
+    try:
+        home().mkdir(mode=0o700, parents=True, exist_ok=True)
+        log = open(home() / "app.log", "a", encoding="utf-8")  # noqa: SIM115 — process-lifetime
+    except OSError:
+        log = io.StringIO()
+    sys.stdout = sys.stdout or log
+    sys.stderr = sys.stderr or log
+    console.file = sys.stdout
+    err.file = sys.stderr
+
+
 def main() -> None:
     from leettrace.tracer.runner import CHILD_FLAG
 
@@ -439,4 +482,7 @@ def main() -> None:
         sys.argv.pop(1)
         child.main()
         return
+    # macOS may pass a process-serial-number argument to double-clicked apps.
+    sys.argv = [a for a in sys.argv if not a.startswith("-psn_")]
+    _ensure_stdio()
     app()

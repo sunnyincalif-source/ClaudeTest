@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 from typing import Any
 
 import pytest
@@ -218,6 +219,9 @@ def test_recursion_depth_cap() -> None:
     assert max_depth(trace) <= 52
 
 
+@pytest.mark.skipif(
+    sys.platform == "darwin", reason="macOS does not enforce RLIMIT_AS (best effort)"
+)
 def test_memory_cap() -> None:
     src = "xs = []\nwhile True:\n    xs.append('x' * 10_000_000)\n"
     trace = trace_script(src, limits=RunLimits(max_memory_mb=64))

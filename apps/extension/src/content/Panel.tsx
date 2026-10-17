@@ -177,7 +177,15 @@ export function Panel({ initiallyOpen = false }: { initiallyOpen?: boolean }) {
         {status?.kind === 'offline' && (
           <Offline onRetry={refresh} blocked={!!status.localNetworkBlocked} />
         )}
-        {status?.kind === 'unpaired' && <Pair port={status.port} onPaired={refresh} />}
+        {status?.kind === 'unpaired' && (
+          <Pair
+            port={status.port}
+            onPaired={() => {
+              setNotice('Engine connected. Pick your test cases and press Trace my code.');
+              void refresh();
+            }}
+          />
+        )}
         {status?.kind === 'outdated' && (
           <div className="ltx-card ltx-warn" role="alert">
             Your engine is v{status.version}, but this extension expects a matching version. Update
@@ -332,71 +340,67 @@ function Offline({ onRetry, blocked }: { onRetry: () => void; blocked: boolean }
 }
 
 function Pair({ port, onPaired }: { port: number; onPaired: () => void }) {
-  const [requestId, setRequestId] = useState<string | null>(null);
   const [code, setCode] = useState('');
   const [error, setError] = useState<string | null>(null);
-  const start = async () => {
-    setError(null);
-    try {
-      setRequestId(await requestPairing(port));
-    } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
-    }
-  };
+  const [busy, setBusy] = useState(false);
+  useEffect(() => {
+    // Also echo the code in the engine's terminal, for people running it from a shell.
+    requestPairing(port).catch(() => undefined);
+  }, [port]);
   const confirm = async () => {
-    if (!requestId) return;
     setError(null);
+    setBusy(true);
     try {
-      await confirmPairing(port, requestId, code);
+      await confirmPairing(port, code);
       onPaired();
     } catch (e) {
+      const status = e instanceof DaemonError ? e.status : 0;
       setError(
-        e instanceof DaemonError && e.status === 403
-          ? 'That code didn’t match. Check the terminal and try again.'
-          : e instanceof Error
-            ? e.message
-            : String(e),
+        status === 403
+          ? 'That code didn’t match. Copy it again from the LeetTrace welcome page.'
+          : status === 410
+            ? 'That code expired. The welcome page now shows a new one — paste that.'
+            : status === 429
+              ? 'Too many attempts. Wait a minute, then try again.'
+              : e instanceof Error
+                ? e.message
+                : String(e),
       );
-      if (e instanceof DaemonError && e.status === 410) setRequestId(null);
+    } finally {
+      setBusy(false);
     }
   };
   return (
     <div className="ltx-card">
-      <h2>Connect to your engine</h2>
+      <h2>Pair with the LeetTrace app</h2>
       <p>
-        Found the LeetTrace engine on this computer. To make sure it’s really you, connect once with
-        a code from your terminal.
+        The LeetTrace app is running on this computer. Paste the <strong>pairing code</strong> from
+        its welcome page (it opened when you started the app) — you only do this once.
       </p>
-      {!requestId ? (
-        <button type="button" className="ltx-primary" onClick={() => void start()}>
-          Connect
+      <form
+        onSubmit={(e) => {
+          e.preventDefault();
+          void confirm();
+        }}
+      >
+        <label className="ltx-custom">
+          <span>Pairing code</span>
+          <input
+            value={code}
+            onChange={(e) => setCode(e.currentTarget.value)}
+            inputMode="numeric"
+            autoComplete="one-time-code"
+            placeholder="123-456"
+            aria-label="Pairing code"
+          />
+        </label>
+        <button type="submit" className="ltx-primary" disabled={busy || !code.trim()}>
+          {busy ? 'Pairing…' : 'Pair'}
         </button>
-      ) : (
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            void confirm();
-          }}
-        >
-          <label className="ltx-custom">
-            <span>
-              Enter the 6-digit code shown in the terminal running <code>leettrace start</code> (or
-              run <code>leettrace pair</code>):
-            </span>
-            <input
-              value={code}
-              onChange={(e) => setCode(e.currentTarget.value)}
-              inputMode="numeric"
-              autoComplete="one-time-code"
-              placeholder="123-456"
-              aria-label="Pairing code"
-            />
-          </label>
-          <button type="submit" className="ltx-primary">
-            Pair
-          </button>
-        </form>
-      )}
+      </form>
+      <p className="ltx-muted">
+        Can’t find it? Run <code>leettrace pair</code> in a terminal, or reopen the app.
+      </p>
       {error && (
         <p className="ltx-error" role="alert">
           {error}

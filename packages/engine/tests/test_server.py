@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import stat
+import sys
 from typing import Any
 
 import pytest
@@ -154,55 +155,78 @@ def test_watch_requires_token_and_pushes(client: TestClient) -> None:
         assert msg["trace"]["steps"]
 
 
-def test_pairing_handshake(client: TestClient) -> None:
+def _current_code(client: TestClient) -> str:
+    return client.get("/pair/code", headers=AUTH).json()["code"]
+
+
+def test_pairing_with_the_welcome_page_code(client: TestClient) -> None:
     lc = {"Origin": "https://leetcode.com"}
-    # Only the LeetCode page origin may start pairing.
+    # The standing code is only readable with the session token (welcome page / CLI).
+    assert client.get("/pair/code").status_code == 401
+    code = _current_code(client)
+    assert len(code) == 6 and code.isdigit()
+    # Only the LeetCode page origin may pair.
+    assert client.post("/pair/confirm", json={"code": code}).status_code == 403
+    assert (
+        client.post(
+            "/pair/confirm", json={"code": code}, headers={"Origin": "https://evil.example"}
+        ).status_code
+        == 403
+    )
+    wrong = "000000" if code != "000000" else "111111"
+    assert client.post("/pair/confirm", json={"code": wrong}, headers=lc).status_code == 403
+    ok = client.post("/pair/confirm", json={"code": f"{code[:3]}-{code[3:]}"}, headers=lc)
+    assert ok.status_code == 200
+    assert ok.json()["token"] == TOKEN
+    # One-time: the same code can't pair a second client.
+    assert client.post("/pair/confirm", json={"code": code}, headers=lc).status_code == 403
+    info = client.get("/pair/code", headers=AUTH).json()
+    assert info["code"] != code and info["paired"] == 1
+
+
+def test_pair_request_echoes_code_to_terminal(client: TestClient) -> None:
+    lc = {"Origin": "https://leetcode.com"}
     assert client.post("/pair/request", json={"client": "x"}).status_code == 403
     r = client.post("/pair/request", json={"client": "LeetTrace extension"}, headers=lc)
     assert r.status_code == 200
-    rid = r.json()["requestId"]
-    assert codes and codes[0][0] == "LeetTrace extension"
-    code = codes[0][1]
-    # The token is never handed out without the code shown in the user's terminal.
-    bad = client.post(
-        "/pair/confirm",
-        json={"requestId": rid, "code": "000000" if code != "000000" else "111111"},
-        headers=lc,
-    )
-    assert bad.status_code == 403
-    ok = client.post(
-        "/pair/confirm", json={"requestId": rid, "code": f"{code[:3]}-{code[3:]}"}, headers=lc
-    )
-    assert ok.status_code == 200
-    assert ok.json()["token"] == TOKEN
-    # One-time: the request is consumed.
-    again = client.post("/pair/confirm", json={"requestId": rid, "code": code}, headers=lc)
-    assert again.status_code == 410
+    assert codes == [("LeetTrace extension", _current_code(client))]
+    assert client.post("/pair/request", json={}, headers=lc).status_code == 429  # rate limit
 
 
-def test_pairing_brute_force_locks_out(client: TestClient) -> None:
+def test_pairing_brute_force_rotates_the_code(client: TestClient) -> None:
     lc = {"Origin": "https://leetcode.com"}
-    rid = client.post("/pair/request", json={}, headers=lc).json()["requestId"]
-    real = codes[-1][1]
+    real = _current_code(client)
     wrong = "999999" if real != "999999" else "888888"
     for _ in range(5):
-        assert (
-            client.post(
-                "/pair/confirm", json={"requestId": rid, "code": wrong}, headers=lc
-            ).status_code
-            == 403
-        )
-    assert (
-        client.post("/pair/confirm", json={"requestId": rid, "code": real}, headers=lc).status_code
-        == 410
-    )
+        assert client.post("/pair/confirm", json={"code": wrong}, headers=lc).status_code == 403
+    # After 5 wrong guesses the code is replaced; the old one no longer works.
+    assert client.post("/pair/confirm", json={"code": real}, headers=lc).status_code == 403
+    assert _current_code(client) != real
 
 
-def test_pair_pending_requires_token(client: TestClient) -> None:
-    assert client.get("/pair/pending").status_code == 401
-    assert client.get("/pair/pending", headers=AUTH).json() == {"pending": []}
+def test_expired_code_is_replaced(client: TestClient) -> None:
+    lc = {"Origin": "https://leetcode.com"}
+    code = _current_code(client)
+    client.app.state.engine.pair.expires = 0  # type: ignore[attr-defined]
+    r = client.post("/pair/confirm", json={"code": code}, headers=lc)
+    assert r.status_code == 410
+    assert "welcome page" in r.json()["error"]
 
 
+def test_health_reports_limits_honestly(client: TestClient) -> None:
+    limits = client.get("/health", headers=AUTH).json()["limits"]
+    assert limits["maxSteps"] == 300
+    assert limits["memory"] in ("enforced", "best-effort", "unavailable")
+    assert limits["mechanism"]
+
+
+def test_downloads_serve_only_bundled_zips(client: TestClient) -> None:
+    assert client.get("/downloads/../session.json").status_code in (401, 404)
+    assert client.get("/downloads/%2e%2e%2fsession.json").status_code == 404
+    assert client.get("/downloads/nope.zip").status_code == 404
+
+
+@pytest.mark.skipif(sys.platform == "win32", reason="POSIX permission bits")
 def test_session_file_is_user_only(tmp_path: Any, monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setenv("LEETTRACE_HOME", str(tmp_path / "lt"))
     s = make_session(12345, "0.1.0")
