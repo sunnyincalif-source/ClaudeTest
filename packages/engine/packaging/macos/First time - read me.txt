@@ -1,0 +1,12 @@
+Install LeetTrace
+
+1. Drag LeetTrace into the Applications folder.
+2. First time only: in Applications, right-click LeetTrace -> Open -> Open.
+   (macOS 15 or later: if there's no Open button, go to System Settings ->
+   Privacy & Security -> "LeetTrace was blocked" -> Open Anyway.)
+   LeetTrace is open source and not yet signed by Apple, so macOS asks once.
+3. LeetTrace appears in the menu bar and starts when you log in.
+   The welcome page opens in your browser: add the Chrome extension from there.
+
+Then open any LeetCode problem and click Trace. It connects automatically.
+Your code runs only on this Mac.

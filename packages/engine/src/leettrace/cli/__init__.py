@@ -49,8 +49,8 @@ def _root(
 ) -> None:
     """LeetTrace — a local trace engine for your LeetCode practice.
 
-    Run with no command (or double-click the app) to start the engine and open the welcome
-    page with your pairing code.
+    Run with no command (or open the installed app) to start the engine with its tray icon and
+    open the welcome page.
     """
     if ctx.invoked_subcommand is None:
         launch()
@@ -242,13 +242,47 @@ def pair() -> None:
 
 
 def launch() -> None:
-    """No subcommand / double-click: start the engine (or find it) and open the welcome page."""
+    """No subcommand / double-click: the desktop app (engine + tray, welcome page)."""
+    app_cmd(background=False, port=None)
+
+
+@app.command(name="app")
+def app_cmd(
+    background: Annotated[
+        bool, typer.Option("--background", help="Start silently (login item): no browser tab.")
+    ] = False,
+    port: Annotated[int | None, typer.Option(help="Port to bind on 127.0.0.1.")] = None,
+) -> None:
+    """Run the desktop app: the engine plus a tray / menu-bar icon (one instance per user)."""
+    from leettrace.desktop.app import run_app
+
     running = find_daemon()
-    if running is not None:
+    if running is not None and not background:
         console.print(f"[green]●[/] LeetTrace is already running — opening {running.base_url}")
-        webbrowser.open(running.welcome_url())
-        return
-    start(port=None, background=False, dev=False, no_open=False)
+    try:
+        run_app(background=background, port=port)
+    except RuntimeError as e:
+        err.print(f"[red]Could not start:[/] {e}")
+        raise typer.Exit(1) from e
+
+
+@app.command()
+def autostart(
+    state: Annotated[str | None, typer.Argument(help="on | off (omit to show)")] = None,
+) -> None:
+    """Show or change whether LeetTrace starts when you log in."""
+    from leettrace.desktop import autostart as auto
+
+    if state is not None:
+        if state.lower() not in {"on", "off"}:
+            err.print("[red]Use[/] leettrace autostart on|off")
+            raise typer.Exit(2)
+        if state.lower() == "on":
+            auto.enable()
+        else:
+            auto.disable()
+    on = auto.is_enabled()
+    console.print(f"Start at login: [bold]{'on' if on else 'off'}[/]")
 
 
 # ------------------------------------------------------------------ tracing

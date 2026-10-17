@@ -55,7 +55,10 @@ def serve(
     on_ready: Callable[[Session, str], None] | None = None,
     on_pair_code: Callable[[str, str], None] | None = None,
     dev: bool = False,
+    on_stop_handle: Callable[[Callable[[], None]], None] | None = None,
 ) -> None:
+    """Serve until stopped. Blocks; safe to run on a worker thread (the desktop app runs the
+    tray on the main thread). `on_stop_handle` receives a thread-safe "stop" function."""
     chosen = pick_port(port or DEFAULT_PORT, 0 if port else PORT_SCAN)
     session = make_session(chosen, __version__)
     dev_origins = ("http://localhost:5173", "http://127.0.0.1:5173") if dev else ()
@@ -84,6 +87,8 @@ def serve(
         server.should_exit = True
 
     app.state.engine.request_shutdown = request_shutdown
+    if on_stop_handle is not None:
+        on_stop_handle(request_shutdown)
     try:
         server.run()
     finally:

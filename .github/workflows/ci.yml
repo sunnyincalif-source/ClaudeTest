@@ -45,7 +45,7 @@ jobs:
         run: python3 scripts/annotate.py "e2e extension" pnpm --filter @leettrace/extension e2e
 
   cross-os:
-    name: Engine tests + binary smoke (${{ matrix.os }})
+    name: Engine tests + installer check (${{ matrix.os }})
     strategy:
       fail-fast: false
       matrix:
@@ -73,16 +73,17 @@ jobs:
       - name: Smoke test (dev install)
         working-directory: packages/engine
         run: uv run python ../../scripts/annotate.py "dev smoke ${{ matrix.os }}" uv run python scripts/smoke.py uv run leettrace
-      - name: Build standalone binary
+      - name: Build the desktop app + installer
         shell: bash
-        run: packages/engine/packaging/build_binary.sh
-      - name: Smoke test (standalone binary)
+        run: packages/engine/packaging/build_desktop.sh
+      - name: Install it, start it like the OS would at login, smoke-test it
         shell: bash
         run: |
-          BIN=packages/engine/dist-bin/leettrace
-          if [ -f "$BIN.exe" ]; then BIN="$BIN.exe"; fi
+          cd packages/engine
+          ART=$(ls dist-bin/LeetTrace-Setup-*.exe dist-bin/LeetTrace-*.dmg dist-bin/LeetTrace-*.AppImage 2>/dev/null | head -1)
+          CHECK=linux; case "${{ runner.os }}" in Windows) CHECK=windows ;; macOS) CHECK=macos ;; esac
           PY=python3; command -v python3 >/dev/null || PY=python
-          $PY scripts/annotate.py "binary smoke ${{ matrix.os }}" $PY packages/engine/scripts/smoke.py "$BIN"
+          $PY ../../scripts/annotate.py "install check ${{ matrix.os }}" $PY scripts/install_check.py $CHECK "$ART"
       - uses: actions/upload-artifact@v4
         with:
           name: leettrace-ci-${{ matrix.os }}

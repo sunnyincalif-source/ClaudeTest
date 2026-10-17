@@ -1,9 +1,12 @@
 name: Release
 
-# Push a tag like v1.0.0 to build and publish a GitHub Release with:
-#   LeetTrace-macos-arm64.dmg, LeetTrace-macos-x64.dmg, LeetTrace-windows-x64.exe,
-#   leettrace-linux-x64, leettrace-chrome-extension.zip, leettrace-firefox-extension.zip,
+# Push a tag like v1.1.0 to build and publish a GitHub Release with:
+#   LeetTrace-Setup-windows-x64.exe (installer), LeetTrace-macos-arm64.dmg,
+#   LeetTrace-macos-x64.dmg, LeetTrace-linux-x86_64.AppImage, leettrace-linux-x64 (CLI),
+#   leettrace-chrome-extension.zip (Chrome Web Store upload), leettrace-firefox-extension.zip,
 #   SHA256SUMS
+# Every installer is installed and started on its own OS before anything is published
+# (packages/engine/scripts/install_check.py).
 # Asset names carry no version, so https://github.com/<repo>/releases/latest/download/<name>
 # always points at the newest release (the site relies on this as its fallback).
 #
@@ -55,26 +58,28 @@ jobs:
             apps/extension/release/*.zip
 
   binaries:
-    name: Binary (${{ matrix.asset }})
+    name: Installer (${{ matrix.label }})
     needs: bundle
     strategy:
       fail-fast: false
       matrix:
         include:
           - os: ubuntu-latest
-            kind: onefile
-            asset: leettrace-linux-x64
-          - os: windows-latest
-            kind: onefile
-            asset: LeetTrace-windows-x64.exe
-          - os: macos-latest # Apple silicon
-            kind: app
-            arch: arm64
-            asset: LeetTrace-macos-arm64.dmg
-          - os: macos-15-intel
-            kind: app
+            label: linux
+            check: linux
             arch: x64
-            asset: LeetTrace-macos-x64.dmg
+          - os: windows-latest
+            label: windows
+            check: windows
+            arch: x64
+          - os: macos-latest # Apple silicon
+            label: macos-arm64
+            check: macos
+            arch: arm64
+          - os: macos-15-intel
+            label: macos-x64
+            check: macos
+            arch: x64
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -92,27 +97,26 @@ jobs:
           cp -R bundle/packages/engine/src/leettrace/extension_dist/. packages/engine/src/leettrace/extension_dist/
       - run: cd packages/engine && uv sync --frozen
 
-      - name: Build (Linux / Windows single-file binary)
-        if: matrix.kind == 'onefile'
+      - name: Build the desktop app + installer
+        shell: bash
+        run: packages/engine/packaging/build_desktop.sh "${{ matrix.arch }}"
+
+      - name: Install it, start it like the OS would at login, smoke-test it
+        shell: bash
+        run: |
+          cd packages/engine
+          ART=$(ls dist-bin/LeetTrace-Setup-*.exe dist-bin/LeetTrace-*.dmg dist-bin/LeetTrace-*.AppImage 2>/dev/null | head -1)
+          PY=python3; command -v python3 >/dev/null || PY=python
+          $PY ../../scripts/annotate.py "install check ${{ matrix.label }}" $PY scripts/install_check.py ${{ matrix.check }} "$ART"
+          mkdir -p ../../out && cp "$ART" ../../out/
+
+      - name: Standalone CLI binary (Linux)
+        if: matrix.check == 'linux'
         shell: bash
         run: |
           packages/engine/packaging/build_binary.sh
-          mkdir -p out
-          if [ -f packages/engine/dist-bin/leettrace.exe ]; then
-            cp packages/engine/dist-bin/leettrace.exe "out/${{ matrix.asset }}"
-          else
-            cp packages/engine/dist-bin/leettrace "out/${{ matrix.asset }}"
-          fi
-          PY=python3; command -v python3 >/dev/null || PY=python
-          $PY scripts/annotate.py "smoke ${{ matrix.asset }}" $PY packages/engine/scripts/smoke.py "out/${{ matrix.asset }}"
-
-      - name: Build (macOS LeetTrace.app in a .dmg)
-        if: matrix.kind == 'app'
-        shell: bash
-        run: |
-          packages/engine/packaging/build_app.sh "${{ matrix.arch }}"
-          python3 scripts/annotate.py "smoke ${{ matrix.asset }}" python3 packages/engine/scripts/smoke.py packages/engine/dist-bin/LeetTrace.app/Contents/MacOS/LeetTrace
-          mkdir -p out && cp "packages/engine/dist-bin/${{ matrix.asset }}" out/
+          cp packages/engine/dist-bin/leettrace out/leettrace-linux-x64
+          python3 scripts/annotate.py "smoke leettrace-linux-x64" python3 packages/engine/scripts/smoke.py out/leettrace-linux-x64
 
       # --- Signing (owner-gated; see LAUNCH_CHECKLIST.md). Unsigned builds run green. ---------
       # - name: Sign + notarize (macOS)
@@ -147,8 +151,8 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: asset-${{ matrix.asset }}
-          path: out/${{ matrix.asset }}
+          name: asset-${{ matrix.label }}
+          path: out/*
 
   release:
     name: Publish release

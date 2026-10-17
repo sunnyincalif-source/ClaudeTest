@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=LeetTrace
+Comment=See your LeetCode solution run: call stack, memory and pointers
+Exec=leettrace
+Icon=leettrace
+Terminal=false
+Categories=Development;Education;
+X-AppImage-Version=@VERSION@

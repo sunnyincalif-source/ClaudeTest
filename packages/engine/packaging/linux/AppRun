@@ -1,0 +1,5 @@
+#!/bin/sh
+# AppImage entry: no arguments = the desktop app (engine + tray, welcome page);
+# any arguments = the leettrace CLI (e.g. `./LeetTrace.AppImage run solution.py`).
+HERE="$(dirname "$(readlink -f "$0")")"
+exec "$HERE/usr/lib/leettrace/leettrace" "$@"
