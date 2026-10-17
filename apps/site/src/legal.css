@@ -1,0 +1,22 @@
+.legal {
+  max-width: 760px;
+  padding-block: 48px 80px;
+}
+.legal h1 {
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  margin: 10px 0 8px;
+}
+.legal h2 {
+  font-size: 1.15rem;
+  margin: 32px 0 10px;
+}
+.legal p,
+.legal li {
+  color: var(--fg-muted);
+}
+.legal li {
+  margin: 6px 0;
+}
+.legal b {
+  color: var(--fg);
+}

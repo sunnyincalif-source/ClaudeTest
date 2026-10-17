@@ -26,3 +26,4 @@ apps/extension/release
 packages/engine/src/leettrace/extension_dist/*
 !packages/engine/src/leettrace/extension_dist/.gitkeep
 src/generated/
+dist-ssr

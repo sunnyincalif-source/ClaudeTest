@@ -1,46 +1,68 @@
-# Chrome Web Store / Firefox Add-ons listing (draft)
+# Chrome Web Store listing (ready to paste)
+
+Upload `leettrace-chrome-extension.zip` from the latest GitHub Release. Assets for the listing
+are in `docs/store/`.
 
 **Name:** LeetTrace
 
-**Summary (132 chars max):** See your Python solution execute on the problem page: call stack, heap, pointer arrows,
-and a reason for every step.
+**Summary (132 chars max):**
+See your LeetCode solution run: call stack, memory and pointers, step by step, on the real test cases. 100% local.
 
-**Category:** Developer Tools
+**Category:** Developer Tools · **Language:** English
 
 **Description:**
 
-LeetTrace shows you how your solution actually runs.
+See your code actually run.
 
-Click **Trace** next to Run on any LeetCode problem. LeetTrace runs your Python code against
-the problem's example test cases and lets you step through it:
+LeetTrace rides along with your LeetCode practice and shows the call stack, memory, and
+pointers step by step, on the real test cases. Runs entirely on your machine — nothing is
+uploaded.
 
-- **Call stack:** every frame and its local variables, as recursion goes deeper and returns.
-- **Heap:** lists, dicts, sets, and your own objects such as ListNode and TreeNode.
-- **Pointer arrows:** watch `next` pointers flip while you reverse a linked list, and trees
-  draw as real branching structures.
-- **A reason for every step:** "Checking if n <= 1 (5 <= 1) → False, so we skip the if
-  block."
-- **Pass or fail per example case,** plus a timeline you can scrub forward and back.
+Open any LeetCode problem and a **Trace** button is already there, next to Run. Click it and
+step through your Python solution against the problem's own examples:
 
-Your code runs on **your own computer**, in the free LeetTrace engine
-(`pipx install leettrace`, then `leettrace start`). Nothing is sent to any server. The
-extension only talks to the engine on 127.0.0.1, after a one-time pairing code that you
-confirm in your terminal.
+- **Call stack** — frames push and pop as functions run; recursion becomes something you can
+  watch.
+- **Live heap & pointer arrows** — lists, dicts, linked lists and trees render as real objects
+  and arrows that rewire as your code runs.
+- **Step-by-step "why"** — a plain-English reason for every step.
+- **Real test cases** — pass/fail and output vs expected, per example.
 
-v1 traces Python 3.
+LeetTrace needs its small free desktop app (Windows, macOS, Linux) from
+https://leettrace.vercel.app — that's where your code runs, in a sandbox on your own computer.
+The extension connects to it automatically: no codes, no terminal.
 
-LeetTrace is an independent tool. It is not affiliated with or endorsed by LeetCode.
+Python 3 today; JavaScript next.
 
-**Permissions, explained:**
+LeetTrace is an independent open-source tool and is not affiliated with or endorsed by
+LeetCode.
 
-- _Read and change data on leetcode.com/problems:_ adds the Trace button and side panel,
-  reads your editor code and the public example cases.
-- _storage:_ remembers the pairing with your local engine.
-- _scripting:_ reads the code from the page's editor.
-- _127.0.0.1:_ talks to the LeetTrace engine on your own machine.
+**Single purpose:** show how the user's own solution executes on LeetCode problem pages, using
+the LeetTrace app on the user's computer.
 
-**Privacy:** no analytics, no remote servers, no account. Code and test cases go only to the
-engine on your own computer.
+**Permission justifications:**
 
-**Screenshots:** `docs/images/extension-panel.png`, `docs/demo/leetcode-overlay.gif`
-(first frame), `docs/images/viz-rev_mid.png`, `docs/images/viz-bst.png`.
+- _Host permission, leetcode.com:_ adds the Trace button and side panel to problem pages;
+  reads the problem's public example cases and the code in the editor when the user clicks
+  Trace.
+- _Host permission, 127.0.0.1:_ talks to the LeetTrace app on the user's own computer
+  (loopback only).
+- _storage:_ remembers the connection to that app.
+- _scripting:_ reads the code from LeetCode's editor, which lives in the page's own context.
+- _externally_connectable (127.0.0.1 / localhost):_ lets the LeetTrace app's local page hand
+  the extension its connection token automatically.
+
+**Data use disclosures:** collects nothing. No personal data, no analytics, no remote code.
+Code and test cases are sent only to the app on the user's own computer (127.0.0.1).
+
+**Privacy policy URL:** https://leettrace.vercel.app/privacy/ (use your deployed site URL)
+
+**Assets (`docs/store/`):**
+
+- Icon 128×128: `icon-128.png`
+- Screenshots 1280×800: `1-hero.png`, `2-panel.png`, `3-on-leetcode.png`
+- Promo / social image 1200×630: `apps/site/public/media/og.png`
+
+**Firefox Add-ons (secondary):** upload `leettrace-firefox-extension.zip`. Firefox has no
+automatic connection (no `externally_connectable`): users connect once with the one-time code
+under "Other ways to connect" in the panel.

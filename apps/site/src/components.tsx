@@ -1,25 +1,24 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 
-/** The LeetTrace mark: a magnifier inside code brackets. */
-export function Mark({ size = 28 }: { size?: number }) {
+/** The LeetTrace mark: focus brackets around a dot, in the blue→cyan accent gradient. */
+export function Mark({ size = 24, id = 'mark' }: { size?: number; id?: string }) {
+  const g = `lt-grad-${id}`;
   return (
-    <svg width={size} height={size} viewBox="0 0 32 32" aria-hidden="true" className="mark">
-      <rect width="32" height="32" rx="8" className="mark-bg" />
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <defs>
+        <linearGradient id={g} x1="4" y1="4" x2="20" y2="20" gradientUnits="userSpaceOnUse">
+          <stop style={{ stopColor: 'var(--accent)' }} />
+          <stop offset="1" style={{ stopColor: 'var(--accent-2)' }} />
+        </linearGradient>
+      </defs>
       <path
-        d="M9 8H6.5v16H9M23 8h2.5v16H23"
-        className="mark-stroke"
-        fill="none"
-        strokeWidth="2.2"
+        d="M8 4H4v4M16 4h4v4M8 20H4v-4M16 20h4v-4"
+        stroke={`url(#${g})`}
+        strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
-      <circle cx="15" cy="15" r="4.6" className="mark-stroke" fill="none" strokeWidth="2.2" />
-      <path
-        d="M18.4 18.4l3.2 3.2"
-        className="mark-stroke"
-        strokeWidth="2.4"
-        strokeLinecap="round"
-      />
+      <circle cx="12" cy="12" r="3.2" stroke={`url(#${g})`} strokeWidth="2" />
     </svg>
   );
 }
@@ -40,111 +39,58 @@ export function usePrefersReducedMotion(): boolean {
   return reduced;
 }
 
-/**
- * A looping product clip. Autoplays (muted) only while on screen and only without
- * prefers-reduced-motion; always has a visible pause/play control (WCAG 2.2.2).
- */
-export function DemoVideo({
-  name,
-  label,
-  eager = false,
-  width = 960,
-  height = 516,
-}: {
-  name: string;
-  label: string;
-  eager?: boolean;
-  width?: number;
-  height?: number;
-}) {
-  const ref = useRef<HTMLVideoElement>(null);
-  const reduced = usePrefersReducedMotion();
-  const [playing, setPlaying] = useState(false);
-  const [userPaused, setUserPaused] = useState(false);
-
+/** True once the element has come near the viewport (then stays true). */
+export function useNearViewport<T extends Element>(
+  margin = '300px',
+): [React.RefObject<T>, boolean] {
+  const ref = useRef<T>(null);
+  const [near, setNear] = useState(false);
   useEffect(() => {
-    const v = ref.current;
-    if (!v || reduced || userPaused || typeof IntersectionObserver === 'undefined') return;
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry?.isIntersecting) void v.play().catch(() => undefined);
-        else v.pause();
-      },
-      { threshold: 0.35 },
-    );
-    io.observe(v);
-    return () => io.disconnect();
-  }, [reduced, userPaused]);
-
-  const toggle = () => {
-    const v = ref.current;
-    if (!v) return;
-    if (v.paused) {
-      setUserPaused(false);
-      void v.play().catch(() => undefined);
-    } else {
-      setUserPaused(true);
-      v.pause();
+    const el = ref.current;
+    if (!el || near) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setNear(true);
+      return;
     }
-  };
-
-  return (
-    <div className="video">
-      <video
-        ref={ref}
-        muted
-        loop
-        playsInline
-        preload={eager ? 'metadata' : 'none'}
-        poster={`/media/${name}.webp`}
-        width={width}
-        height={height}
-        aria-label={label}
-        onPlay={() => setPlaying(true)}
-        onPause={() => setPlaying(false)}
-      >
-        <source src={`/media/${name}.webm`} type="video/webm" />
-        <source src={`/media/${name}.mp4`} type="video/mp4" />
-      </video>
-      <button
-        type="button"
-        className="video-toggle"
-        onClick={toggle}
-        aria-label={playing ? `Pause: ${label}` : `Play: ${label}`}
-      >
-        {playing ? (
-          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-            <rect x="3" y="2" width="3.5" height="12" rx="1" />
-            <rect x="9.5" y="2" width="3.5" height="12" rx="1" />
-          </svg>
-        ) : (
-          <svg viewBox="0 0 16 16" width="14" height="14" aria-hidden="true">
-            <path d="M4 2.5v11l9-5.5z" />
-          </svg>
-        )}
-      </button>
-    </div>
-  );
+    const io = new IntersectionObserver(
+      ([e]) => {
+        if (e?.isIntersecting) {
+          setNear(true);
+          io.disconnect();
+        }
+      },
+      { rootMargin: margin },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [near, margin]);
+  return [ref, near];
 }
 
-/** A browser/mac window frame around product visuals. */
-export function WindowFrame({ title, children }: { title: string; children: ReactNode }) {
+/** A window frame around product visuals (design system ds-frame). */
+export function WindowFrame({
+  address,
+  children,
+  label,
+}: {
+  address: ReactNode;
+  children: ReactNode;
+  label?: string;
+}) {
   return (
-    <figure className="window">
-      <div className="window-bar" aria-hidden="true">
-        <span className="dots">
-          <i />
-          <i />
-          <i />
-        </span>
-        <span className="window-title">{title}</span>
+    <figure className="ds-frame frame" aria-label={label}>
+      <div className="ds-frame-bar" aria-hidden="true">
+        <i />
+        <i />
+        <i />
+        <span className="ds-frame-addr">{address}</span>
       </div>
-      <div className="window-body">{children}</div>
+      <div className="frame-body">{children}</div>
     </figure>
   );
 }
 
-/** Adds .in to children of `.reveal` when scrolled into view. Content is visible regardless. */
+/** Adds .in to `.reveal` elements when scrolled into view. Content is visible regardless. */
 export function useReveal() {
   useEffect(() => {
     if (typeof IntersectionObserver === 'undefined') return;

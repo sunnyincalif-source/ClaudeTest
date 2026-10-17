@@ -1,4 +1,4 @@
-// Build-time configuration. Override with VITE_LEETTRACE_SITE_URL (see apps/extension/.env).
+// Build-time configuration. Override with VITE_LEETTRACE_SITE_URL (see the repo-root .env).
 const env = (import.meta as unknown as { env?: Record<string, string | undefined> }).env ?? {};
 
 /** Base URL of the LeetTrace site (apps/site). No trailing slash. */

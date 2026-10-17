@@ -1,32 +1,13 @@
-import { useEffect, useState } from 'react';
-import { CHROME_STORE_URL, REPO_URL, RELEASES_URL } from './config';
-import { CopyButton, DemoVideo, Mark, WindowFrame, useReveal } from './components';
+// LeetTrace landing + install site (SPEC-PRODUCT §8, copy per §9). Dark-only, built on the
+// shared design system. Static: no backend, no telemetry; reads only public GitHub Release
+// metadata for the Download button.
+import { lazy, Suspense, useState, type ReactNode } from 'react';
+import { CHROME_STORE_URL, GITHUB_REPO, REPO_URL } from './config';
+import { CopyButton, Mark, WindowFrame, useNearViewport, useReveal } from './components';
 import { DownloadButton, DownloadsProvider, useDownloads } from './Download';
-import { EXTENSION_ZIPS } from './platform';
+import { ASSETS, EXTENSION_ZIPS, LINUX_CLI } from './platform';
 
-type Theme = 'system' | 'light' | 'dark';
-
-function useTheme(): [Theme, () => void] {
-  const [theme, setTheme] = useState<Theme>(() => {
-    try {
-      return (localStorage.getItem('leettrace.site.theme') as Theme | null) ?? 'system';
-    } catch {
-      return 'system';
-    }
-  });
-  useEffect(() => {
-    if (theme === 'system') delete document.documentElement.dataset.theme;
-    else document.documentElement.dataset.theme = theme;
-    try {
-      localStorage.setItem('leettrace.site.theme', theme);
-    } catch {
-      // per-viewer convenience only
-    }
-  }, [theme]);
-  const next = () => setTheme((t) => (t === 'system' ? 'dark' : t === 'dark' ? 'light' : 'system'));
-  return [theme, next];
-}
-
+const LivePanel = lazy(() => import('./LivePanel'));
 const ADD_TO_CHROME = CHROME_STORE_URL || '#install-extension';
 
 export function App() {
@@ -62,41 +43,36 @@ function Page() {
 
 function Nav() {
   const [open, setOpen] = useState(false);
-  const [theme, cycle] = useTheme();
   return (
     <header className="nav">
-      <div className="wrap nav-inner">
-        <a className="wordmark" href="#top" aria-label="LeetTrace home">
-          <Mark />
-          <span>LeetTrace</span>
+      <div className="wrap nav-in">
+        <a className="brand" href="#top" aria-label="LeetTrace home">
+          <Mark size={22} id="nav" />
+          <b>
+            Leet<span>Trace</span>
+          </b>
         </a>
         <button
           type="button"
-          className="menu-btn"
+          className="nav-toggle"
           aria-expanded={open}
           aria-controls="nav-links"
           onClick={() => setOpen(!open)}
         >
           <span className="sr-only">Menu</span>
-          <svg
-            viewBox="0 0 24 24"
-            width="22"
-            height="22"
-            aria-hidden="true"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-          >
-            {open ? <path d="M6 6l12 12M18 6L6 18" /> : <path d="M4 7h16M4 12h16M4 17h16" />}
+          <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="2" />
           </svg>
         </button>
-        <nav id="nav-links" className={`nav-links${open ? ' open' : ''}`} aria-label="Main">
-          <a href="#install" onClick={() => setOpen(false)}>
-            Install
-          </a>
+        <nav
+          id="nav-links"
+          className={`nav-links${open ? ' open' : ''}`}
+          aria-label="Main"
+          onClick={() => setOpen(false)}
+        >
+          <a href="#install">Install</a>
           <a
             href={ADD_TO_CHROME}
-            onClick={() => setOpen(false)}
             {...(CHROME_STORE_URL ? { target: '_blank', rel: 'noreferrer' } : {})}
           >
             Add to Chrome
@@ -104,14 +80,9 @@ function Nav() {
           <a href={REPO_URL} target="_blank" rel="noreferrer">
             GitHub
           </a>
-          <button
-            type="button"
-            className="theme-btn"
-            onClick={cycle}
-            aria-label={`Theme: ${theme}. Change theme`}
-          >
-            <ThemeIcon theme={theme} />
-          </button>
+          <a className="ds-btn ds-btn-primary ds-btn-sm" href="#download">
+            Download
+          </a>
         </nav>
       </div>
     </header>
@@ -121,470 +92,503 @@ function Nav() {
 function Hero() {
   return (
     <section className="hero" id="top" aria-labelledby="hero-title">
-      <div className="wrap hero-grid">
+      <div className="aurora" aria-hidden="true" />
+      <div className="wrap hero-in">
         <div className="hero-copy">
+          <span className="eyebrow">
+            <span className="dot" aria-hidden="true" />
+            Runs 100% on your machine
+          </span>
           <h1 id="hero-title">
-            See your code <span className="hl">actually run.</span>
+            See your code <span className="g">actually run.</span>
           </h1>
-          <p className="lede">
-            LeetTrace rides along with your LeetCode practice — in your browser and your terminal —
-            and shows the call stack, memory, and pointers step by step, on the real test cases.
-            Runs entirely on your machine.
+          <p className="sub">
+            LeetTrace rides along with your LeetCode practice and shows the call stack, memory, and
+            pointers step by step, on the real test cases. Runs entirely on your machine — nothing
+            is uploaded.
           </p>
           <div className="cta-row">
             <DownloadButton id="download" />
-            <a
-              className="btn btn-secondary btn-lg"
-              href={ADD_TO_CHROME}
-              {...(CHROME_STORE_URL ? { target: '_blank', rel: 'noreferrer' } : {})}
-            >
-              <ChromeGlyph /> Add to Chrome
-            </a>
+            <AddToChromeButton />
           </div>
-          <p className="trust">Python · 100% local · open source</p>
+          <p className="trust">
+            <b>Python</b> · 100% local · open source
+          </p>
         </div>
-        <div className="hero-visual">
-          <WindowFrame title="LeetTrace — reverse a linked list">
-            <DemoVideo
-              name="linked-list-reverse"
-              eager
-              label="Reversing a linked list: each next pointer flips while the nodes stay in place"
-            />
-          </WindowFrame>
+        <HeroShot />
+      </div>
+    </section>
+  );
+}
+
+function AddToChromeButton() {
+  return (
+    <a
+      className="ds-btn ds-btn-ghost btn-lg"
+      href={ADD_TO_CHROME}
+      {...(CHROME_STORE_URL ? { target: '_blank', rel: 'noreferrer' } : {})}
+    >
+      <ChromeGlyph />
+      Add to Chrome
+    </a>
+  );
+}
+
+/** Static product shot (fast first paint): the editor beside the panel's memory view. */
+function HeroShot() {
+  const code = [
+    'def reverseList(head):',
+    '    prev = None',
+    '    curr = head',
+    '    while curr:',
+    '        nxt = curr.next',
+    '        curr.next = prev',
+    '        prev = curr',
+    '        curr = nxt',
+    '    return prev',
+  ];
+  return (
+    <WindowFrame
+      address="leetcode.com/problems/reverse-linked-list"
+      label="LeetTrace on a LeetCode problem: the editor and the memory view"
+    >
+      <div className="shot">
+        <pre className="mini-ed" aria-hidden="true">
+          {code.map((l, i) => (
+            <span key={i} className={i === 5 ? 'hot' : undefined}>
+              <i>{i + 1}</i>
+              {l}
+              {'\n'}
+            </span>
+          ))}
+        </pre>
+        <div className="mini-panel" aria-hidden="true">
+          <div className="mini-h">
+            <span>Memory</span>
+            <span className="ds-live">connected</span>
+          </div>
+          <div className="mini-tags">
+            <span className="t-prev">prev</span>
+            <span className="t-curr">curr</span>
+            <span className="t-next">nxt</span>
+          </div>
+          <div className="mini-nodes">
+            <span className="nd">1</span>
+            <span className="nd lit">2</span>
+            <span className="nd">3</span>
+            <span className="nd null">∅</span>
+            <svg className="mini-arrows" viewBox="0 0 220 80" preserveAspectRatio="none">
+              <path d="M78 52 C 78 74 22 74 22 52" className="a-hot" />
+              <path d="M138 22 C 150 4 182 4 190 22" className="a-dim" />
+            </svg>
+          </div>
+          <p className="mini-cap">curr.next = prev — the link flips</p>
+          <p className="mini-why">
+            <b>?</b> Reverse one link: node 2.next now points back to node 1.
+          </p>
         </div>
+      </div>
+    </WindowFrame>
+  );
+}
+
+function Section({
+  id,
+  label,
+  title,
+  lede,
+  children,
+  className = '',
+}: {
+  id?: string;
+  label: string;
+  title: string;
+  lede?: ReactNode;
+  children: ReactNode;
+  className?: string;
+}) {
+  const titleId = `${id ?? label.toLowerCase().replace(/\W+/g, '-')}-title`;
+  return (
+    <section className={`section ${className}`} id={id} aria-labelledby={titleId}>
+      <div className="wrap">
+        <p className="ds-eyebrow">{label}</p>
+        <h2 id={titleId}>{title}</h2>
+        {lede && <p className="lede">{lede}</p>}
+        {children}
       </div>
     </section>
   );
 }
 
 function HowItWorks() {
-  const steps = [
-    {
-      title: 'Install the app.',
-      body: 'One download. It runs a small tracer locally — your code never leaves your machine.',
-      img: '/media/welcome-page.webp',
-      alt: 'The LeetTrace welcome page with the pairing code',
-    },
-    {
-      title: 'Add the browser extension.',
-      body: (
-        <>
-          A <strong>Trace</strong> button appears on every LeetCode problem.
-        </>
-      ),
-      img: '/media/extension-panel.webp',
-      alt: 'The LeetTrace side panel on a problem page',
-    },
-    {
-      title: 'Hit Trace.',
-      body: 'Watch your solution execute step by step against the real example cases — stack, memory, and pointers, live.',
-      img: '/media/viz-bst.webp',
-      alt: 'A binary search tree traced step by step with pointer arrows',
-    },
+  const steps: [string, ReactNode][] = [
+    [
+      'Download & install.',
+      'One file. A small tracer runs locally — your code never leaves your machine.',
+    ],
+    ['Add to Chrome.', 'One click from the Chrome Web Store.'],
+    [
+      'Open any LeetCode problem.',
+      <>
+        A <b>Trace</b> button is already there — hit it and watch it run.
+      </>,
+    ],
   ];
   return (
-    <section className="section" id="how" aria-labelledby="how-title">
-      <div className="wrap">
-        <p className="eyebrow">How it works</p>
-        <h2 id="how-title">Three steps. Then just practice.</h2>
-        <ol className="steps">
-          {steps.map((s, i) => (
-            <li key={s.title} className="step reveal">
-              <span className="step-no" aria-hidden="true">
-                {i + 1}
-              </span>
-              <h3>{s.title}</h3>
-              <p>{s.body}</p>
-              <img
-                src={s.img}
-                alt={s.alt}
-                loading="lazy"
-                decoding="async"
-                width="640"
-                height="400"
-              />
-            </li>
-          ))}
-        </ol>
-      </div>
-    </section>
+    <Section id="how" label="How it works" title="Three steps. Then just practice.">
+      <ol className="steps">
+        {steps.map(([t, d], i) => (
+          <li key={t} className="ds-card step reveal">
+            <span className="step-no" aria-hidden="true">
+              {i + 1}
+            </span>
+            <h3>{t}</h3>
+            <p>{d}</p>
+          </li>
+        ))}
+      </ol>
+    </Section>
   );
 }
 
 function Payoff() {
+  const [ref, near] = useNearViewport<HTMLDivElement>();
+  const [compact] = useState(
+    () => typeof window !== 'undefined' && window.matchMedia?.('(max-width: 760px)').matches,
+  );
   return (
-    <section className="section payoff" aria-labelledby="payoff-title">
-      <div className="wrap">
-        <p className="eyebrow">The payoff</p>
-        <h2 id="payoff-title">Your solution, on the problem page, one step at a time.</h2>
-        <WindowFrame title="leetcode.com/problems/two-sum">
-          <DemoVideo
-            name="leetcode-overlay"
-            width={1000}
-            height={678}
-            label="The LeetTrace panel tracing Two Sum against the page's examples: the dict fills in and the case passes"
-          />
+    <Section
+      id="payoff"
+      label="The panel"
+      title="It shows up inside LeetCode."
+      lede={
+        <>
+          This is the real LeetTrace panel playing a recorded trace — watch the <code>next</code>{' '}
+          pointers reverse one at a time. Use ←/→ or the timeline to step yourself.
+        </>
+      }
+    >
+      <div ref={ref} className="payoff-frame">
+        <WindowFrame
+          address={
+            <>
+              leetcode.com/problems/<b>reverse-linked-list</b>
+            </>
+          }
+          label="The LeetTrace panel tracing a linked-list reversal"
+        >
+          {near ? (
+            <Suspense fallback={<div className="panel-placeholder">Loading the trace…</div>}>
+              <LivePanel compact={!!compact} />
+            </Suspense>
+          ) : (
+            <div className="panel-placeholder" />
+          )}
         </WindowFrame>
-        <p className="caption">
-          Two Sum, traced against the page’s own examples: the dict fills in, the pointers move, and
-          each case says pass or fail.
-        </p>
       </div>
-    </section>
+    </Section>
   );
 }
 
 function Bento() {
+  const cards: [string, string, ReactNode][] = [
+    [
+      'stack',
+      'Call stack',
+      'Frames push and pop as functions run. Recursion becomes something you can watch.',
+    ],
+    [
+      'heap',
+      'Live heap & pointer arrows',
+      'Lists, dicts, linked lists and trees render as real objects and arrows that rewire as your code runs.',
+    ],
+    [
+      'why',
+      'Step-by-step “why”',
+      'A plain-English reason for every step, so you know what the line just did — not just that it ran.',
+    ],
+    [
+      'cases',
+      'Real test cases',
+      'Runs against the problem’s own examples, with pass/fail and output vs expected, per case.',
+    ],
+    [
+      'term',
+      'Terminal + browser',
+      <>
+        The same engine traces files from your terminal: <code>leettrace run</code>,{' '}
+        <code>watch</code>, and a TUI.
+      </>,
+    ],
+    [
+      'local',
+      '100% local',
+      'Your code runs in a sandbox on your computer. Nothing is uploaded, ever.',
+    ],
+  ];
   return (
-    <section className="section" id="features" aria-labelledby="features-title">
-      <div className="wrap">
-        <p className="eyebrow">What you get</p>
-        <h2 id="features-title">Everything print-debugging never showed you.</h2>
-        <div className="bento">
-          <article className="card card-feature card-glow reveal">
-            <h3>Live heap &amp; pointer arrows</h3>
-            <p>
-              Linked lists, trees and your own objects drawn as real pointer graphs. Nodes stay put
-              while next and left/right rewire — exactly what your code did.
-            </p>
-            <DemoVideo name="recursive-fib" label="fib(5) unfolding on the call stack" />
+    <Section
+      id="features"
+      label="What you get"
+      title="Everything print-debugging never showed you."
+    >
+      <div className="bento">
+        {cards.map(([icon, title, body]) => (
+          <article key={icon} className={`ds-card bento-card bento-${icon} reveal`}>
+            <FeatureIcon name={icon} />
+            <h3>{title}</h3>
+            <p>{body}</p>
           </article>
-          <article className="card reveal">
-            <h3>The real call stack</h3>
-            <p>Every frame and its locals, through every recursive call and back out again.</p>
-            <img
-              src="/media/viz-fact_dark.webp"
-              alt="Five factorial frames on the call stack"
-              loading="lazy"
-              decoding="async"
-              width="1232"
-              height="544"
-            />
-          </article>
-          <article className="card reveal">
-            <h3>A “why” for every step</h3>
-            <p className="quote">
-              <code>Checking if n &lt;= 1 (5 &lt;= 1) → False, so we skip the if block.</code>
-            </p>
-            <p>
-              Plain-English notes checked against the actual state — they never contradict the
-              picture.
-            </p>
-          </article>
-          <article className="card reveal">
-            <h3>Runs on the real test cases</h3>
-            <p>
-              Reads the problem’s examples, builds ListNode and TreeNode inputs, and tells you pass
-              or fail per case.
-            </p>
-          </article>
-          <article className="card reveal">
-            <h3>Terminal + browser</h3>
-            <p>
-              <code>leettrace watch solution.py</code> re-traces on every save. Or step through it
-              right in your terminal.
-            </p>
-            <img
-              src="/media/tui.svg"
-              alt="The LeetTrace terminal view stepping through a linked-list reversal"
-              loading="lazy"
-              decoding="async"
-              width="1600"
-              height="900"
-            />
-          </article>
-          <article className="card reveal">
-            <h3>100% local &amp; private</h3>
-            <p>Real CPython on your machine. No account, no upload, no telemetry.</p>
-          </article>
-        </div>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
 
 function Privacy() {
   return (
-    <section className="section privacy" aria-labelledby="privacy-title">
-      <div className="wrap privacy-grid">
-        <div>
-          <p className="eyebrow">Runs locally</p>
-          <h2 id="privacy-title">Your code never leaves your machine.</h2>
-          <p>
-            The tracer is a small app on your computer. The browser talks to it only over{' '}
-            <code>127.0.0.1</code>, locked to a per-session token and to leetcode.com. Nothing is
-            uploaded — there’s no server to upload to.
-          </p>
-        </div>
+    <Section
+      id="privacy"
+      label="Runs locally"
+      title="Your code never leaves your machine."
+      className="privacy"
+    >
+      <div className="privacy-grid">
+        <p className="lede">
+          The tracer runs real CPython on your computer, in a sandboxed subprocess with step, time,
+          depth and memory limits. The browser talks to it only over <code>127.0.0.1</code>, locked
+          to a secret token and to leetcode.com. There are no accounts, no servers and no analytics.
+        </p>
         <ul className="checks">
-          <li>Listens on 127.0.0.1 only — never your network</li>
-          <li>Every request needs a secret session token</li>
-          <li>Only leetcode.com and the app itself may connect</li>
-          <li>Your program runs in a sandbox with step, time and memory caps</li>
+          <li>Loopback only — never your network</li>
+          <li>Token-gated, origin-locked</li>
+          <li>Nothing uploaded, ever</li>
+          <li>
+            Open source —{' '}
+            <a href={REPO_URL} target="_blank" rel="noreferrer">
+              read it
+            </a>
+          </li>
         </ul>
       </div>
-    </section>
+      <p>
+        <a href="/privacy/">Privacy policy →</a>
+      </p>
+    </Section>
   );
 }
 
-type OS = 'macos' | 'windows' | 'linux';
+type OsTab = 'macOS' | 'Windows' | 'Linux';
 
 function Install() {
-  const { detected } = useDownloads();
-  const guess: OS = detected?.platform?.startsWith('windows')
-    ? 'windows'
-    : detected?.platform?.startsWith('linux')
-      ? 'linux'
-      : 'macos';
-  const [tab, setTab] = useState<OS | null>(null);
-  const current = tab ?? guess;
-  const { release } = useDownloads();
-  const chromeZip =
-    release?.asset(EXTENSION_ZIPS.chrome).url ??
-    `${RELEASES_URL}/latest/download/${EXTENSION_ZIPS.chrome}`;
-  const tabs: { id: OS; label: string }[] = [
-    { id: 'macos', label: 'macOS' },
-    { id: 'windows', label: 'Windows' },
-    { id: 'linux', label: 'Linux' },
-  ];
-  const onKey = (e: React.KeyboardEvent, i: number) => {
-    if (e.key !== 'ArrowRight' && e.key !== 'ArrowLeft') return;
-    const next = tabs[(i + (e.key === 'ArrowRight' ? 1 : tabs.length - 1)) % tabs.length]!;
-    setTab(next.id);
-    document.getElementById(`tab-${next.id}`)?.focus();
-  };
-
+  const { detected, release } = useDownloads();
+  const detectedOs: OsTab = detected?.platform ? ASSETS[detected.platform].os : 'macOS';
+  const [picked, setPicked] = useState<OsTab | null>(null);
+  const os = picked ?? detectedOs;
+  const tabs: OsTab[] = ['macOS', 'Windows', 'Linux'];
+  const linux = ASSETS['linux-x64'];
+  const linuxName = release?.pick(linux.name, linux.legacy).name.split('/').pop() ?? linux.name;
   return (
-    <section className="section install" id="install" aria-labelledby="install-title">
-      <div className="wrap">
-        <p className="eyebrow">Get started</p>
-        <h2 id="install-title">Install in about five minutes.</h2>
-
-        <div className="install-block">
-          <h3>1. Install the app</h3>
-          <div className="tabs" role="tablist" aria-label="Operating system">
-            {tabs.map((t, i) => (
+    <Section
+      id="install"
+      label="Get started"
+      title="Install in about two minutes."
+      className="install"
+    >
+      <div className="install-grid">
+        <div className="ds-card install-block">
+          <h3>
+            <span className="step-no" aria-hidden="true">
+              1
+            </span>{' '}
+            Install the app
+          </h3>
+          <div className="ds-tabs" role="tablist" aria-label="Operating system">
+            {tabs.map((t) => (
               <button
-                key={t.id}
-                id={`tab-${t.id}`}
-                role="tab"
+                key={t}
                 type="button"
-                aria-selected={current === t.id}
-                aria-controls={`panel-${t.id}`}
-                tabIndex={current === t.id ? 0 : -1}
-                onClick={() => setTab(t.id)}
-                onKeyDown={(e) => onKey(e, i)}
+                role="tab"
+                id={`tab-${t}`}
+                className="ds-tab"
+                aria-selected={os === t}
+                aria-controls={`panel-${t}`}
+                onClick={() => setPicked(t)}
               >
-                {t.label}
+                {t}
               </button>
             ))}
           </div>
           <div
-            className="tab-panel"
             role="tabpanel"
-            id={`panel-${current}`}
-            aria-labelledby={`tab-${current}`}
-            tabIndex={0}
+            id={`panel-${os}`}
+            aria-labelledby={`tab-${os}`}
+            className="os-panel"
           >
-            {current === 'macos' && (
-              <ol>
-                <li>
-                  <strong>Download</strong> → open the <code>.dmg</code> and drag{' '}
-                  <strong>LeetTrace</strong> into Applications.
-                </li>
-                <li>
-                  The first time, <strong>right-click the app → Open</strong> (macOS blocks unsigned
-                  apps by default; this is a one-time step), then <strong>Allow</strong>. On macOS
-                  15 (Sequoia) or later, if it still won’t open:{' '}
-                  <strong>System Settings → Privacy &amp; Security → Open Anyway</strong>.
-                </li>
-                <li>
-                  Or in Terminal:{' '}
-                  <span className="cmd">
-                    <code>xattr -dr com.apple.quarantine /Applications/LeetTrace.app</code>
-                    <CopyButton
-                      text="xattr -dr com.apple.quarantine /Applications/LeetTrace.app"
-                      label="Copy the xattr command"
-                    />
-                  </span>
-                </li>
-                <li>The app starts and opens a welcome page in your browser.</li>
-              </ol>
-            )}
-            {current === 'windows' && (
-              <ol>
-                <li>
-                  <strong>Download</strong> the <code>.exe</code> and run it.
-                </li>
-                <li>
-                  If SmartScreen appears, <strong>More info → Run anyway</strong> (it’s unsigned for
-                  now).
-                </li>
-                <li>
-                  The app starts and opens a welcome page. Keep its window open while you practice.
-                </li>
-              </ol>
-            )}
-            {current === 'linux' && (
-              <ol>
-                <li>
-                  <strong>Download</strong>, then:{' '}
-                  <span className="cmd">
-                    <code>chmod +x leettrace-linux-x64 &amp;&amp; ./leettrace-linux-x64</code>
-                    <CopyButton
-                      text="chmod +x leettrace-linux-x64 && ./leettrace-linux-x64"
-                      label="Copy the Linux run command"
-                    />
-                  </span>
-                </li>
-                <li>It starts the engine and opens a welcome page in your browser.</li>
-              </ol>
-            )}
-            <div className="install-dl">
-              <DownloadButton compact />
-            </div>
-          </div>
-        </div>
-
-        <div className="install-block" id="install-extension">
-          <h3>2. Add the browser extension</h3>
-          <div className="two-col">
-            <div>
-              <h4>Now</h4>
-              <ol>
-                <li>
-                  Download the extension zip from the app’s welcome page (or{' '}
-                  <a href={chromeZip} download>
-                    download the Chrome extension zip
-                  </a>
-                  ) → unzip it.
-                </li>
-                <li>
-                  Open <code>chrome://extensions</code> → turn on <strong>Developer mode</strong>.
-                </li>
-                <li>
-                  <strong>Load unpacked</strong> → select the folder.
-                </li>
-              </ol>
-            </div>
-            <div>
-              <h4>When published</h4>
+            {os === 'macOS' && (
               <p>
-                {CHROME_STORE_URL ? (
-                  <a href={CHROME_STORE_URL} target="_blank" rel="noreferrer">
-                    Add to Chrome
-                  </a>
-                ) : (
-                  <strong>Add to Chrome</strong>
-                )}{' '}
-                from the Web Store — one click.
+                Open the <code>.dmg</code>, drag to Applications. First launch:{' '}
+                <b>right-click → Open</b> once (it&apos;s unsigned for now).
               </p>
-              <p className="muted">
-                Firefox: download the Firefox zip from the release and load it from about:debugging.
-              </p>
-            </div>
-          </div>
-        </div>
-
-        <div className="install-block">
-          <h3>3. Pair them</h3>
-          <div className="two-col">
-            <div>
+            )}
+            {os === 'Windows' && (
               <p>
-                The app’s welcome page shows a <strong>pairing code</strong>. Open any LeetCode
-                problem, click <strong>Trace</strong>, and paste the code into the LeetTrace panel
-                once — you’ll see <strong>“Engine connected.”</strong>
+                Run the installer; if SmartScreen appears, <b>More info → Run anyway</b> (one time).
               </p>
-              <p className="muted">
-                If Chrome asks to let leetcode.com access apps on this device, choose Allow — that’s
-                how the page reaches the app on your computer.
-              </p>
-            </div>
-            <img
-              src="/media/welcome-page.webp"
-              alt="The welcome page showing a six-digit pairing code with a Copy button"
-              loading="lazy"
-              decoding="async"
-              width="1100"
-              height="1130"
-            />
+            )}
+            {os === 'Linux' && (
+              <>
+                <p>Make it executable and run it.</p>
+                <div className="cmd">
+                  <code>
+                    chmod +x {linuxName} && ./{linuxName}
+                  </code>
+                  <CopyButton
+                    text={`chmod +x ${linuxName} && ./${linuxName}`}
+                    label="Copy command"
+                  />
+                </div>
+              </>
+            )}
+            <p className="muted small">
+              LeetTrace then lives in your {os === 'macOS' ? 'menu bar' : 'system tray'} and starts
+              when you log in.
+            </p>
+            <DownloadButton compact />
           </div>
         </div>
 
-        <div className="install-block">
-          <h3>4. Use it</h3>
+        <div className="ds-card install-block" id="install-extension">
+          <h3>
+            <span className="step-no" aria-hidden="true">
+              2
+            </span>{' '}
+            Add the extension
+          </h3>
+          {CHROME_STORE_URL ? (
+            <>
+              <p>One click from the Chrome Web Store.</p>
+              <p>
+                <a
+                  className="ds-btn ds-btn-primary"
+                  href={CHROME_STORE_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  <ChromeGlyph /> Add to Chrome
+                </a>
+              </p>
+            </>
+          ) : (
+            <>
+              <p>
+                Coming to the Chrome Web Store. Until then, add it in a minute:{' '}
+                <a href={release?.asset(EXTENSION_ZIPS.chrome).url} download>
+                  download the extension (.zip)
+                </a>{' '}
+                (the app&apos;s welcome page offers it too), unzip it, then:
+              </p>
+              <ol className="substeps">
+                <li>
+                  Open <code>chrome://extensions</code> and turn on <b>Developer mode</b>.
+                </li>
+                <li>
+                  Click <b>Load unpacked</b> and pick the unzipped folder.
+                </li>
+              </ol>
+            </>
+          )}
+        </div>
+
+        <div className="ds-card install-block">
+          <h3>
+            <span className="step-no" aria-hidden="true">
+              3
+            </span>{' '}
+            Connect
+          </h3>
           <p>
-            Open any LeetCode problem, write Python, click <strong>Trace</strong> (next to Run).
+            Nothing to do — the app and extension pair <b>automatically</b>.
+          </p>
+          <p className="muted small">
+            If Chrome asks whether leetcode.com may use <b>apps on this device</b>, choose{' '}
+            <b>Allow</b>: it only lets LeetCode talk to LeetTrace on your own computer.
+          </p>
+        </div>
+
+        <div className="ds-card install-block">
+          <h3>
+            <span className="step-no" aria-hidden="true">
+              4
+            </span>{' '}
+            Use it
+          </h3>
+          <p>
+            Open any problem, write Python, click <b>Trace</b>.
+          </p>
+          <p className="muted small">
+            Prefer the terminal? Power users can trace files directly:{' '}
+            <a href={release?.asset(LINUX_CLI).url} download>
+              Linux CLI binary
+            </a>{' '}
+            · <code>leettrace run solution.py</code>
           </p>
         </div>
       </div>
-    </section>
+    </Section>
   );
 }
 
-const FAQ: { q: string; a: React.ReactNode }[] = [
+export const FAQ: { q: string; a: ReactNode }[] = [
   {
     q: 'Is my code sent anywhere?',
     a: (
       <>
-        No. The tracer runs on your machine; the browser talks to it only over{' '}
-        <code>127.0.0.1</code>, locked to a session token and to leetcode.com. Nothing is uploaded.
+        No — the tracer runs on your machine; the browser talks to it only over{' '}
+        <code>127.0.0.1</code>, locked to a token and to leetcode.com.
       </>
     ),
   },
   {
-    q: '“macOS can’t verify the developer.”',
+    q: '“Unverified developer” / “Windows protected your PC”?',
     a: (
       <>
-        It’s unsigned for now. Right-click the app → Open (one time) — on macOS 15 or later use
-        System Settings → Privacy &amp; Security → Open Anyway — or run{' '}
-        <code>xattr -dr com.apple.quarantine /Applications/LeetTrace.app</code>.
+        Normal for an unsigned app — one-time <b>right-click → Open</b> /{' '}
+        <b>More info → Run anyway</b>.
       </>
     ),
   },
-  {
-    q: '“Windows protected your PC.”',
-    a: <>SmartScreen on an unsigned app — More info → Run anyway.</>,
-  },
-  {
-    q: 'The extension says the engine is off.',
-    a: (
-      <>
-        Start the LeetTrace app, then open a LeetCode problem, click Trace, and pair with the code
-        on the app’s welcome page.
-      </>
-    ),
-  },
-  { q: 'Which languages?', a: <>Python today. JavaScript is next; C++/Java are on the roadmap.</> },
-  { q: 'Is this affiliated with LeetCode?', a: <>No — it’s an independent companion tool.</> },
+  { q: 'Do I enter a code?', a: 'No — it connects automatically.' },
+  { q: 'Languages?', a: 'Python today; JS next; C++/Java on the roadmap.' },
+  { q: 'Affiliated with LeetCode?', a: 'No, independent companion tool.' },
 ];
 
 function Faq() {
   return (
-    <section className="section" id="faq" aria-labelledby="faq-title">
-      <div className="wrap narrow">
-        <p className="eyebrow">Troubleshooting</p>
-        <h2 id="faq-title">FAQ</h2>
-        <div className="faq">
-          {FAQ.map((f) => (
-            <details key={f.q}>
-              <summary>{f.q}</summary>
-              <p>{f.a}</p>
-            </details>
-          ))}
-        </div>
+    <Section id="faq" label="FAQ" title="Questions, answered.">
+      <div className="faq">
+        {FAQ.map((f) => (
+          <details key={f.q} className="ds-card faq-item" role="group">
+            <summary>{f.q}</summary>
+            <div className="faq-a">{f.a}</div>
+          </details>
+        ))}
       </div>
-    </section>
+    </Section>
   );
 }
 
 function ClosingCta() {
   return (
     <section className="section closing" aria-labelledby="closing-title">
-      <div className="wrap closing-inner">
-        <h2 id="closing-title">The debugger LeetCode never gave you.</h2>
-        <p>Free, open source, and it runs on your machine.</p>
-        <DownloadButton compact />
+      <div className="aurora aurora-soft" aria-hidden="true" />
+      <div className="wrap closing-in">
+        <h2 id="closing-title">See your code actually run.</h2>
+        <p className="lede">Free, open source, and entirely on your machine.</p>
+        <div className="cta-row center">
+          <DownloadButton compact />
+          <AddToChromeButton />
+        </div>
       </div>
     </section>
   );
@@ -594,33 +598,41 @@ function Footer() {
   const { release } = useDownloads();
   return (
     <footer className="footer">
-      <div className="wrap footer-grid">
-        <div>
-          <a className="wordmark" href="#top">
-            <Mark size={24} />
-            <span>LeetTrace</span>
+      <div className="wrap footer-in">
+        <div className="footer-brand">
+          <a className="brand" href="#top" aria-label="LeetTrace home">
+            <Mark size={20} id="foot" />
+            <b>
+              Leet<span>Trace</span>
+            </b>
           </a>
           <p className="muted small">
-            LeetTrace is an independent tool and is not affiliated with or endorsed by LeetCode.
-          </p>
-          <p className="muted small">
-            {release?.tag ? `Latest release ${release.tag}` : 'Latest release on GitHub'}
+            {release?.tag ? `${release.tag} · ` : ''}LeetTrace is an independent tool and is not
+            affiliated with or endorsed by LeetCode.
           </p>
         </div>
         <nav aria-label="Product">
-          <h2>Product</h2>
-          <a href="#download">Download</a>
+          <h3>Product</h3>
           <a href="#how">How it works</a>
-          <a href={REPO_URL} target="_blank" rel="noreferrer">
-            GitHub
-          </a>
+          <a href="#features">Features</a>
+          <a href="#download">Download</a>
         </nav>
         <nav aria-label="Help">
-          <h2>Help</h2>
-          <a href="#install">Install guide</a>
-          <a href="#faq">Troubleshooting</a>
-          <a href={`${REPO_URL}/blob/main/docs/SECURITY.md`} target="_blank" rel="noreferrer">
-            Privacy &amp; security
+          <h3>Help</h3>
+          <a href="#install">Install</a>
+          <a href="#faq">FAQ</a>
+          <a href="/privacy/">Privacy</a>
+        </nav>
+        <nav aria-label="GitHub">
+          <h3>GitHub</h3>
+          <a href={REPO_URL} target="_blank" rel="noreferrer">
+            {GITHUB_REPO}
+          </a>
+          <a href={`${REPO_URL}/releases`} target="_blank" rel="noreferrer">
+            Releases
+          </a>
+          <a href={`${REPO_URL}/issues`} target="_blank" rel="noreferrer">
+            Report an issue
           </a>
         </nav>
       </div>
@@ -630,47 +642,63 @@ function Footer() {
 
 function ChromeGlyph() {
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="20"
-      height="20"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-    >
-      <circle cx="12" cy="12" r="9" />
-      <circle cx="12" cy="12" r="3.5" />
-      <path d="M12 8.5h8.2M8.9 13.8L4.8 6.7M15 13.8l-4.1 7.1" />
+    <svg viewBox="0 0 24 24" width="18" height="18" aria-hidden="true" fill="none">
+      <circle cx="12" cy="12" r="9.2" stroke="currentColor" strokeWidth="1.8" />
+      <circle cx="12" cy="12" r="3.6" stroke="currentColor" strokeWidth="1.8" />
+      <path
+        d="M12 8.4h8.4M8.9 13.8 4.7 6.5M15.1 13.8l-4.2 7.3"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
 
-function ThemeIcon({ theme }: { theme: Theme }) {
+function FeatureIcon({ name }: { name: string }) {
+  const paths: Record<string, ReactNode> = {
+    stack: <path d="M5 6h14M5 12h14M5 18h14" />,
+    heap: (
+      <>
+        <rect x="3" y="9" width="6" height="6" rx="1.5" />
+        <rect x="15" y="9" width="6" height="6" rx="1.5" />
+        <path d="M9 12h6m-2-2 2 2-2 2" />
+      </>
+    ),
+    why: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.6.3-1 .8-1 1.5V14M12 17h.01" />
+      </>
+    ),
+    cases: <path d="m5 12 4 4 10-10" />,
+    term: (
+      <>
+        <rect x="3" y="4" width="18" height="16" rx="2" />
+        <path d="m7 9 3 3-3 3M12 15h5" />
+      </>
+    ),
+    local: (
+      <>
+        <rect x="5" y="10" width="14" height="10" rx="2" />
+        <path d="M8 10V7a4 4 0 0 1 8 0v3" />
+      </>
+    ),
+  };
   return (
-    <svg
-      viewBox="0 0 24 24"
-      width="18"
-      height="18"
-      aria-hidden="true"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-    >
-      {theme === 'dark' ? (
-        <path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z" />
-      ) : theme === 'light' ? (
-        <>
-          <circle cx="12" cy="12" r="4" />
-          <path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" />
-        </>
-      ) : (
-        <>
-          <circle cx="12" cy="12" r="8" />
-          <path d="M12 4a8 8 0 0 1 0 16z" fill="currentColor" />
-        </>
-      )}
-    </svg>
+    <span className="ic" aria-hidden="true">
+      <svg
+        viewBox="0 0 24 24"
+        width="18"
+        height="18"
+        fill="none"
+        stroke="currentColor"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      >
+        {paths[name]}
+      </svg>
+    </span>
   );
 }

@@ -1,15 +1,17 @@
 import { StrictMode } from 'react';
-import { createRoot } from 'react-dom/client';
-import '@fontsource/hanken-grotesk/400.css';
-import '@fontsource/hanken-grotesk/600.css';
-import '@fontsource/hanken-grotesk/800.css';
-import '@fontsource/ibm-plex-mono/400.css';
-import '@fontsource/ibm-plex-mono/600.css';
+import { createRoot, hydrateRoot } from 'react-dom/client';
+import '@leettrace/design/fonts.css';
+import '@leettrace/design/tokens.css';
+import '@leettrace/design/components.css';
 import './styles.css';
 import { App } from './App';
 
-createRoot(document.getElementById('root')!).render(
+const root = document.getElementById('root')!;
+const app = (
   <StrictMode>
     <App />
-  </StrictMode>,
+  </StrictMode>
 );
+// The build prerenders the page into #root (scripts/prerender.mjs); hydrate it.
+if (root.hasChildNodes()) hydrateRoot(root, app);
+else createRoot(root).render(app);

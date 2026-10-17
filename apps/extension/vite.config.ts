@@ -4,6 +4,8 @@ import { crx } from '@crxjs/vite-plugin';
 import manifest from './manifest.config';
 
 export default defineConfig({
+  // One shared .env at the repo root (STORE_URL etc. — see /.env).
+  envDir: '../..',
   plugins: [react(), crx({ manifest })],
   build: {
     target: 'es2022',

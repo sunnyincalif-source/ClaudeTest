@@ -181,7 +181,7 @@
   align-items: center;
   gap: 10px;
   font: 500 0.74rem var(--font-mono);
-  color: var(--fg-faint);
+  color: var(--fg-muted);
   text-transform: uppercase;
   letter-spacing: 0.12em;
 }
@@ -219,7 +219,7 @@
 .ds-frame-addr {
   margin-left: 8px;
   font: 0.72rem var(--font-mono);
-  color: var(--fg-faint);
+  color: var(--fg-muted);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;

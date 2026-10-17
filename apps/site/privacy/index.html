@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Privacy policy — LeetTrace</title>
+    <meta
+      name="description"
+      content="LeetTrace collects no data. The tracer runs on your computer; the browser talks to it only over 127.0.0.1."
+    />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#08090c" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <script type="module" src="/src/privacy.ts"></script>
+  </head>
+  <body>
+    <header class="nav">
+      <div class="wrap nav-in">
+        <a class="brand" href="/" aria-label="LeetTrace home"
+          ><b>Leet<span>Trace</span></b></a
+        >
+      </div>
+    </header>
+    <main class="wrap legal" id="main">
+      <p class="ds-eyebrow">Privacy policy</p>
+      <h1>LeetTrace collects no data.</h1>
+      <p class="lede">
+        Effective October 2026 · applies to the LeetTrace app, browser extension and this website.
+      </p>
+
+      <h2>What LeetTrace does</h2>
+      <p>
+        LeetTrace shows how your own code runs: a desktop app (the "engine") traces your Python on
+        your computer, and a browser extension shows the trace on LeetCode problem pages.
+      </p>
+
+      <h2>Your code and data stay on your computer</h2>
+      <ul>
+        <li>
+          The engine runs only on your computer and listens only on the loopback address
+          <code>127.0.0.1</code>. It is not reachable from your network or the internet.
+        </li>
+        <li>
+          The extension sends your code and the problem's example inputs only to that local engine,
+          and only when you click <b>Trace</b>. Every request carries a secret token, and the engine
+          accepts browser requests only from leetcode.com and its own page.
+        </li>
+        <li>
+          The token is stored in the extension's private storage (and in
+          <code>~/.leettrace</code> on your computer). It never leaves your machine.
+        </li>
+        <li>Nothing is uploaded, sold, shared, or used for advertising. There are no accounts.</li>
+      </ul>
+
+      <h2>What the extension reads</h2>
+      <p>
+        On <code>leetcode.com/problems/*</code> pages, the extension reads the problem's title,
+        example test cases and the code in the editor — only to trace it locally when you ask. It
+        does not read other sites, your browsing history, cookies, or your LeetCode account.
+      </p>
+
+      <h2>This website</h2>
+      <p>
+        This site is static. It has no analytics, no cookies, and no tracking. To show the latest
+        download, your browser asks GitHub's public API for the latest release
+        (<code>api.github.com</code>); GitHub's privacy statement applies to that request. Downloads
+        come from GitHub Releases.
+      </p>
+
+      <h2>Permissions, explained</h2>
+      <ul>
+        <li><b>leetcode.com</b> — add the Trace button and panel to problem pages.</li>
+        <li><b>127.0.0.1</b> — talk to the LeetTrace app on your own computer.</li>
+        <li><b>storage</b> — remember the connection to the app.</li>
+        <li><b>scripting</b> — read the code from LeetCode's editor when you click Trace.</li>
+      </ul>
+
+      <h2>Not affiliated with LeetCode</h2>
+      <p>
+        LeetTrace is an independent open-source tool and is not affiliated with or endorsed by
+        LeetCode.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions or concerns: open an issue at
+        <a href="https://github.com/sunny925bay-jpg/leettrace/issues"
+          >github.com/sunny925bay-jpg/leettrace/issues</a
+        >. Changes to this policy are published here and in the repository's history.
+      </p>
+      <p><a href="/">← Back to LeetTrace</a></p>
+    </main>
+  </body>
+</html>

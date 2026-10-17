@@ -1,7 +1,14 @@
 import { createContext, useContext, useEffect, useId, useState, type ReactNode } from 'react';
 import baked from './generated/release.json';
 import { GITHUB_REPO } from './config';
-import { ASSETS, EXTENSION_ZIPS, detect, type Detected, type Platform } from './platform';
+import {
+  ASSETS,
+  EXTENSION_ZIPS,
+  LINUX_CLI,
+  detect,
+  type Detected,
+  type Platform,
+} from './platform';
 import { formatSize, resolveRelease, type RawRelease, type ReleaseInfo } from './release';
 
 interface Downloads {
@@ -40,13 +47,13 @@ export function DownloadButton({ id, compact = false }: { id?: string; compact?:
   const listId = useId();
   const platform = detected?.platform ?? null;
   const asset = platform ? ASSETS[platform] : null;
-  const info = asset && release ? release.asset(asset.name) : null;
+  const info = asset && release ? release.pick(asset.name, asset.legacy) : null;
   const meta = info ? [release?.tag, formatSize(info.size)].filter(Boolean).join(' · ') : null;
 
   return (
     <div className={`download${compact ? ' compact' : ''}`} id={id}>
       {asset && info ? (
-        <a className="btn btn-primary btn-lg" href={info.url} download>
+        <a className="ds-btn ds-btn-primary btn-lg" href={info.url} download>
           <DownloadIcon />
           <span>
             Download for {asset.os}
@@ -56,7 +63,7 @@ export function DownloadButton({ id, compact = false }: { id?: string; compact?:
       ) : (
         <button
           type="button"
-          className="btn btn-primary btn-lg"
+          className="ds-btn ds-btn-primary btn-lg"
           aria-expanded={open}
           aria-controls={listId}
           onClick={() => setOpen(!open)}
@@ -76,7 +83,7 @@ export function DownloadButton({ id, compact = false }: { id?: string; compact?:
       {platform === 'macos-arm64' && detected && !detected.archKnown && !compact && (
         <p className="arch-note">
           Apple silicon build. On an Intel Mac?{' '}
-          <a href={release?.asset(ASSETS['macos-x64'].name).url} download>
+          <a href={release?.pick(ASSETS['macos-x64'].name).url} download>
             Get the Intel build
           </a>
           .
@@ -108,7 +115,7 @@ function PlatformList({ id, current }: { id: string; current: Platform | null })
   return (
     <ul className="platforms" id={id}>
       {(Object.keys(ASSETS) as Platform[]).map((p) => {
-        const a = release.asset(ASSETS[p].name);
+        const a = release.pick(ASSETS[p].name, ASSETS[p].legacy);
         return (
           <li key={p} aria-current={p === current ? 'true' : undefined}>
             <a href={a.url} download>
@@ -123,10 +130,16 @@ function PlatformList({ id, current }: { id: string; current: Platform | null })
         );
       })}
       <li>
+        <a href={release.asset(LINUX_CLI).url} download>
+          Linux · command-line only
+        </a>
+        <span className="muted">leettrace run / watch, no tray app</span>
+      </li>
+      <li>
         <a href={release.asset(EXTENSION_ZIPS.chrome).url} download>
           Chrome extension (.zip)
         </a>
-        <span className="muted">Load unpacked — see the install steps</span>
+        <span className="muted">For the Chrome Web Store or Load unpacked</span>
       </li>
       <li>
         <a href={release.asset(EXTENSION_ZIPS.firefox).url} download>

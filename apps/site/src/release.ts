@@ -16,6 +16,8 @@ export interface ReleaseInfo {
   pageUrl: string;
   checksumsUrl: string;
   asset(name: string): ReleaseAsset;
+  /** The first of these names that the release actually has (else the first name). */
+  pick(...names: (string | undefined)[]): ReleaseAsset;
 }
 
 export interface RawRelease {
@@ -39,6 +41,10 @@ function build(raw: RawRelease | null, source: ReleaseInfo['source']): ReleaseIn
         size: a?.size ?? null,
         sha256: a?.digest?.startsWith('sha256:') ? a.digest.slice(7) : null,
       };
+    },
+    pick(...names) {
+      const wanted = names.filter((n): n is string => !!n);
+      return this.asset(wanted.find((n) => byName.has(n)) ?? wanted[0]!);
     },
   };
 }

@@ -46,9 +46,9 @@ describe('release resolution', () => {
   it('uses the GitHub API (version, size, sha)', async () => {
     const f = vi.fn(async () => new Response(JSON.stringify(RELEASE), { status: 200 }));
     const r = await resolveRelease('o/r', null, f as unknown as typeof fetch);
-    const a = r.asset('LeetTrace-windows-x64.exe');
+    const a = r.asset('LeetTrace-Setup-windows-x64.exe');
     expect(r.tag).toBe('v1.0.0');
-    expect(a.url).toContain('/download/v1.0.0/LeetTrace-windows-x64.exe');
+    expect(a.url).toContain('/download/v1.0.0/LeetTrace-Setup-windows-x64.exe');
     expect(a.sha256).toBe('ab'.repeat(32));
     expect(formatSize(a.size)).toBe('28.6 MB');
   });
@@ -72,13 +72,35 @@ describe('release resolution', () => {
   });
 });
 
+describe('asset names across releases', () => {
+  afterEach(() => sessionStorage.clear());
+
+  it('uses the v1.0 file names while the latest release predates the installers', async () => {
+    const old = {
+      ...RELEASE,
+      assets: ['LeetTrace-windows-x64.exe', 'leettrace-linux-x64'].map((name) => ({
+        name,
+        size: 1,
+        browser_download_url: `https://gh/v1.0.0/${name}`,
+        digest: null,
+      })),
+    };
+    const f = vi.fn(async () => new Response(JSON.stringify(old), { status: 200 }));
+    const r = await resolveRelease('o/r', null, f as unknown as typeof fetch);
+    const win = ASSETS['windows-x64'];
+    const linux = ASSETS['linux-x64'];
+    expect(r.pick(win.name, win.legacy).url).toBe('https://gh/v1.0.0/LeetTrace-windows-x64.exe');
+    expect(r.pick(linux.name, linux.legacy).url).toBe('https://gh/v1.0.0/leettrace-linux-x64');
+  });
+});
+
 describe('page', () => {
   afterEach(() => {
     vi.unstubAllGlobals();
     sessionStorage.clear();
   });
 
-  it('renders the hero, a Windows download, install steps, FAQ, and the not-affiliated line', async () => {
+  it('renders the §8 sections with §9 copy, an OS-detected download, and no pairing-code or terminal steps', async () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () => new Response(JSON.stringify(RELEASE), { status: 200 })),
@@ -87,18 +109,38 @@ describe('page', () => {
       value: 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
       configurable: true,
     });
-    render(<App />);
+    const { container } = render(<App />);
     expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent(
       'See your code actually run.',
     );
+    expect(
+      screen.getByText(/LeetTrace rides along with your LeetCode practice/),
+    ).toBeInTheDocument();
+    expect(screen.getByText('100% local · open source', { exact: false })).toBeInTheDocument();
     const dl = (await screen.findAllByRole('link', { name: /Download for Windows/ }))[0]!;
-    expect(dl).toHaveAttribute('href', expect.stringContaining('LeetTrace-windows-x64.exe'));
+    expect(dl).toHaveAttribute('href', expect.stringContaining('LeetTrace-Setup-windows-x64.exe'));
     expect(dl).toHaveTextContent('v1.0.0');
     expect(screen.getByRole('tab', { name: 'Windows' })).toHaveAttribute('aria-selected', 'true');
-    const faq = screen.getByRole('heading', { name: 'FAQ' }).parentElement!;
-    expect(within(faq).getAllByRole('group').length).toBe(6);
+    expect(screen.getAllByText(/More info → Run anyway/).length).toBeGreaterThan(0);
+    for (const h of ['Download & install.', 'Add to Chrome.', 'Open any LeetCode problem.'])
+      expect(screen.getByRole('heading', { name: h })).toBeInTheDocument();
+    const faq = screen.getByRole('heading', { name: 'Questions, answered.' }).parentElement!;
+    expect(within(faq).getAllByRole('group').length).toBe(5);
+    expect(within(faq).getByText('No — it connects automatically.')).toBeInTheDocument();
     expect(
       screen.getAllByText(/not affiliated with or endorsed by LeetCode/).length,
     ).toBeGreaterThan(0);
+    // The flow is automatic: no pairing codes, no terminal commands for normal users.
+    const text = container.textContent ?? '';
+    expect(text).not.toMatch(/pairing code|leettrace start|pipx|6-digit/i);
+    // "Add to Chrome" falls back to the unpacked steps while STORE_URL is empty.
+    expect(screen.getAllByRole('link', { name: /Add to Chrome/ })[0]).toHaveAttribute(
+      'href',
+      '#install-extension',
+    );
+    expect(screen.getByRole('link', { name: 'Privacy policy →' })).toHaveAttribute(
+      'href',
+      '/privacy/',
+    );
   });
 });

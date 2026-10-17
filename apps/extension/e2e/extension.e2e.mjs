@@ -31,7 +31,9 @@ async function launchBrowser() {
   const c = await chromium.launchPersistentContext(profile, {
     channel: 'chromium',
     headless: true,
-    viewport: { width: 1400, height: 950 },
+    // STORE=1: Chrome Web Store screenshots (1280×800, dark).
+    viewport: process.env.STORE ? { width: 1280, height: 800 } : { width: 1400, height: 950 },
+    colorScheme: process.env.STORE ? 'dark' : 'light',
     args: [`--disable-extensions-except=${extDir}`, `--load-extension=${extDir}`],
   });
   // Chrome asks the user before leetcode.com may reach 127.0.0.1 ("Apps on device"); a real
@@ -39,9 +41,14 @@ async function launchBrowser() {
   await c.grantPermissions(['local-network-access'], { origin: 'https://leetcode.com' });
   await c.route('https://leetcode.com/**', (route) => {
     const slug = /\/problems\/([a-z0-9-]+)/.exec(new URL(route.request().url()).pathname)?.[1];
-    const body = slug
+    let body = slug
       ? fixture(slug)
       : '<!doctype html><html><body><div id="__next">Problem list</div></body></html>';
+    if (process.env.STORE)
+      body = body.replace(
+        '</head>',
+        '<style>body{background:#1a1a1a;color:#eff1f6bf;font:14px/1.6 system-ui;padding:16px 20px}a{color:#eff1f6}code,pre{color:#eff1f6}</style></head>',
+      );
     return route.fulfill({ status: 200, contentType: 'text/html', body });
   });
   return c;

@@ -6,6 +6,8 @@ export type Platform = 'macos-arm64' | 'macos-x64' | 'windows-x64' | 'linux-x64'
 export interface Asset {
   platform: Platform;
   name: string; // release asset file name (version-less → stable latest/download URL)
+  /** The v1.0 name of the same download, used while the latest release predates v1.1. */
+  legacy?: string;
   os: 'macOS' | 'Windows' | 'Linux';
   label: string;
 }
@@ -25,17 +27,22 @@ export const ASSETS: Record<Platform, Asset> = {
   },
   'windows-x64': {
     platform: 'windows-x64',
-    name: 'LeetTrace-windows-x64.exe',
+    name: 'LeetTrace-Setup-windows-x64.exe',
+    legacy: 'LeetTrace-windows-x64.exe',
     os: 'Windows',
-    label: 'Windows · x64',
+    label: 'Windows · x64 installer',
   },
   'linux-x64': {
     platform: 'linux-x64',
-    name: 'leettrace-linux-x64',
+    name: 'LeetTrace-linux-x86_64.AppImage',
+    legacy: 'leettrace-linux-x64',
     os: 'Linux',
-    label: 'Linux · x64',
+    label: 'Linux · x64 AppImage',
   },
 };
+
+/** The terminal-only binary for Linux power users. */
+export const LINUX_CLI = 'leettrace-linux-x64';
 
 export const EXTENSION_ZIPS = {
   chrome: 'leettrace-chrome-extension.zip',

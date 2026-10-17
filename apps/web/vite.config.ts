@@ -7,6 +7,8 @@ const engine = process.env.LEETTRACE_ENGINE ?? 'http://127.0.0.1:47823';
 const api = { target: engine, changeOrigin: true };
 
 export default defineConfig({
+  // One shared .env at the repo root (STORE_URL etc. — see /.env).
+  envDir: '../..',
   plugins: [react()],
   base: '/',
   build: { target: 'es2022', outDir: 'dist', emptyOutDir: true },

@@ -7,7 +7,7 @@ import { dirname, join } from 'node:path';
 
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const env = Object.fromEntries(
-  (existsSync(join(root, '.env')) ? readFileSync(join(root, '.env'), 'utf8') : '')
+  (existsSync(join(root, '../../.env')) ? readFileSync(join(root, '../../.env'), 'utf8') : '')
     .split('\n')
     .filter((l) => /^\w+=/.test(l))
     .map((l) => [l.slice(0, l.indexOf('=')), l.slice(l.indexOf('=') + 1).trim()]),
