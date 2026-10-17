@@ -29,16 +29,24 @@ type Fetch = typeof fetch;
  * Chrome's Local Network Access asks the user before leetcode.com may reach 127.0.0.1.
  * 'prompt' means the next request will show that permission bubble.
  */
+// Chrome renamed this permission over time ('local-network-access' → 'loopback-network' /
+// 'local-network'); ask for every name and use the first one the browser knows.
+const LNA_PERMISSION_NAMES = ['loopback-network', 'local-network-access', 'local-network'];
+
 export async function localNetworkPermission(): Promise<PermissionState | 'unsupported'> {
-  try {
-    const status = await navigator.permissions.query({
-      name: 'local-network-access' as PermissionName,
-    });
-    return status.state;
-  } catch {
-    return 'unsupported';
+  for (const name of LNA_PERMISSION_NAMES) {
+    try {
+      const status = await navigator.permissions.query({ name: name as PermissionName });
+      return status.state;
+    } catch {
+      // unknown name in this browser: try the next one
+    }
   }
+  return 'unsupported';
 }
+
+/** Tells Chrome's Local Network Access this request intentionally targets this machine. */
+const LOOPBACK = { targetAddressSpace: 'loopback' } as RequestInit;
 
 async function probe(
   port: number,
@@ -50,6 +58,7 @@ async function probe(
     const ctrl = new AbortController();
     const timer = setTimeout(() => ctrl.abort(), timeoutMs);
     const res = await f(`http://127.0.0.1:${port}/health`, {
+      ...LOOPBACK,
       headers: token ? { Authorization: `Bearer ${token}` } : {},
       signal: ctrl.signal,
     });
@@ -65,8 +74,9 @@ export async function checkDaemon(f: Fetch = fetch): Promise<DaemonStatus> {
   const pairing = await getPairing();
   const permission = await localNetworkPermission();
   if (permission === 'denied') return { kind: 'offline', localNetworkBlocked: true };
-  // While Chrome's permission bubble is up, give the user time to answer it.
-  const firstTimeout = permission === 'prompt' ? 60_000 : 1200;
+  // The first request may show Chrome's "allow access to apps on this device" bubble; give
+  // the user time to answer it. (A stopped engine still fails fast: connection refused.)
+  const firstTimeout = permission === 'granted' ? 3000 : 60_000;
   if (pairing) {
     const res = await probe(pairing.port, pairing.token, f, firstTimeout);
     if (res?.ok) {
@@ -91,6 +101,7 @@ async function postJson(url: string, body: unknown, f: Fetch, token?: string): P
   let res: Response;
   try {
     res = await f(url, {
+      ...LOOPBACK,
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

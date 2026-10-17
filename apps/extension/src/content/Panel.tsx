@@ -287,6 +287,13 @@ function Offline({ onRetry, blocked }: { onRetry: () => void; blocked: boolean }
       </p>
       <pre>leettrace start</pre>
       <p className="ltx-muted">
+        <strong>Already running?</strong> Chrome must allow leetcode.com to reach apps on this
+        computer. If Chrome shows a prompt about apps or devices on your network, choose
+        <strong> Allow</strong>. Otherwise click the icon left of the address bar →{' '}
+        <strong>Site settings</strong> → set <em>Local network access</em> (or{' '}
+        <em>Apps on device</em>) to Allow, reload the page, and press Retry.
+      </p>
+      <p className="ltx-muted">
         Not installed yet? <code>pipx install leettrace</code> —{' '}
         <a href={INSTALL_URL} target="_blank" rel="noreferrer">
           install guide
