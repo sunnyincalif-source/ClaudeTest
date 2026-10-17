@@ -13,6 +13,7 @@ Three components, one contract:
 - **Clients:** the `leettrace` terminal CLI (`run`/`watch`/`--tui`), a local web UI
   (`apps/web`) served by the engine, and a browser extension (`apps/extension`) that overlays
   LeetCode.
+- **Site:** `apps/site` — static marketing + install site (SPEC-LAUNCH.md, Phases 11–15).
 - **Contract:** the **Trace Schema** (`packages/schema`) — the engine's output, the localhost
   wire format, and the only thing the viz reads.
 
@@ -37,6 +38,13 @@ Three components, one contract:
 - This is a **native local engine. Do NOT use Pyodide/WASM** — that was a different, earlier
   project.
 - Accessibility and light/dark are acceptance criteria.
+- **The site is static and privacy-clean** (SPEC-LAUNCH §11): no backend, no
+  telemetry/analytics without an explicit consented opt-in; it reads only public GitHub Release
+  metadata. It never ships any flow that would require widening the engine's origin allowlist
+  or disabling its session token.
+- **Instructions must match the real flow** (SPEC-LAUNCH §11): the install/pairing steps on the
+  site are kept in sync with the actual extension + engine behavior; a change to pairing
+  updates the site copy in the same PR.
 
 ## Anti-goals (v1, SPEC §11)
 No accounts, no cloud backend, no hosted execution, no multi-language, no hand-written
