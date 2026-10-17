@@ -838,3 +838,132 @@ code {
     transition: none;
   }
 }
+
+/* one-time first-launch step, illustrated (unsigned app) */
+.bypass {
+  margin: 4px 0 14px;
+}
+.bypass figcaption {
+  font-size: 0.86rem;
+  color: var(--fg-muted);
+  margin-top: 8px;
+}
+.bypass figcaption b {
+  color: var(--fg);
+}
+.bypass-art {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--r-lg);
+  background: var(--bg);
+  font-size: 0.74rem;
+}
+.bypass .hl {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+  box-shadow: 0 0 14px -2px var(--accent-glow);
+}
+.os-finder {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.os-app {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  color: var(--fg);
+}
+.os-app-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 9px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border-strong);
+  box-shadow:
+    inset 0 0 0 7px var(--bg-elev-2),
+    inset 0 0 0 9px var(--accent);
+}
+.os-menu {
+  list-style: none;
+  margin: 0;
+  padding: 4px;
+  min-width: 150px;
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border-strong);
+  border-radius: var(--r-md);
+  color: var(--fg);
+}
+.os-menu li {
+  padding: 3px 8px;
+  border-radius: 4px;
+}
+.os-menu li.hl {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+.os-menu .sep {
+  height: 1px;
+  padding: 0;
+  margin: 3px 0;
+  background: var(--border-strong);
+}
+.os-dialog,
+.os-smartscreen {
+  flex: 1 1 220px;
+  max-width: 300px;
+  padding: 12px;
+  border-radius: var(--r-lg);
+  background: var(--bg-elev-2);
+  border: 1px solid var(--border-strong);
+  color: var(--fg);
+}
+.os-smartscreen {
+  max-width: 340px;
+  border-radius: 2px;
+  background: color-mix(in srgb, var(--accent) 16%, var(--bg-elev-2));
+}
+.os-title {
+  font-weight: 700;
+  margin: 0 0 4px;
+}
+.os-body {
+  color: var(--fg-muted);
+  margin: 0 0 8px;
+}
+.os-link {
+  display: inline-block;
+  color: var(--fg);
+  text-decoration: underline;
+  margin: 0 0 8px;
+  padding: 0 3px;
+  border-radius: 3px;
+}
+.os-buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+.os-buttons span {
+  padding: 3px 12px;
+  border-radius: var(--r-sm);
+  border: 1px solid var(--border-strong);
+  background: var(--bg-elev-3);
+}
+.os-buttons span.hl {
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 600;
+  border-color: transparent;
+}
+.faq-shots {
+  margin-top: 12px;
+  display: grid;
+  gap: 4px;
+}

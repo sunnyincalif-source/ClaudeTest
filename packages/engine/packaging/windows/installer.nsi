@@ -38,6 +38,13 @@ VIAddVersionKey "LegalCopyright" "MIT License"
 !define MUI_WELCOMEPAGE_TITLE "Install LeetTrace ${VERSION}"
 !define MUI_WELCOMEPAGE_TEXT "LeetTrace shows your LeetCode solution running step by step: call stack, memory and pointers, on the real test cases.$\r$\n$\r$\nIt installs a small engine that runs only on this computer and starts when you sign in, with an icon in the system tray. Your code never leaves your machine.$\r$\n$\r$\nAfter installing, add the LeetTrace extension to Chrome and open any LeetCode problem. It connects automatically, with no code to type.$\r$\n$\r$\nFirst time only: if Windows showed $\"Windows protected your PC$\" before this window, that is normal for a new unsigned app (More info, then Run anyway). You won't see it again."
 !insertmacro MUI_PAGE_WELCOME
+; "Before you start": the one-time SmartScreen step + what gets installed (SPEC-PRODUCT §10).
+!define MUI_PAGE_HEADER_TEXT "Before you start"
+!define MUI_PAGE_HEADER_SUBTEXT "The one-time Windows warning, and what LeetTrace installs."
+!define MUI_LICENSEPAGE_TEXT_TOP "Read this once:"
+!define MUI_LICENSEPAGE_TEXT_BOTTOM "Click Next to continue."
+!define MUI_LICENSEPAGE_BUTTON "&Next >"
+!insertmacro MUI_PAGE_LICENSE "${README}"
 !insertmacro MUI_PAGE_DIRECTORY
 !insertmacro MUI_PAGE_INSTFILES
 !define MUI_FINISHPAGE_TITLE "LeetTrace is installed"

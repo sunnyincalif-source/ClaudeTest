@@ -73,6 +73,9 @@ jobs:
       - name: Smoke test (dev install)
         working-directory: packages/engine
         run: uv run python ../../scripts/annotate.py "dev smoke ${{ matrix.os }}" uv run python scripts/smoke.py uv run leettrace
+      - name: create-dmg (styled drag-to-Applications window)
+        if: runner.os == 'macOS'
+        run: brew install create-dmg
       - name: Build the desktop app + installer
         shell: bash
         run: packages/engine/packaging/build_desktop.sh

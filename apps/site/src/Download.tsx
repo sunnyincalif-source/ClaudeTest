@@ -41,11 +41,28 @@ function shortSha(sha: string | null) {
 }
 
 /** The primary CTA: one big OS-matched download, with every other build one click away. */
-export function DownloadButton({ id, compact = false }: { id?: string; compact?: boolean }) {
+export function DownloadButton({
+  id,
+  compact = false,
+  os,
+}: {
+  id?: string;
+  compact?: boolean;
+  /** Offer this OS's build instead of the detected one (e.g. the install section's tabs). */
+  os?: 'macOS' | 'Windows' | 'Linux';
+}) {
   const { detected, release } = useDownloads();
   const [open, setOpen] = useState(false);
   const listId = useId();
-  const platform = detected?.platform ?? null;
+  const detectedPlatform = detected?.platform ?? null;
+  const platform: Platform | null =
+    os && (!detectedPlatform || ASSETS[detectedPlatform].os !== os)
+      ? os === 'macOS'
+        ? 'macos-arm64'
+        : os === 'Windows'
+          ? 'windows-x64'
+          : 'linux-x64'
+      : detectedPlatform;
   const asset = platform ? ASSETS[platform] : null;
   const info = asset && release ? release.pick(asset.name, asset.legacy) : null;
   const meta = info ? [release?.tag, formatSize(info.size)].filter(Boolean).join(' · ') : null;

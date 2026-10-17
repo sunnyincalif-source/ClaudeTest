@@ -5,6 +5,7 @@ import { lazy, Suspense, useState, type ReactNode } from 'react';
 import { CHROME_STORE_URL, GITHUB_REPO, REPO_URL } from './config';
 import { CopyButton, Mark, WindowFrame, useNearViewport, useReveal } from './components';
 import { DownloadButton, DownloadsProvider, useDownloads } from './Download';
+import { MacBypass, WindowsBypass } from './BypassShot';
 import { ASSETS, EXTENSION_ZIPS, LINUX_CLI } from './platform';
 
 const LivePanel = lazy(() => import('./LivePanel'));
@@ -431,11 +432,13 @@ function Install() {
                 <b>right-click → Open</b> once (it&apos;s unsigned for now).
               </p>
             )}
+            {os === 'macOS' && <MacBypass />}
             {os === 'Windows' && (
               <p>
                 Run the installer; if SmartScreen appears, <b>More info → Run anyway</b> (one time).
               </p>
             )}
+            {os === 'Windows' && <WindowsBypass />}
             {os === 'Linux' && (
               <>
                 <p>Make it executable and run it.</p>
@@ -454,7 +457,7 @@ function Install() {
               LeetTrace then lives in your {os === 'macOS' ? 'menu bar' : 'system tray'} and starts
               when you log in.
             </p>
-            <DownloadButton compact />
+            <DownloadButton compact os={os} />
           </div>
         </div>
 
@@ -555,6 +558,10 @@ export const FAQ: { q: string; a: ReactNode }[] = [
       <>
         Normal for an unsigned app — one-time <b>right-click → Open</b> /{' '}
         <b>More info → Run anyway</b>.
+        <div className="faq-shots">
+          <MacBypass />
+          <WindowsBypass />
+        </div>
       </>
     ),
   },
