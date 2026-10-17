@@ -344,6 +344,10 @@
 }
 .lt-code code {
   font: inherit;
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
 }
 
 /* canvas: stack + heap + arrows share one coordinate space */

@@ -3440,10 +3440,7 @@
       "tail",
       "v",
       "cur"
-     ],
-     "returnValue": {
-      "kind": "none"
-     }
+     ]
     }
    ],
    "heap": {

@@ -400,7 +400,7 @@ def _note(i: int, steps: list[JSON], facts: JSON, index: _Index) -> str | None:
     if event == "return":
         rv = top.get("returnValue")
         if top["func"] == "<module>":
-            if rv is None:
+            if facts.get("unwinding"):
                 return "The exception reached the top level of the program."
             return "Program finished."
         if rv is None:

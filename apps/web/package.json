@@ -9,7 +9,8 @@
     "build": "tsc -p tsconfig.json --noEmit && vite build && node scripts/copy-to-engine.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "lint": "eslint src",
-    "test": "vitest run --passWithNoTests"
+    "test": "vitest run --passWithNoTests",
+    "e2e": "node e2e/watch.e2e.mjs"
   },
   "dependencies": {
     "@leettrace/schema": "workspace:^",
@@ -18,6 +19,7 @@
     "react-dom": "18.3.1"
   },
   "devDependencies": {
+    "@playwright/test": "1.56.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "16",

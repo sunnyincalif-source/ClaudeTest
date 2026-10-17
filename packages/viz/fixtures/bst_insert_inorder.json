@@ -28052,10 +28052,7 @@
       "root",
       "v",
       "result"
-     ],
-     "returnValue": {
-      "kind": "none"
-     }
+     ]
     }
    ],
    "heap": {

@@ -22,6 +22,8 @@ export interface TraceViewerProps {
   initial?: Partial<PlaybackState>;
   /** Exposes the playback controller (e.g. for exporting or tests). */
   onPlayback?: (p: Playback) => void;
+  /** Force a theme; by default follows prefers-color-scheme. */
+  theme?: 'light' | 'dark';
 }
 
 function isEditable(t: EventTarget | null): boolean {
@@ -55,7 +57,14 @@ export function handleKey(p: Playback, key: string): boolean {
   }
 }
 
-export function TraceViewer({ trace, compact, globalKeys, initial, onPlayback }: TraceViewerProps) {
+export function TraceViewer({
+  trace,
+  compact,
+  globalKeys,
+  initial,
+  onPlayback,
+  theme,
+}: TraceViewerProps) {
   const playback = usePlayback(trace, initial);
   const reducedMotion = useReducedMotion();
   const layout = useMemo(() => computeLayout(trace), [trace]);
@@ -93,6 +102,7 @@ export function TraceViewer({ trace, compact, globalKeys, initial, onPlayback }:
   return (
     <div
       className={cls}
+      data-theme={theme}
       tabIndex={-1}
       onKeyDown={onKeyDown}
       role="region"

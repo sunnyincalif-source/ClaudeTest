@@ -2424,10 +2424,7 @@
       "n",
       "i",
       "j"
-     ],
-     "returnValue": {
-      "kind": "none"
-     }
+     ]
     }
    ],
    "heap": {

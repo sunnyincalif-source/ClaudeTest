@@ -948,10 +948,7 @@
      "id": "f1",
      "func": "<module>",
      "locals": {},
-     "order": [],
-     "returnValue": {
-      "kind": "none"
-     }
+     "order": []
     }
    ],
    "heap": {},

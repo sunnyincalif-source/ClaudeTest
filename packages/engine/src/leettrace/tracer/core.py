@@ -218,7 +218,10 @@ class Tracer:
                 exception={"type": arg[0].__name__, "message": str(exc)},
             )
         elif event == "return":
-            self._record(frame, "return", return_value=(None if rec.unwinding else (arg,)))
+            # A module "returning" None is noise; only functions show a return value.
+            show = not rec.unwinding and not rec.is_module
+            self._record(frame, "return", return_value=(arg,) if show else None)
+            self.facts[-1]["unwinding"] = rec.unwinding
             self._shadow.pop()
         return self._local_trace
 

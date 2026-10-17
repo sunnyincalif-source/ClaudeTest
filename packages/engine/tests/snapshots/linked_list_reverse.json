@@ -5395,10 +5395,7 @@
       "nxt",
       "out",
       "node"
-     ],
-     "returnValue": {
-      "kind": "none"
-     }
+     ]
     }
    ],
    "heap": {
