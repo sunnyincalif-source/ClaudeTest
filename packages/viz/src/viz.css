@@ -134,9 +134,10 @@
   font: 600 10.5px/1.6 var(--font-mono);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  padding: 1px 7px;
+  padding: 0 7px;
   border-radius: var(--r-sm);
-  background: var(--accent-soft);
+  background: var(--bg);
+  border: 1px solid color-mix(in srgb, var(--accent) 45%, transparent);
   color: var(--accent);
   flex: none;
   margin-top: 1px;
@@ -145,15 +146,16 @@
   box-shadow: inset 2px 0 0 var(--bad);
 }
 .lt-ev-exception .lt-ev {
-  background: var(--bad-soft);
+  border-color: color-mix(in srgb, var(--bad) 45%, transparent);
   color: var(--bad);
 }
 .lt-ev-return .lt-ev {
-  background: var(--good-soft);
+  border-color: color-mix(in srgb, var(--good) 45%, transparent);
   color: var(--good);
 }
 .lt-ev-call .lt-ev {
-  color: var(--accent-2);
+  border-color: color-mix(in srgb, var(--accent-2) 45%, transparent);
+  color: var(--fn);
 }
 
 /* ---------- controls ---------- */
@@ -268,7 +270,7 @@
   margin: 0;
   padding: 6px 0;
   font: 12.5px/1.62 var(--font-mono);
-  color: var(--fg-muted);
+  color: color-mix(in srgb, var(--fg) 55%, var(--fg-muted));
 }
 .lt-code-line {
   display: flex;
@@ -283,7 +285,7 @@
   width: 3.2em;
   flex: none;
   text-align: right;
-  color: var(--fg-faint);
+  color: var(--fg-muted);
   padding-right: 4px;
   user-select: none;
   font-variant-numeric: tabular-nums;
