@@ -80,6 +80,7 @@ jobs:
         shell: bash
         run: packages/engine/packaging/build_desktop.sh
       - name: Install it, start it like the OS would at login, smoke-test it
+        timeout-minutes: 15
         shell: bash
         run: |
           cd packages/engine

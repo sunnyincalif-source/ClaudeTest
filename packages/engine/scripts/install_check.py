@@ -47,6 +47,7 @@ def wait_engine(home: Path, timeout: float = 60) -> dict[str, object]:
     log = home / "app.log"
     if log.exists():
         print(log.read_text(encoding="utf-8", errors="replace")[-3000:])
+    dump_log()
     raise SystemExit("FAIL engine did not come up")
 
 
@@ -65,21 +66,47 @@ def shutdown(session: dict[str, object], home: Path) -> None:
     check(not (home / "session.json").exists(), "engine stopped cleanly")
 
 
+APP_LOG = Path(tempfile.gettempdir()) / "leettrace-install-check-app.log"
+
+
 def start_app(cmd: list[str], env: dict[str, str]) -> subprocess.Popen[bytes]:
     flags = 0
     if sys.platform == "win32":
         flags = subprocess.CREATE_NEW_PROCESS_GROUP  # type: ignore[attr-defined]
+    # Never hand the app our stdout/stderr: CI wraps this script and waits for those pipes to
+    # close, so an app (or a helper it spawned) that outlives the check would hang the job.
+    log = open(APP_LOG, "ab")  # noqa: SIM115 — closed by the child's lifetime
     return subprocess.Popen(
         cmd,
         env=env,
         stdin=subprocess.DEVNULL,
+        stdout=log,
+        stderr=subprocess.STDOUT,
         creationflags=flags,
         start_new_session=sys.platform != "win32",
     )
 
 
+def wait_exit(proc: subprocess.Popen[bytes], what: str) -> None:
+    try:
+        proc.wait(30)
+    except subprocess.TimeoutExpired:
+        proc.kill()
+        dump_log()
+        check(False, f"{what}: the app process exited after shutdown")
+    check(True, f"{what}: the app process exited after shutdown")
+
+
+def dump_log() -> None:
+    if APP_LOG.exists():
+        print("---- app output ----")
+        print(APP_LOG.read_text(encoding="utf-8", errors="replace")[-4000:])
+
+
 def smoke(cli: str, env: dict[str, str]) -> None:
-    r = subprocess.run([sys.executable, str(HERE / "smoke.py"), cli], env=env, check=False)
+    r = subprocess.run(
+        [sys.executable, str(HERE / "smoke.py"), cli], env=env, check=False, timeout=600
+    )
     check(r.returncode == 0, f"engine smoke test via the installed CLI ({cli})")
 
 
@@ -87,7 +114,7 @@ def windows(installer: Path, env: dict[str, str], home: Path) -> None:
     import winreg  # type: ignore[import-not-found,unused-ignore]
 
     root = Path(os.environ.get("PROGRAMW6432", r"C:\Program Files")) / "LeetTrace"
-    r = subprocess.run([str(installer), "/S"], check=False)
+    r = subprocess.run([str(installer), "/S"], check=False, timeout=300)
     check(r.returncode == 0, "silent install (/S) succeeded")
     for _ in range(60):
         if (root / "LeetTrace.exe").exists():
@@ -108,10 +135,10 @@ def windows(installer: Path, env: dict[str, str], home: Path) -> None:
     check("LeetTrace.exe" in value and "--background" in value, f"start at sign-in: {value}")
     print((home / "app.log").read_text(encoding="utf-8", errors="replace").strip()[-400:])
     shutdown(session, home)
-    proc.wait(30)
+    wait_exit(proc, "Windows")
     smoke(str(root / "leettrace.exe"), env)
     un = root / "Uninstall LeetTrace.exe"
-    r = subprocess.run([str(un), "/S", f"_?={root}"], check=False)
+    r = subprocess.run([str(un), "/S", f"_?={root}"], check=False, timeout=300)
     check(r.returncode == 0, "silent uninstall succeeded")
     check(not (root / "LeetTrace.exe").exists(), "app files removed")
     try:
@@ -148,7 +175,7 @@ def macos(dmg: Path, env: dict[str, str], home: Path, user_home: Path) -> None:
     args = plistlib.loads(agent.read_bytes())["ProgramArguments"]
     check(args == [str(exe), "app", "--background"], f"login item starts the app: {args}")
     shutdown(session, home)
-    proc.wait(30)
+    wait_exit(proc, "macOS")
     smoke(str(exe), env)
 
 
@@ -163,7 +190,7 @@ def linux(appimage: Path, env: dict[str, str], home: Path, cfg: Path) -> None:
     text = entry.read_text(encoding="utf-8")
     check(str(appimage.resolve()) in text, "autostart points at the AppImage file")
     shutdown(session, home)
-    proc.wait(30)
+    wait_exit(proc, "Linux")
     smoke(str(appimage), env)
 
 
