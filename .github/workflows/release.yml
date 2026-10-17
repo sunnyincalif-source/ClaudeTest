@@ -1,58 +1,172 @@
 name: Release
 
+# Push a tag like v1.0.0 to build and publish a GitHub Release with:
+#   LeetTrace-macos-arm64.dmg, LeetTrace-macos-x64.dmg, LeetTrace-windows-x64.exe,
+#   leettrace-linux-x64, leettrace-chrome-extension.zip, leettrace-firefox-extension.zip,
+#   SHA256SUMS
+# Asset names carry no version, so https://github.com/<repo>/releases/latest/download/<name>
+# always points at the newest release (the site relies on this as its fallback).
+#
+# Dry run (builds + smoke-tests every asset and uploads them as workflow artifacts, but never
+# publishes): push any branch named release-dry-run/<anything>, or Actions → Release →
+# "Run workflow" (dry_run: true). Only a v* tag publishes.
+
 on:
   push:
     tags: ['v*']
+    branches: ['release-dry-run/**']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: Build and test everything, but don't publish a release
+        type: boolean
+        default: true
+
+permissions:
+  contents: write
 
 jobs:
-  web-and-extension:
+  bundle:
+    name: Web UI + extension zips
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: pnpm/action-setup@v4
-        with: { version: 9.15.9 }
+        with:
+          version: 9.15.9
       - uses: actions/setup-node@v4
-        with: { node-version: 20, cache: pnpm }
+        with:
+          node-version: 20
+          cache: pnpm
       - uses: astral-sh/setup-uv@v5
       - run: pnpm install --frozen-lockfile
-      - run: pnpm build
-      - run: pnpm --filter @leettrace/extension exec node scripts/package.mjs
-      - name: Build wheel + sdist (bundles the web UI)
-        run: cd packages/engine && uv build -o dist
+      - run: pnpm exec turbo run build --filter=@leettrace/web --filter=@leettrace/extension
       - uses: actions/upload-artifact@v4
         with:
-          name: web-ui
-          path: packages/engine/src/leettrace/web_dist
-      - uses: actions/upload-artifact@v4
-        with:
-          name: python-dist
-          path: packages/engine/dist/*
-      - uses: actions/upload-artifact@v4
-        with:
-          name: extension
-          path: apps/extension/release/*.zip
+          name: bundle
+          path: |
+            packages/engine/src/leettrace/web_dist
+            packages/engine/src/leettrace/extension_dist
+            apps/extension/release/*.zip
 
   binaries:
-    needs: web-and-extension
+    name: Binary (${{ matrix.asset }})
+    needs: bundle
     strategy:
+      fail-fast: false
       matrix:
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        include:
+          - os: ubuntu-latest
+            kind: onefile
+            asset: leettrace-linux-x64
+          - os: windows-latest
+            kind: onefile
+            asset: LeetTrace-windows-x64.exe
+          - os: macos-latest # Apple silicon
+            kind: app
+            arch: arm64
+            asset: LeetTrace-macos-arm64.dmg
+          - os: macos-15-intel
+            kind: app
+            arch: x64
+            asset: LeetTrace-macos-x64.dmg
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
-        with: { python-version: '3.12' }
+        with:
+          python-version: '3.12'
       - uses: actions/download-artifact@v4
         with:
-          name: web-ui
-          path: packages/engine/src/leettrace/web_dist
+          name: bundle
+          path: bundle
+      - name: Place the bundled UI + extension into the engine
+        shell: bash
+        run: |
+          cp -R bundle/packages/engine/src/leettrace/web_dist/. packages/engine/src/leettrace/web_dist/
+          cp -R bundle/packages/engine/src/leettrace/extension_dist/. packages/engine/src/leettrace/extension_dist/
       - run: cd packages/engine && uv sync --frozen
-      - shell: bash
-        run: packages/engine/packaging/build_binary.sh
+
+      - name: Build (Linux / Windows single-file binary)
+        if: matrix.kind == 'onefile'
+        shell: bash
+        run: |
+          packages/engine/packaging/build_binary.sh
+          mkdir -p out
+          if [ -f packages/engine/dist-bin/leettrace.exe ]; then
+            cp packages/engine/dist-bin/leettrace.exe "out/${{ matrix.asset }}"
+          else
+            cp packages/engine/dist-bin/leettrace "out/${{ matrix.asset }}"
+          fi
+          PY=python3; command -v python3 >/dev/null || PY=python
+          $PY scripts/annotate.py "smoke ${{ matrix.asset }}" $PY packages/engine/scripts/smoke.py "out/${{ matrix.asset }}"
+
+      - name: Build (macOS LeetTrace.app in a .dmg)
+        if: matrix.kind == 'app'
+        shell: bash
+        run: |
+          packages/engine/packaging/build_app.sh "${{ matrix.arch }}"
+          python3 scripts/annotate.py "smoke ${{ matrix.asset }}" python3 packages/engine/scripts/smoke.py packages/engine/dist-bin/LeetTrace.app/Contents/MacOS/LeetTrace
+          mkdir -p out && cp "packages/engine/dist-bin/${{ matrix.asset }}" out/
+
+      # --- Signing (owner-gated; see LAUNCH_CHECKLIST.md). Unsigned builds run green. ---------
+      # - name: Sign + notarize (macOS)
+      #   if: matrix.kind == 'app' && env.APPLE_DEVELOPER_ID != ''
+      #   env:
+      #     APPLE_DEVELOPER_ID: ${{ secrets.APPLE_DEVELOPER_ID }}          # "Developer ID Application: …"
+      #     APPLE_CERT_P12_BASE64: ${{ secrets.APPLE_CERT_P12_BASE64 }}
+      #     APPLE_CERT_PASSWORD: ${{ secrets.APPLE_CERT_PASSWORD }}
+      #     APPLE_ID: ${{ secrets.APPLE_ID }}
+      #     APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+      #     APPLE_APP_PASSWORD: ${{ secrets.APPLE_APP_PASSWORD }}
+      #   run: |
+      #     echo "$APPLE_CERT_P12_BASE64" | base64 --decode > cert.p12
+      #     security create-keychain -p ci build.keychain && security default-keychain -s build.keychain
+      #     security unlock-keychain -p ci build.keychain
+      #     security import cert.p12 -k build.keychain -P "$APPLE_CERT_PASSWORD" -T /usr/bin/codesign
+      #     security set-key-partition-list -S apple-tool:,apple: -s -k ci build.keychain
+      #     codesign --deep --force --options runtime --sign "$APPLE_DEVELOPER_ID" packages/engine/dist-bin/LeetTrace.app
+      #     # rebuild the dmg from the signed app, then notarize + staple it
+      #     hdiutil create -volname LeetTrace -srcfolder packages/engine/dist-bin/LeetTrace.app -ov -format UDZO "out/${{ matrix.asset }}"
+      #     xcrun notarytool submit "out/${{ matrix.asset }}" --apple-id "$APPLE_ID" --team-id "$APPLE_TEAM_ID" --password "$APPLE_APP_PASSWORD" --wait
+      #     xcrun stapler staple "out/${{ matrix.asset }}"
+      # - name: Sign (Windows)
+      #   if: matrix.os == 'windows-latest' && env.WINDOWS_CERT_PFX_BASE64 != ''
+      #   shell: pwsh
+      #   env:
+      #     WINDOWS_CERT_PFX_BASE64: ${{ secrets.WINDOWS_CERT_PFX_BASE64 }}
+      #     WINDOWS_CERT_PASSWORD: ${{ secrets.WINDOWS_CERT_PASSWORD }}
+      #   run: |
+      #     [IO.File]::WriteAllBytes("cert.pfx", [Convert]::FromBase64String($env:WINDOWS_CERT_PFX_BASE64))
+      #     & "C:\Program Files (x86)\Windows Kits\10\bin\x64\signtool.exe" sign /f cert.pfx /p $env:WINDOWS_CERT_PASSWORD /tr http://timestamp.digicert.com /td sha256 /fd sha256 "out/${{ matrix.asset }}"
+
       - uses: actions/upload-artifact@v4
         with:
-          name: leettrace-${{ matrix.os }}
-          path: packages/engine/dist-bin/*
+          name: asset-${{ matrix.asset }}
+          path: out/${{ matrix.asset }}
 
-  # Publishing (PyPI via trusted publishing, Chrome Web Store, AMO) is deliberately manual:
-  # download the artifacts from this run and upload them. See docs/RELEASING.md.
+  release:
+    name: Publish release
+    needs: [bundle, binaries]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          path: dl
+      - name: Collect assets + checksums
+        run: |
+          mkdir -p assets
+          find dl -type f \( -name 'LeetTrace-*' -o -name 'leettrace-linux-x64' -o -name 'leettrace-*-extension.zip' \) \
+            -not -path '*/extension_dist/*' -exec cp {} assets/ \;
+          cd assets && sha256sum * | tee SHA256SUMS && ls -la
+      - uses: actions/upload-artifact@v4
+        with:
+          name: release-assets
+          path: assets/*
+      - name: Publish GitHub Release
+        if: startsWith(github.ref, 'refs/tags/v') && (github.event_name == 'push' || !inputs.dry_run)
+        uses: softprops/action-gh-release@v2
+        with:
+          files: assets/*
+          generate_release_notes: true
+          fail_on_unmatched_files: true

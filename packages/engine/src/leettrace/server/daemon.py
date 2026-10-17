@@ -5,6 +5,7 @@ from __future__ import annotations
 import os
 import socket
 from collections.abc import Callable
+from typing import Any
 
 import uvicorn
 
@@ -25,12 +26,27 @@ LOOPBACK = "127.0.0.1"  # never the wildcard address, never a LAN interface (SPE
 def pick_port(preferred: int = DEFAULT_PORT, scan: int = PORT_SCAN) -> int:
     for port in range(preferred, preferred + scan + 1):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+            if os.name != "nt":
+                # Match uvicorn: a just-closed socket in TIME_WAIT must not make the port
+                # look busy (a restart would otherwise fail to bind its own port).
+                s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
             try:
                 s.bind((LOOPBACK, port))
             except OSError:
                 continue
             return port
     raise RuntimeError(f"no free loopback port in {preferred}..{preferred + scan}")
+
+
+class _AnnouncingServer(uvicorn.Server):
+    def __init__(self, config: uvicorn.Config, on_listening: Callable[[], None]) -> None:
+        super().__init__(config)
+        self._on_listening = on_listening
+
+    async def startup(self, sockets: Any = None) -> None:
+        await super().startup(sockets=sockets)  # binds the listening socket
+        if not self.should_exit:
+            self._on_listening()
 
 
 def serve(
@@ -54,15 +70,20 @@ def serve(
         access_log=False,
         ws="websockets-sansio",
     )
-    server = uvicorn.Server(config)
+
+    def announce() -> None:
+        # Only now is the port actually listening: publish the session file (clients poll
+        # for it) and tell the user. Writing it earlier let fast clients hit "refused".
+        write_session(session)
+        if on_ready is not None:
+            on_ready(session, app.state.engine.pair.current())
+
+    server = _AnnouncingServer(config, announce)
 
     def request_shutdown() -> None:
         server.should_exit = True
 
     app.state.engine.request_shutdown = request_shutdown
-    write_session(session)
-    if on_ready is not None:
-        on_ready(session, app.state.engine.pair.current())
     try:
         server.run()
     finally:

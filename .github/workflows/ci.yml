@@ -36,13 +36,13 @@ jobs:
       - name: Install Chromium for e2e
         run: pnpm --filter @leettrace/web exec playwright install --with-deps chromium
       - name: e2e — web UI watch round-trip
-        run: pnpm --filter @leettrace/web e2e
+        run: python3 scripts/annotate.py "e2e web" pnpm --filter @leettrace/web e2e
       - name: e2e — friendly launch (welcome page + pairing code)
-        run: pnpm --filter @leettrace/web e2e:launch
+        run: python3 scripts/annotate.py "e2e launch" pnpm --filter @leettrace/web e2e:launch
       - name: e2e — accessibility audit
-        run: pnpm --filter @leettrace/web audit
+        run: python3 scripts/annotate.py "a11y audit" pnpm --filter @leettrace/web audit
       - name: e2e — extension on problem-page fixtures
-        run: pnpm --filter @leettrace/extension e2e
+        run: python3 scripts/annotate.py "e2e extension" pnpm --filter @leettrace/extension e2e
 
   cross-os:
     name: Engine tests + binary smoke (${{ matrix.os }})
@@ -68,9 +68,11 @@ jobs:
         run: pnpm exec turbo run build --filter=@leettrace/web --filter=@leettrace/extension
       - run: cd packages/engine && uv sync --frozen
       - name: Engine tests (tracer, limits incl. Windows Job Object, server, adapter, TUI)
-        run: cd packages/engine && uv run pytest
+        working-directory: packages/engine
+        run: uv run python ../../scripts/annotate.py "engine tests ${{ matrix.os }}" uv run pytest -x -q
       - name: Smoke test (dev install)
-        run: cd packages/engine && uv run python scripts/smoke.py uv run leettrace
+        working-directory: packages/engine
+        run: uv run python ../../scripts/annotate.py "dev smoke ${{ matrix.os }}" uv run python scripts/smoke.py uv run leettrace
       - name: Build standalone binary
         shell: bash
         run: packages/engine/packaging/build_binary.sh
@@ -79,7 +81,8 @@ jobs:
         run: |
           BIN=packages/engine/dist-bin/leettrace
           if [ -f "$BIN.exe" ]; then BIN="$BIN.exe"; fi
-          python3 packages/engine/scripts/smoke.py "$BIN" || python packages/engine/scripts/smoke.py "$BIN"
+          PY=python3; command -v python3 >/dev/null || PY=python
+          $PY scripts/annotate.py "binary smoke ${{ matrix.os }}" $PY packages/engine/scripts/smoke.py "$BIN"
       - uses: actions/upload-artifact@v4
         with:
           name: leettrace-ci-${{ matrix.os }}

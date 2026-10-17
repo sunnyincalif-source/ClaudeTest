@@ -1,11 +1,13 @@
 """Windows resource caps for the tracer subprocess via a Job Object (SPEC-LAUNCH A2).
 
 POSIX children cap themselves with setrlimit (see child.py). Windows has no setrlimit, so the
-parent puts each child in a Job Object with a per-process committed-memory limit, a
-one-process limit (the traced program can't spawn helpers), and kill-on-close.
+child puts *itself* into a Job Object before running any user code: a per-process
+committed-memory limit, a one-process limit (the traced program can't spawn helpers), and
+kill-on-close. (Doing it from the child avoids a race with venv launcher processes, which on
+Windows start the real interpreter as a grandchild.)
 
-If any call fails, `assign()` returns False and the caller reports the memory cap as
-unavailable — never a silent "no limit".
+If any call fails the child says so on stderr (MEMORY_CAP_UNAVAILABLE) and the engine reports
+the memory cap as unavailable — never a silent "no limit".
 """
 
 from __future__ import annotations
@@ -22,6 +24,7 @@ JOB_OBJECT_EXTENDED_LIMIT_INFORMATION_CLASS = 9
 # The interpreter itself commits memory before user code runs; allow for it on top of the
 # user's budget so the cap measures (roughly) the program, as RLIMIT_AS does on POSIX.
 INTERPRETER_OVERHEAD_MB = 96
+MEMORY_CAP_UNAVAILABLE = "LEETTRACE_MEMORY_CAP_UNAVAILABLE"
 
 
 def supported() -> bool:
@@ -82,6 +85,7 @@ class WindowsJob:
             wintypes.DWORD,
         ]
         kernel32.AssignProcessToJobObject.argtypes = [wintypes.HANDLE, wintypes.HANDLE]
+        kernel32.GetCurrentProcess.restype = wintypes.HANDLE
         kernel32.CloseHandle.argtypes = [wintypes.HANDLE]
 
         handle = kernel32.CreateJobObjectW(None, None)
@@ -111,7 +115,27 @@ class WindowsJob:
         process_handle = int(proc._handle)  # noqa: SLF001 — Popen's Win32 process handle
         return bool(self._kernel32.AssignProcessToJobObject(self.handle, process_handle))
 
+    def assign_current(self) -> bool:
+        """Put the calling process in the job (the job handle stays open for its lifetime)."""
+        current = self._kernel32.GetCurrentProcess()
+        return bool(self._kernel32.AssignProcessToJobObject(self.handle, current))
+
     def close(self) -> None:
         if getattr(self, "handle", None):
             self._kernel32.CloseHandle(self.handle)
             self.handle = None
+
+
+def cap_current_process(memory_mb: int) -> bool:
+    """Called by the sandbox child on Windows. Returns False if the cap couldn't be applied."""
+    try:
+        job = WindowsJob(memory_mb)
+        ok = job.assign_current()
+    except OSError:
+        return False
+    # Keep the handle open: closing it would (with kill-on-close) end this very process.
+    _KEEP.append(job)
+    return ok
+
+
+_KEEP: list[WindowsJob] = []

@@ -19,7 +19,7 @@ import urllib.request
 from pathlib import Path
 from typing import Any
 
-PORT = 48555
+PORT = 48555 + (os.getpid() % 400)  # distinct per run: no clash with a just-closed run
 FACTORIAL = "def f(n):\n    return 1 if n <= 1 else n * f(n - 1)\n\nprint(f(5))\n"
 TWO_SUM = (
     "class Solution:\n"
@@ -78,6 +78,13 @@ def main(cmd: list[str]) -> None:
             print((Path(home) / "engine.log").read_text())
             check(False, "engine started and wrote its session file")
         token = json.loads(session_file.read_text())["token"]
+        # The session file is written just before the socket is bound: wait until it answers.
+        while time.monotonic() < deadline:
+            try:
+                call("GET", "/health", None)
+                break
+            except urllib.error.URLError:
+                time.sleep(0.25)
         check(True, f"engine started ({' '.join(cmd)}) on {sys.platform}")
 
         status, _ = call("GET", "/health", None)

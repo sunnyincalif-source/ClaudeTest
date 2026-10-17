@@ -22,9 +22,16 @@ from leettrace.tracer.core import Limits, Tracer
 
 def _apply_rlimits(max_memory_mb: int, max_seconds: float) -> list[tuple[int, tuple[int, int]]]:
     restored: list[tuple[int, tuple[int, int]]] = []
+    if sys.platform == "win32":
+        from leettrace.tracer.winjob import MEMORY_CAP_UNAVAILABLE, cap_current_process
+
+        if not cap_current_process(max_memory_mb):
+            print(MEMORY_CAP_UNAVAILABLE, file=sys.stderr, flush=True)
+        return restored
     try:
         import resource
-    except ImportError:  # Windows: rely on the parent's wall-clock kill
+    except ImportError:  # other non-POSIX platforms: step/time/depth caps still apply
+        print("LEETTRACE_MEMORY_CAP_UNAVAILABLE", file=sys.stderr, flush=True)
         return restored
     try:
         baseline = 0

@@ -99,10 +99,8 @@ class _Completed:
         self.stderr = stderr
 
 
-def _spawn(request_bytes: bytes, cwd: str, timeout: float, memory_mb: int) -> _Completed:
-    """Start the child, cap it (Job Object on Windows) *before* it receives the program."""
+def _spawn(request_bytes: bytes, cwd: str, timeout: float) -> _Completed:
     global _WINDOWS_JOB_OK
-    job = None
     proc = subprocess.Popen(
         child_command(),
         stdin=subprocess.PIPE,
@@ -112,23 +110,15 @@ def _spawn(request_bytes: bytes, cwd: str, timeout: float, memory_mb: int) -> _C
         env=_child_env(),
     )
     try:
-        if sys.platform == "win32":
-            from leettrace.tracer.winjob import WindowsJob
-
-            try:
-                job = WindowsJob(memory_mb)
-                _WINDOWS_JOB_OK = job.assign(proc)
-            except OSError:
-                _WINDOWS_JOB_OK = False
         out, err = proc.communicate(request_bytes, timeout=timeout)
-        return _Completed(proc.returncode, out, err)
     except subprocess.TimeoutExpired:
         proc.kill()
         proc.communicate()
         raise
-    finally:
-        if job is not None:
-            job.close()
+    if sys.platform == "win32":
+        # The child caps itself with a Job Object and reports if it couldn't.
+        _WINDOWS_JOB_OK = b"LEETTRACE_MEMORY_CAP_UNAVAILABLE" not in err
+    return _Completed(proc.returncode, out, err)
 
 
 def run_request(request: dict[str, Any], limits: RunLimits | None = None) -> dict[str, Any]:
@@ -139,9 +129,7 @@ def run_request(request: dict[str, Any], limits: RunLimits | None = None) -> dic
     hard_timeout = limits.max_seconds + 10.0  # startup + serialization headroom
     with tempfile.TemporaryDirectory(prefix="leettrace-") as cwd:
         try:
-            proc = _spawn(
-                json.dumps(request).encode("utf-8"), cwd, hard_timeout, limits.max_memory_mb
-            )
+            proc = _spawn(json.dumps(request).encode("utf-8"), cwd, hard_timeout)
         except subprocess.TimeoutExpired:
             return validate_trace(
                 _error_trace(
