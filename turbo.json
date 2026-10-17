@@ -1,9 +1,31 @@
 {
   "$schema": "https://turbo.build/schema.json",
   "tasks": {
-    "build": { "dependsOn": ["^build"], "outputs": ["dist/**"] },
-    "test": { "dependsOn": ["^build"] },
-    "typecheck": { "dependsOn": ["^build"] },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**"]
+    },
+    "test": {
+      "dependsOn": ["^build"]
+    },
+    "typecheck": {
+      "dependsOn": ["^build"]
+    },
     "lint": {}
-  }
+  },
+  "globalPassThroughEnv": [
+    "SSL_CERT_FILE",
+    "NIX_SSL_CERT_FILE",
+    "REQUESTS_CA_BUNDLE",
+    "NODE_EXTRA_CA_CERTS",
+    "HTTP_PROXY",
+    "HTTPS_PROXY",
+    "NO_PROXY",
+    "http_proxy",
+    "https_proxy",
+    "no_proxy",
+    "UV_*",
+    "VITE_*",
+    "LEETTRACE_*"
+  ]
 }

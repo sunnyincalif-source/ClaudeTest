@@ -453,7 +453,7 @@ function Install() {
                 <li>
                   Download the extension zip from the app’s welcome page (or{' '}
                   <a href={chromeZip} download>
-                    here
+                    download the Chrome extension zip
                   </a>
                   ) → unzip it.
                 </li>
