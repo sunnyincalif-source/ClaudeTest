@@ -19,3 +19,10 @@ chrome.runtime.onMessage.addListener((msg: { type?: string }, sender, sendRespon
     .catch(() => sendResponse(null));
   return true; // async response
 });
+
+// First-run onboarding: explain the three steps (install engine → start → Trace).
+chrome.runtime.onInstalled.addListener((details) => {
+  if (details.reason === 'install') {
+    void chrome.tabs.create({ url: chrome.runtime.getURL('src/welcome/index.html') });
+  }
+});

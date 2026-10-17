@@ -73,6 +73,7 @@ def start(
         if background:
             print(f"leettrace engine {__version__} on {session.base_url}", flush=True)
             return
+        _welcome_once()
         console.print(f"[bold green]●[/] LeetTrace engine {__version__} running")
         console.print(f"  Listening on {session.base_url} [dim](loopback only)[/]")
         console.print(f"  Web UI:      {session.ui_url()}")
@@ -98,6 +99,84 @@ def start(
     except RuntimeError as e:
         err.print(f"[red]Could not start:[/] {e}")
         raise typer.Exit(1) from e
+
+
+def _welcome_once() -> None:
+    from leettrace.server.session import home
+
+    marker = home() / ".welcomed"
+    if marker.exists():
+        return
+    console.print(
+        "\n[bold]Welcome to LeetTrace![/] Three ways to use it:\n"
+        "  1. [bold]Browser[/]: install the extension, open a LeetCode problem, click "
+        "[bold]Trace[/] beside Run.\n"
+        "     The first time, the panel asks for a pairing code — it appears right here.\n"
+        "  2. [bold]Terminal[/]: [cyan]leettrace run solution.py[/] · "
+        "[cyan]leettrace watch solution.py[/] (re-traces on save)\n"
+        '     LeetCode-style: [cyan]leettrace leetcode sol.py -c "nums = [2,7], target = 9"[/]\n'
+        "  3. [bold]Try it now[/]: [cyan]leettrace demo[/]\n"
+    )
+    try:
+        marker.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        marker.touch()
+    except OSError:
+        pass
+
+
+DEMO_FILES = {
+    "reverse_list.py": """class Solution:
+    def reverseList(self, head: Optional[ListNode]) -> Optional[ListNode]:
+        prev = None
+        cur = head
+        while cur:
+            nxt = cur.next
+            cur.next = prev
+            prev = cur
+            cur = nxt
+        return prev
+""",
+    "factorial.py": """def factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+
+
+print(factorial(5))
+""",
+}
+
+
+@app.command()
+def demo(
+    directory: Annotated[Path, typer.Argument(help="Where to write the demo files")] = Path(
+        "leettrace-demo"
+    ),
+    no_open: Annotated[bool, typer.Option("--no-open", help="Don't open the web UI")] = False,
+) -> None:
+    """Write two example solutions and trace one — the fastest way to see LeetTrace."""
+    directory.mkdir(parents=True, exist_ok=True)
+    for name, code in DEMO_FILES.items():
+        target = directory / name
+        if not target.exists():
+            target.write_text(code, encoding="utf-8")
+    console.print(f"Wrote examples to [bold]{escape(str(directory))}/[/]")
+    session = _daemon()
+    body = {
+        "code": DEMO_FILES["reverse_list.py"],
+        "cases": [{"input": "head = [1,2,3,4]", "expected": "[4,3,2,1]"}],
+        "publish": True,
+        "slug": "reverse-linked-list",
+    }
+    r = post(session, "/leetcode/trace", body)
+    print_trace(r.json()["traces"][0], label="reverse_list.py")
+    console.print(
+        f"\nNext: [cyan]leettrace watch {escape(str(directory / 'factorial.py'))}[/] "
+        "and edit the file — the view updates on save."
+    )
+    run_id = r.headers.get("X-LeetTrace-Run")
+    if not no_open and run_id:
+        webbrowser.open(session.ui_url(run_id))
 
 
 @app.command()

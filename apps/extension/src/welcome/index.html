@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Welcome to LeetTrace</title>
+    <link rel="stylesheet" href="./welcome.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Welcome to LeetTrace</h1>
+      <p class="lead">
+        See your Python solution execute on the problem page: call stack, heap, pointer arrows, and
+        a reason for every step — run on your own machine.
+      </p>
+      <ol class="steps">
+        <li>
+          <h2>Install the engine (one command)</h2>
+          <pre>pipx install leettrace</pre>
+          <p>
+            No pipx? <code>python3 -m pip install --user leettrace</code>, or download the
+            standalone binary from the releases page.
+          </p>
+        </li>
+        <li>
+          <h2>Start it</h2>
+          <pre>leettrace start</pre>
+          <p>It listens on 127.0.0.1 only and runs your code in a sandboxed subprocess.</p>
+        </li>
+        <li>
+          <h2>Open a problem and click <span class="btn">Trace</span></h2>
+          <p>
+            The button sits next to LeetCode's Run. The first time, the panel asks for a 6-digit
+            code — it's printed in the terminal running <code>leettrace start</code>. Chrome may
+            also ask to let leetcode.com reach apps on this device: choose <strong>Allow</strong>.
+          </p>
+        </li>
+      </ol>
+      <p class="fine">
+        LeetTrace is an independent tool and is not affiliated with or endorsed by LeetCode. v1
+        traces Python 3.
+      </p>
+    </main>
+  </body>
+</html>

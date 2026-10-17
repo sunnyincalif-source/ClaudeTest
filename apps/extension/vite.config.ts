@@ -5,7 +5,12 @@ import manifest from './manifest.config';
 
 export default defineConfig({
   plugins: [react(), crx({ manifest })],
-  build: { target: 'es2022', outDir: 'dist', emptyOutDir: true },
+  build: {
+    target: 'es2022',
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: { input: { welcome: 'src/welcome/index.html' } },
+  },
   server: { port: 5174, strictPort: true, hmr: { port: 5174 } },
   test: { globals: true, environment: 'jsdom', setupFiles: ['./src/test-setup.ts'] },
 });
