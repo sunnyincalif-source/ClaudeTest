@@ -656,3 +656,17 @@
     transition: none !important;
   }
 }
+
+/* Phones: stack the heap under the call stack so arrows drop downward. */
+@media (max-width: 560px) {
+  .lt-viz:not(.lt-compact) .lt-canvas {
+    flex-direction: column;
+    gap: 28px;
+  }
+  .lt-viz:not(.lt-compact) .lt-stack {
+    width: 100%;
+  }
+  .lt-source {
+    max-height: 260px;
+  }
+}

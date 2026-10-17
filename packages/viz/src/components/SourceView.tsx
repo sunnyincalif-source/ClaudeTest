@@ -14,7 +14,7 @@ export function SourceView({ source, line, errorLine }: Props) {
     current.current?.scrollIntoView?.({ block: 'nearest' });
   }, [line]);
   return (
-    <section className="lt-source" aria-label="Source code">
+    <section className="lt-source" aria-label="Source code" tabIndex={0}>
       <ol className="lt-code">
         {lines.map((text, i) => {
           const n = i + 1;

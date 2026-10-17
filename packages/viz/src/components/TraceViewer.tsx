@@ -134,7 +134,13 @@ export function TraceViewer({
           <Controls playback={playback} step={step} total={steps.length} />
           <div className="lt-body">
             <SourceView source={trace.source} line={step.line} errorLine={trace.error?.line} />
-            <div className="lt-canvas" ref={canvasRef}>
+            <div
+              className="lt-canvas"
+              ref={canvasRef}
+              role="group"
+              aria-label="Stack and heap"
+              tabIndex={0}
+            >
               <StackPanel step={step} diff={diff} />
               <HeapPanel step={step} layout={layout} diff={diff} />
               <ArrowLayer

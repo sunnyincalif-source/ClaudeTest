@@ -106,6 +106,21 @@ check(
   'pointer arrows drawn in the panel',
 );
 if (shotDir) await page.screenshot({ path: join(shotDir, 'ext-trace.png') });
+if (process.env.FRAMES_DIR) {
+  // Demo clip: step through case 1 inside the LeetCode tab.
+  const { mkdirSync } = await import('node:fs');
+  mkdirSync(process.env.FRAMES_DIR, { recursive: true });
+  await page.mouse.move(5, 5);
+  const total = await panel.getByLabel('Timeline').getAttribute('max');
+  for (let i = 0; i <= Number(total); i++) {
+    await panel.getByLabel('Timeline').fill(String(i));
+    await panel.getByLabel('Timeline').evaluate((el) => el.blur());
+    await sleep(350);
+    await page.screenshot({
+      path: join(process.env.FRAMES_DIR, `${String(i).padStart(4, '0')}.png`),
+    });
+  }
+}
 
 // 5) The page's own scripts can't see the token (it lives in extension storage).
 const leaked = await page.evaluate(() => JSON.stringify(localStorage) + document.cookie);

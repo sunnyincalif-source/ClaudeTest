@@ -34,7 +34,7 @@ export function HeapPanel({ step, layout, diff }: Props) {
 
   return (
     <section className="lt-heap" aria-label="Heap objects">
-      <h3 className="lt-panel-title">Heap</h3>
+      <h2 className="lt-panel-title">Heap</h2>
       {all.length === 0 && <p className="lt-empty">Nothing on the heap yet.</p>}
       {instances.length > 0 && (
         <div className="lt-grid" style={gridStyle}>

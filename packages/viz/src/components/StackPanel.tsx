@@ -15,7 +15,7 @@ export function StackPanel({ step, diff }: Props) {
   const frames = [...step.stack].reverse(); // newest on top
   return (
     <section className="lt-stack" aria-label="Call stack">
-      <h3 className="lt-panel-title">Call stack</h3>
+      <h2 className="lt-panel-title">Call stack</h2>
       {frames.length === 0 && <p className="lt-empty">No frames.</p>}
       <ol className="lt-frames">
         {frames.map((f, idx) => (
