@@ -1,8 +1,35 @@
 # LeetTrace: status report
 
-**Code:** branch `leettrace` of `github.com/sunnyincalif-source/ClaudeTest`, 13 commits.
-**Spec:** `SPEC.md`, with the standing rules in `CLAUDE.md`. All ten phases in SPEC §9 are implemented.
-**Tests:** 144 automated tests pass: engine 103 (pytest), schema 14, viz 13, extension 11 and web 3 (Vitest). Three browser end-to-end scripts also pass.
+**Code:** branch `leettrace` of `github.com/sunnyincalif-source/ClaudeTest` (owner repo:
+`sunny925bay-jpg/leettrace`). **Version:** 1.1.0 in the code, not yet tagged.
+**Specs:** `SPEC.md`, `SPEC-LAUNCH.md`, `SPEC-PRODUCT.md`; standing rules in `CLAUDE.md`.
+
+## v1.1 (Phases 16–21) — product-grade UX + new identity
+
+- **Design system** (`packages/design`): tokens (TS source → generated CSS), Geist Sans +
+  IBM Plex Mono self-hosted, shared `ds-` components. Tests lock the reference values, ban
+  purple/violet/magenta, check WCAG AA in both themes, and fail on any stray hex color in
+  the viz, web UI, extension or site.
+- **Trace panel** restyled (dark electric, light theme kept), spring step/arrow motion.
+- **Installers + always-on engine:** Windows NSIS installer (Program Files, Start menu,
+  `LeetTrace.exe` + `leettrace-cli.exe`), macOS menu-bar `.app` in a styled dmg, Linux
+  AppImage; tray / menu-bar icon; start at login; single instance. CI installs each one on
+  its own OS, starts it like a login item and smoke-tests it.
+- **Automatic pairing:** pinned extension ID + `externally_connectable`; the engine page
+  hands over a token that persists across restarts; silent reconnect and re-handshake after
+  rotation; manual code only as a hidden fallback. "Apps on device" blocked state detected
+  correctly and explained.
+- **Site** rebuilt dark-only per SPEC-PRODUCT §8/§9, prerendered, `/privacy`, one
+  `STORE_URL` switch (`VITE_CHROME_STORE_URL` in the repo-root `.env`). Lighthouse: mobile
+  perf 96–97 / a11y 100, desktop 100 / 100.
+- **Store package** (`docs/store`, `docs/store-listing.md`), unsigned-launch click-through
+  everywhere, signing as a secrets-only switch (`docs/RELEASING.md`).
+- **Verified:** CI green on Linux, macOS and Windows; release dry run
+  (`release-dry-run/v1.1.0`) built and checked every installer and published nothing.
+- **Owner steps left:** `LAUNCH_CHECKLIST.md` (pull, Vercel, tag v1.1.0, Web Store) and
+  `docs/DRESS_REHEARSAL.md`.
+
+The sections below describe the v1.0 build (Phases 0–15), most of which still applies.
 
 ## 1. What's finished
 
