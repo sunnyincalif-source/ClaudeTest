@@ -121,7 +121,11 @@ def windows(installer: Path, env: dict[str, str], home: Path) -> None:
             break
         time.sleep(0.5)
     check((root / "LeetTrace.exe").exists(), f"app installed to {root}")
-    check((root / "leettrace.exe").exists(), "CLI installed alongside (leettrace.exe)")
+    check((root / "leettrace-cli.exe").exists(), "CLI installed alongside (leettrace-cli.exe)")
+    check(
+        sorted(p.name.lower() for p in root.glob("*.exe")).count("leettrace.exe") == 1,
+        "the app and the CLI are separate executables",
+    )
     menu = Path(os.environ.get("PROGRAMDATA", r"C:\ProgramData")) / (
         r"Microsoft\Windows\Start Menu\Programs\LeetTrace.lnk"
     )
@@ -136,10 +140,16 @@ def windows(installer: Path, env: dict[str, str], home: Path) -> None:
     dump_log()  # e.g. "tray: on" — what the app reported at startup
     shutdown(session, home)
     wait_exit(proc, "Windows")
-    smoke(str(root / "leettrace.exe"), env)
+    smoke(str(root / "leettrace-cli.exe"), env)
     un = root / "Uninstall LeetTrace.exe"
     r = subprocess.run([str(un), "/S", f"_?={root}"], check=False, timeout=300)
     check(r.returncode == 0, "silent uninstall succeeded")
+    for _ in range(40):  # Defender may hold a just-scanned file for a moment
+        if not (root / "LeetTrace.exe").exists():
+            break
+        time.sleep(0.5)
+    if (root / "LeetTrace.exe").exists():
+        print("left behind:", sorted(p.name for p in root.iterdir())[:20])
     check(not (root / "LeetTrace.exe").exists(), "app files removed")
     try:
         with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as k:

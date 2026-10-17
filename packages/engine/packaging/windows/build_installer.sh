@@ -27,7 +27,7 @@ sign() {
 }
 if [ -n "${WINDOWS_CERT_PFX_BASE64:-}" ]; then
   sign dist-bin/LeetTrace/LeetTrace.exe
-  sign dist-bin/LeetTrace/leettrace.exe
+  sign dist-bin/LeetTrace/leettrace-cli.exe
 else
   echo "no Windows signing secrets: building an unsigned installer (SmartScreen: More info → Run anyway)"
 fi

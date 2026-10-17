@@ -1,7 +1,8 @@
 # PyInstaller spec for the desktop app (SPEC-PRODUCT §5). Build from packages/engine:
 #   uv run pyinstaller --noconfirm --clean --distpath dist-bin --workpath build/pyi packaging/leettrace.spec
 # Produces, per OS (LT_TARGET overrides the detected one):
-#   windows: dist-bin/LeetTrace/  LeetTrace.exe (no console: the app) + leettrace.exe (the CLI)
+#   windows: dist-bin/LeetTrace/  LeetTrace.exe (no console: the app) + leettrace-cli.exe (the CLI;
+#            Windows file names are case-insensitive, so it can't be "leettrace.exe")
 #   macos:   dist-bin/LeetTrace.app  (menu-bar only, no Dock icon; CLI: Contents/MacOS/LeetTrace)
 #   linux:   dist-bin/LeetTrace/leettrace  (wrapped into an AppImage by linux/build_appimage.sh)
 import os
@@ -54,7 +55,7 @@ if TARGET == "windows":
     ico = ICONS / "leettrace.ico"
     coll = COLLECT(  # noqa: F821
         exe("LeetTrace", False, ico),
-        exe("leettrace", True, ico),
+        exe("leettrace-cli", True, ico),
         a.binaries,
         a.datas,
         name="LeetTrace",

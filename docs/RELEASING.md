@@ -81,7 +81,7 @@ notarized and stapled, and Gatekeeper opens it without the right-click step.
 | `WINDOWS_CERT_PFX_BASE64` | the code-signing certificate `.pfx`, base64 |
 | `WINDOWS_CERT_PASSWORD`   | the `.pfx` password                         |
 
-`LeetTrace.exe`, `leettrace.exe` and the installer are signed and timestamped. SmartScreen
+`LeetTrace.exe`, `leettrace-cli.exe` and the installer are signed and timestamped. SmartScreen
 reputation still builds up over the first downloads (immediately with an EV certificate).
 
 After signing is live, remove the one-time click-through copy from `apps/site/src/App.tsx`

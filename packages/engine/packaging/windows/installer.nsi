@@ -76,7 +76,7 @@ FunctionEnd
 !macro StopRunning
   ; Upgrades and uninstalls: stop a running app/engine first (files would be locked).
   nsExec::Exec 'taskkill /F /T /IM LeetTrace.exe'
-  nsExec::Exec 'taskkill /F /T /IM leettrace.exe'
+  nsExec::Exec 'taskkill /F /T /IM leettrace-cli.exe'
   Sleep 500
 !macroend
 
@@ -110,7 +110,11 @@ Section "Uninstall"
   DeleteRegValue HKCU "${RUN_KEY}" "LeetTrace"
   SetShellVarContext all
   Delete "$SMPROGRAMS\LeetTrace.lnk"
-  RMDir /r "$INSTDIR"
+  Delete /REBOOTOK "$INSTDIR\LeetTrace.exe"
+  Delete /REBOOTOK "$INSTDIR\leettrace-cli.exe"
+  RMDir /r /REBOOTOK "$INSTDIR\_internal"
+  Delete "$INSTDIR\Uninstall LeetTrace.exe"
+  RMDir /r /REBOOTOK "$INSTDIR"
   DeleteRegKey HKLM "${UNINST_KEY}"
   DeleteRegKey HKLM "Software\${APP}"
 SectionEnd
