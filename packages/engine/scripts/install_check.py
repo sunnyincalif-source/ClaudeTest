@@ -133,7 +133,7 @@ def windows(installer: Path, env: dict[str, str], home: Path) -> None:
     with winreg.OpenKey(winreg.HKEY_CURRENT_USER, key) as k:
         value, _ = winreg.QueryValueEx(k, "LeetTrace")
     check("LeetTrace.exe" in value and "--background" in value, f"start at sign-in: {value}")
-    print((home / "app.log").read_text(encoding="utf-8", errors="replace").strip()[-400:])
+    dump_log()  # e.g. "tray: on" — what the app reported at startup
     shutdown(session, home)
     wait_exit(proc, "Windows")
     smoke(str(root / "leettrace.exe"), env)
