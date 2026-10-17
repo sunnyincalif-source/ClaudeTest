@@ -96,9 +96,11 @@ def run_app(*, background: bool = False, port: int | None = None) -> None:
         return
 
     first = first_run()
-    if first and not autostart.is_enabled():
-        with contextlib.suppress(Exception):  # best effort; the tray toggle can retry
-            autostart.enable()
+    with contextlib.suppress(Exception):  # best effort; the tray toggle can retry
+        if first:
+            autostart.enable()  # on by default; the tray menu turns it off
+        else:
+            autostart.refresh()
 
     engine = EngineThread(port)
     session = engine.start()

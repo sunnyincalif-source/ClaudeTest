@@ -99,6 +99,19 @@ class FakeWinreg(types.SimpleNamespace):
             raise OSError("no value")
 
 
+def test_refresh_repoints_an_existing_entry(
+    monkeypatch: pytest.MonkeyPatch, tmp_path: Path
+) -> None:
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    autostart.refresh("linux")  # off stays off
+    assert not autostart.is_enabled("linux")
+    autostart.enable(["/old/place/LeetTrace", "app", "--background"], "linux")
+    monkeypatch.setattr(autostart, "launch_command", lambda: ["/new/LeetTrace", "app"])
+    autostart.refresh("linux")
+    text = (tmp_path / "autostart" / "leettrace.desktop").read_text(encoding="utf-8")
+    assert "Exec=/new/LeetTrace app" in text
+
+
 def test_windows_run_key(monkeypatch: pytest.MonkeyPatch) -> None:
     reg = FakeWinreg()
     monkeypatch.setattr(autostart, "_winreg", lambda: reg)
@@ -188,6 +201,9 @@ def desktop_home(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> list[str]:
     monkeypatch.setenv("LEETTRACE_HOME", str(tmp_path / "home"))
     monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "config"))
     monkeypatch.setattr(Path, "home", staticmethod(lambda: tmp_path))
+    # Never touch the real Run key of the machine running the tests.
+    fake_reg = FakeWinreg()
+    monkeypatch.setattr(autostart, "_winreg", lambda: fake_reg)
     opened: list[str] = []
     monkeypatch.setattr(desktop_app.webbrowser, "open", lambda url: opened.append(url))
     return opened

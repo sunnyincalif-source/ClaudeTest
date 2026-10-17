@@ -173,7 +173,8 @@ def macos(dmg: Path, env: dict[str, str], home: Path, user_home: Path) -> None:
     agent = user_home / "Library/LaunchAgents/dev.leettrace.agent.plist"
     check(agent.exists(), "login item (LaunchAgent) registered on first launch")
     args = plistlib.loads(agent.read_bytes())["ProgramArguments"]
-    check(args == [str(exe), "app", "--background"], f"login item starts the app: {args}")
+    same = os.path.realpath(args[0]) == os.path.realpath(exe)
+    check(same and args[1:] == ["app", "--background"], f"login item starts the app: {args}")
     shutdown(session, home)
     wait_exit(proc, "macOS")
     smoke(str(exe), env)

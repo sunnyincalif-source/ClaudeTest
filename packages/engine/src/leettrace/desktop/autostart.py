@@ -136,3 +136,10 @@ def disable(platform: str = sys.platform) -> None:
             pass
     else:
         linux_desktop_path().unlink(missing_ok=True)
+
+
+def refresh(platform: str = sys.platform) -> None:
+    """If start-at-login is on, point it at this copy of the app (moved, upgraded or
+    reinstalled apps keep starting at login, from the right place)."""
+    if is_enabled(platform):
+        enable(platform=platform)
